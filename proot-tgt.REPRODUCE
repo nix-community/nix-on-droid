@@ -1,0 +1,13 @@
+When I build it reproducibly with Nix, I get signal 7 during execution.
+At the moment the proot binary was built directly on-device in Termux.
+Sorry about that mess.
+
+Outline:
+
+* Download and compile libtalloc
+* Collect .o files into an .a static library
+* Compile proot with termux patches with:
+    * LDFLAGS += -L ../../talloc-2.1.14/
+    * LDFLAGS += -Wl,-Bstatic -ltalloc -Wl,-Bdynamic
+
+I'd be grateful if somebody could help me fix it

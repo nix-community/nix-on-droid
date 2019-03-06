@@ -1,0 +1,193 @@
+#!/usr/bin/env bash
+
+# This script builds the initial bootstrap zipball for Nix on Android.
+# Copyright (c) 2019 Alexander Sosedkin <monk@unboiled.info>
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set -ue
+
+ARCHIVE=nix-2.2.1-aarch64-linux.tar.bz2
+BASEURL=https://nixos.org/releases/nix/nix-2.2.1
+URL="$BASEURL/$ARCHIVE"
+INST="/data/data/com.termux.nix/files/usr"
+
+export PROOT_NO_SECCOMP=1  # see https://github.com/proot-me/PRoot/issues/106
+
+rm -rf ./bootstrap
+mkdir -p bootstrap
+
+wget https://github.com/proot-me/proot-static-build/blob/master/static/proot-x86_64?raw=true -O proot-host
+chmod +x proot-host
+
+wget https://github.com/multiarch/qemu-user-static/releases/download/v3.1.0-2/qemu-aarch64-static -O qemu-aarch64
+chmod +x qemu-aarch64
+
+echo "downloading nix archive"
+wget $URL -O $ARCHIVE
+
+echo -n "extracting $ARCHIVE "
+tar -xf "$ARCHIVE" -C bootstrap --checkpoint=200 --checkpoint-action=dot
+echo " done"
+mv bootstrap/nix* bootstrap/nix-installer
+
+echo -n "copying store... "
+mkdir bootstrap/nix
+cp -r bootstrap/nix-installer/store bootstrap/nix/
+echo "done"
+
+mkdir -p bootstrap/bin
+TGT_SHELL=$(find bootstrap/nix/store -path '*/bin/bash' | sed s/^bootstrap//)
+echo "shell found at $TGT_SHELL"
+ln -s "$TGT_SHELL" bootstrap/bin/sh
+
+mkdir -p bootstrap/usr/bin
+TGT_ENV=$(find bootstrap/nix/store -path '*/bin/env' | sed s/^bootstrap//)
+echo "env found at $TGT_ENV"
+ln -s "$TGT_ENV" bootstrap/usr/bin/env
+
+TGT_NIX=$(find bootstrap/nix/store -path '*/bin/nix' | sed s/^bootstrap//)
+TGT_NIX=${TGT_NIX%/bin/nix}
+echo "nix derivation found at $TGT_NIX"
+
+TGT_CACERT=$(find bootstrap/nix/store -path *-nss-cacert-*/ca-bundle.crt | sed s/^bootstrap//)
+echo "cacert found at $TGT_CACERT"
+
+PROOT_CMD="./proot-host -q ./qemu-aarch64 -r bootstrap -w /"
+
+echo "initialising Nix database..."
+$PROOT_CMD "$TGT_NIX/bin/nix-store" --init
+
+echo "registering paths..."
+$PROOT_CMD "$TGT_NIX/bin/nix-store" --load-db < bootstrap/nix-installer/.reginfo
+
+echo "injecting proot..."
+mkdir -p bootstrap/bin
+cp proot-tgt bootstrap/bin/proot
+
+echo "making up some resolv.conf..."
+mkdir -p bootstrap/etc
+echo -e "nameserver 1.1.1.1\nnameserver 8.8.8.8" > bootstrap/etc/resolv.conf
+
+echo "disabling sandboxing..."  # we can't rely on USER_NS support
+mkdir -p bootstrap/etc/nix
+echo "sandbox = false " > bootstrap/etc/nix/nix.conf
+
+echo "composing login scripts..."
+mkdir -p bootstrap/tmp
+mkdir -p bootstrap/bin
+cat > bootstrap/bin/login <<EOF
+#!/system/bin/sh
+set -e
+export USER=\$(/system/bin/whoami)
+export PROOT_TMP_DIR=$INST/tmp
+exec $INST/bin/proot \
+	-b $INST/nix:/nix \
+	-b $INST/bin:/bin \
+	-b $INST/etc:/etc \
+	-b $INST/tmp:/tmp \
+	-b $INST/usr:/usr \
+	-b /:/android \
+	--link2symlink \
+	$INST/bin/sh $INST/bin/.login-inner \$USER "\$@"
+EOF
+
+chmod +x bootstrap/bin/login
+cat > bootstrap/bin/.login-inner <<EOF
+set -e
+
+echo "Welcome to Nix-on-Droid!"
+
+export USER="\$1"
+shift
+
+echo "Sourcing Nix environment..."
+. $INST/$TGT_NIX/etc/profile.d/nix.sh
+
+if [ ! -e \$HOME/.nix-profile/etc/ssl/certs/ca-bundle.crt ]; then
+	if [ -e $TGT_CACERT ]; then
+		export NIX_SSL_CERT_FILE=$TGT_CACERT
+	fi
+fi
+
+if [ ! -e \$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
+	echo "Continuing with stage2 on-device installation..."
+	export NIX_SSL_CERT_FILE=$TGT_CACERT
+	echo "Subscribing to the stable (nixos-18.09) channels of nixpkgs and home-manager..."
+	$TGT_NIX/bin/nix-channel --add https://nixos.org/channels/nixos-18.09 nixpkgs
+	$TGT_NIX/bin/nix-channel --add https://github.com/rycee/home-manager/archive/release-18.09.tar.gz home-manager
+	$TGT_NIX/bin/nix-channel --update
+
+	echo "Creating an initial home-manager configuration in ~/.config/nixpkgs/home.nix ..."
+	export NIX_PATH=\$HOME/.nix-defexpr/channels\${NIX_PATH:+:}\$NIX_PATH
+	$TGT_NIX/bin/nix run nixpkgs.coreutils -c mkdir -p \$HOME/.config/nixpkgs/
+	$TGT_NIX/bin/nix run nixpkgs.coreutils -c cp -n $INST/etc/home.nix.default \$HOME/.config/nixpkgs/home.nix
+	echo "Installing home-manager..."
+	$TGT_NIX/bin/nix run nixpkgs.nix -c $TGT_NIX/bin/nix-shell '<home-manager>' -A install
+fi
+
+echo "Sourcing home-manager environment..."
+. "\$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+
+echo "Dropping you into a shell."
+echo "You can summon software from nixpkgs (e.g. gitMinimal) with:"
+echo "  * nix-run nixpkgs.gitMinimal"
+echo "  * nix-env -iA nixpkgs.gitMinimal"
+echo "  * [edit ~/.config/nixpkgs/home.nix and run] home-manager switch"
+echo "or a myriad other ways."
+echo "Happy hacking!"
+exec /usr/bin/env bash "\$@"
+EOF
+chmod +x bootstrap/bin/.login-inner
+
+echo "providing a default home-manager config..."
+cat > bootstrap/etc/home.nix.default <<EOF
+{ pkgs, ... }:
+
+{
+  # Let Home Manager install and manage itself.
+  programs.home-manager.enable = true;
+
+  home.packages = with pkgs; [
+    nix cacert tzdata coreutils
+    diffutils findutils utillinux
+    gnugrep gnupg gnused gnutar hostname man
+    bzip2 gzip unzip xz zip
+    bashInteractive less vim
+  ];
+}
+EOF
+
+echo "removing nix-installer..."
+rm -rf bootstrap/nix-installer
+
+echo "finding executables..."
+find bootstrap -executable -type f | \
+	sed s@^bootstrap/@@ \
+	> bootstrap/EXECUTABLES.txt
+
+echo "finding symlinks..."
+for LINK in $(find bootstrap -type l); do
+	LNK=$(echo "$LINK" | sed s@^bootstrap/@@)
+	TGT=$(readlink $LINK)
+	echo "$TGT←$LNK" >> bootstrap/SYMLINKS.txt
+	rm "$LINK"
+done
+
+echo "packing..."
+rm -f bootstrap-aarch64.zip
+(cd bootstrap; zip -q -9 -r ../bootstrap-aarch64 ./*)
+cp bootstrap-aarch64.zip ../nix-on-droid-app/app/src/main/assets/bootstrap-aarch64
+
+echo "done"
