@@ -197,6 +197,5 @@ done
 echo "packing..."
 rm -f bootstrap-aarch64.zip
 (cd bootstrap; zip -q -9 -r ../bootstrap-aarch64 ./*)
-cp bootstrap-aarch64.zip ../nix-on-droid-app/app/src/main/assets/bootstrap-aarch64
 
 echo "done"
