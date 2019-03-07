@@ -142,6 +142,8 @@ if [ ! -e \$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
 	$TGT_NIX/bin/nix run nixpkgs.coreutils -c cp -n $INST/etc/home.nix.default \$HOME/.config/nixpkgs/home.nix
 	echo "Installing home-manager..."
 	$TGT_NIX/bin/nix run nixpkgs.nix -c $TGT_NIX/bin/nix-shell '<home-manager>' -A install
+else
+	export NIX_PATH=\$HOME/.nix-defexpr/channels\${NIX_PATH:+:}\$NIX_PATH
 fi
 
 echo "Sourcing home-manager environment..."
