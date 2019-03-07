@@ -123,6 +123,7 @@ fi
 
 if [ ! -e \$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
 	echo "Continuing with stage2 on-device installation..."
+
 	export NIX_SSL_CERT_FILE=$TGT_CACERT
 	echo "Subscribing to the stable (nixos-18.09) channels of nixpkgs and home-manager..."
 	$TGT_NIX/bin/nix-channel --add https://nixos.org/channels/nixos-18.09 nixpkgs
@@ -142,7 +143,7 @@ echo "Sourcing home-manager environment..."
 
 echo "Dropping you into a shell."
 echo "You can summon software from nixpkgs (e.g. gitMinimal) with:"
-echo "  * nix-run nixpkgs.gitMinimal"
+echo "  * nix run nixpkgs.gitMinimal"
 echo "  * nix-env -iA nixpkgs.gitMinimal"
 echo "  * [edit ~/.config/nixpkgs/home.nix and run] home-manager switch"
 echo "or a myriad other ways."
