@@ -95,7 +95,7 @@ export PROOT_TMP_DIR=$INST/tmp
 
 if [ ! -e $INST/etc/passwd ]; then
 	echo "Creating an entry in /etc/passwd..."
-	echo "nix-on-droid:x:\$(/system/bin/stat -c '%u:%g'):nix-on-droid:/bin/sh" > $INST/etc/passwd
+	echo "nix-on-droid:x:\$(/system/bin/stat -c '%u:%g' $INST):nix-on-droid:/bin/sh" > $INST/etc/passwd
 fi
 
 exec $INST/bin/proot \
