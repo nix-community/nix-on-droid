@@ -85,8 +85,9 @@ mkdir -p bootstrap/etc/nix
 echo "sandbox = false " > bootstrap/etc/nix/nix.conf
 
 echo "composing login scripts..."
-mkdir -p bootstrap/tmp
 mkdir -p bootstrap/bin
+mkdir -p bootstrap/root
+mkdir -p bootstrap/tmp
 cat > bootstrap/bin/login <<EOF
 #!/system/bin/sh
 set -e
@@ -94,8 +95,9 @@ export USER=\$(/system/bin/whoami)
 export PROOT_TMP_DIR=$INST/tmp
 
 if [ ! -e $INST/etc/passwd ]; then
-	echo "Creating an entry in /etc/passwd..."
-	echo "nix-on-droid:x:\$(/system/bin/stat -c '%u:%g' $INST):nix-on-droid:/bin/sh" > $INST/etc/passwd
+	echo "Creating /etc/passwd..."
+	echo "root:x:0:0:System administrator:$INST/root:/bin/sh" > $INST/etc/passwd
+	echo "nix-on-droid:x:\$(/system/bin/stat -c '%u:%g' $INST):nix-on-droid:/bin/sh" >> $INST/etc/passwd
 fi
 
 exec $INST/bin/proot \
