@@ -118,6 +118,7 @@ set -e
 echo "Welcome to Nix-on-Droid!"
 
 export USER="\$1"
+export HOME="/data/data/com.termux.nix/files/home"
 shift
 
 echo "Sourcing Nix environment..."
