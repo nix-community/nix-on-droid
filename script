@@ -152,14 +152,18 @@ fi
 echo "Sourcing home-manager environment..."
 . "\$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
-echo "Dropping you into a shell."
-echo "You can summon software from nixpkgs (e.g. gitMinimal) with:"
-echo "  * nix run nixpkgs.gitMinimal"
-echo "  * nix-env -iA nixpkgs.gitMinimal"
-echo "  * [edit ~/.config/nixpkgs/home.nix and run] home-manager switch"
-echo "or a myriad other ways."
-echo "Happy hacking!"
-exec /usr/bin/env bash "\$@"
+if [ -z "$@" ]; then
+	echo "Dropping you into a shell."
+	echo "You can summon software from nixpkgs (e.g. gitMinimal) with:"
+	echo "  * nix run nixpkgs.gitMinimal"
+	echo "  * nix-env -iA nixpkgs.gitMinimal"
+	echo "  * [edit ~/.config/nixpkgs/home.nix and run] home-manager switch"
+	echo "or a myriad other ways."
+	echo "Happy hacking!"
+	exec /usr/bin/env bash
+else
+	exec /usr/bin/env "$@"
+fi
 EOF
 chmod +x bootstrap/bin/.login-inner
 
