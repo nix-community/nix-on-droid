@@ -91,11 +91,12 @@ mkdir -p bootstrap/tmp
 cat > bootstrap/bin/login <<EOF
 #!/system/bin/sh
 set -e
+
 export USER=\$(/system/bin/whoami)
 export PROOT_TMP_DIR=$INST/tmp
 
 if [ ! -e $INST/etc/passwd ]; then
-	echo "Creating /etc/passwd..."
+	[ -n "$@" ] || echo "Creating /etc/passwd..."
 	echo "root:x:0:0:System administrator:$INST/root:/bin/sh" > $INST/etc/passwd
 	echo "nix-on-droid:x:\$(/system/bin/stat -c '%u:%g' $INST):nix-on-droid:/bin/sh" >> $INST/etc/passwd
 fi
@@ -115,13 +116,15 @@ chmod +x bootstrap/bin/login
 cat > bootstrap/bin/.login-inner <<EOF
 set -e
 
-echo "Welcome to Nix-on-Droid!"
+[ "\$#" -gt 1 ] || echo "Welcome to Nix-on-Droid!"
+
+[ "\$#" -gt 1 ] || echo "If nothing works, use the rescue shell and read $INST/bin/.login-inner"
 
 export USER="\$1"
 export HOME="/data/data/com.termux.nix/files/home"
 shift
 
-echo "Sourcing Nix environment..."
+[ "\$#" -gt 0 ] || echo "Sourcing Nix environment..."
 . $INST/$TGT_NIX/etc/profile.d/nix.sh
 
 if [ ! -e \$HOME/.nix-profile/etc/ssl/certs/ca-bundle.crt ]; then
@@ -130,44 +133,87 @@ if [ ! -e \$HOME/.nix-profile/etc/ssl/certs/ca-bundle.crt ]; then
 	fi
 fi
 
-if [ ! -e \$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
-	echo "Continuing with stage2 on-device installation..."
-
-	export NIX_SSL_CERT_FILE=$TGT_CACERT
-	echo "Subscribing to the stable (nixos-18.09) channels of nixpkgs and home-manager..."
-	$TGT_NIX/bin/nix-channel --add https://nixos.org/channels/nixos-18.09 nixpkgs
-	$TGT_NIX/bin/nix-channel --add https://github.com/rycee/home-manager/archive/release-18.09.tar.gz home-manager
-	$TGT_NIX/bin/nix-channel --update
-
-	echo "Creating an initial home-manager configuration in ~/.config/nixpkgs/home.nix ..."
+if [ -e "\$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+	[ "\$#" -gt 0 ] || echo "Sourcing home-manager environment..."
 	export NIX_PATH=\$HOME/.nix-defexpr/channels\${NIX_PATH:+:}\$NIX_PATH
-	$TGT_NIX/bin/nix run nixpkgs.coreutils -c mkdir -p \$HOME/.config/nixpkgs/
-	$TGT_NIX/bin/nix run nixpkgs.coreutils -c cp -n $INST/etc/home.nix.default \$HOME/.config/nixpkgs/home.nix
-	echo "Installing home-manager..."
-	$TGT_NIX/bin/nix run nixpkgs.nix -c $TGT_NIX/bin/nix-shell '<home-manager>' -A install
-else
-	export NIX_PATH=\$HOME/.nix-defexpr/channels\${NIX_PATH:+:}\$NIX_PATH
+	. "\$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 fi
 
-echo "Sourcing home-manager environment..."
-. "\$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+if [ "\$#" -eq 0 ]; then
+	if [ ! -e "\$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+		echo "Congratulations. Now you have Nix installed, but that's kinda it."
+		echo "Hope you're a seasoned Nix user, because stuff is not pretty yet."
+		echo "If you wonder what to do next, and want to do it the hard way, start with running"
+		echo "  nix-channel --add https://nixos.org/channels/nixos-18.09 nixpkgs"
+		echo "  nix-channel --update"
+		echo "After that you can summon software from nixpkgs (e.g. gitMinimal):"
+		echo "* by asking for a shell that has it:"
+		echo "    nix run nixpkgs.bashInteractive nixpkgs.gitMinimal"
+		echo "* or installing it into the user environment (not recommended):"
+		echo "    nix-env -iA nixpkgs.gitMinimal"
+		echo "* or, the best way, declaratively with home-manager:"
+		echo "    0. nix-on-droid-install"
+		echo "    1. [get an editor and edit ~/.config/nixpkgs/home.nix]"
+		echo "    2. home-manager switch"
+		echo "or a myriad other ways."
+		echo "You should really consider installing at least: nix, cacert and coreutils."
+		echo "bashInteractive and a text editor should be high on the list too."
+		echo
+		echo "If you want the easy way, nix-on-droid-install should get all this covered."
+		echo
+		echo "TL;DR: run nix-on-droid-install and things will get better."
+		echo
+		echo "Dropping you into an extremely limited shell (that has Nix though). Happy hacking!"
+		export PATH="$TGT_NIX/bin:\$PATH"
+		exec /bin/sh
+	fi
 
-if [ -z "$@" ]; then
-	echo "Dropping you into a shell."
-	echo "You can summon software from nixpkgs (e.g. gitMinimal) with:"
-	echo "  * nix run nixpkgs.gitMinimal"
-	echo "  * nix-env -iA nixpkgs.gitMinimal"
-	echo "  * [edit ~/.config/nixpkgs/home.nix and run] home-manager switch"
-	echo "or a myriad other ways."
-	echo "Happy hacking!"
+	echo "Dropping you into a shell. Happy hacking!"
 	exec /usr/bin/env bash
 else
-	exec /usr/bin/env "$@"
+	exec /usr/bin/env "\$@"
 fi
 EOF
 chmod +x bootstrap/bin/.login-inner
 
+
+cat > bootstrap/bin/nix-on-droid-install <<EOF
+#!/bin/sh
+set -e
+
+if [ -e \$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
+	echo "You already have home-manager installed."
+fi
+
+echo "Installing home-manager and other good stuff..."
+
+echo "Subscribing to the stable (nixos-18.09) channel of home-manager and nixpkgs..."
+echo "If you want unstable instead, you probably also know what to do."
+$TGT_NIX/bin/nix-channel --add https://nixos.org/channels/nixos-18.09 nixpkgs
+$TGT_NIX/bin/nix-channel --add https://github.com/rycee/home-manager/archive/release-18.09.tar.gz home-manager
+echo "Updating channels..."
+$TGT_NIX/bin/nix-channel --update
+echo "Whew."
+
+export NIX_PATH=\$HOME/.nix-defexpr/channels\${NIX_PATH:+:}\$NIX_PATH
+
+if [ ! -e \$HOME/.config/nixpkgs/home.nix ]; then
+	echo "Creating an initial home-manager configuration in ~/.config/nixpkgs/home.nix ..."
+	$TGT_NIX/bin/nix run nixpkgs.coreutils -c mkdir -p \$HOME/.config/nixpkgs/
+	$TGT_NIX/bin/nix run nixpkgs.coreutils -c cp -n $INST/etc/home.nix.default \$HOME/.config/nixpkgs/home.nix
+fi
+
+echo "Installing home-manager..."
+$TGT_NIX/bin/nix run nixpkgs.nix -c $TGT_NIX/bin/nix-shell '<home-manager>' -A install
+
+echo "Edit ~/.config/nixpkgs/home.nix and home-manager rebuild to control what is going on."
+echo "Run bash or restart your session to enjoy a much nicer environment."
+EOF
+chmod +x bootstrap/bin/nix-on-droid-install
+
+
 echo "providing a default home-manager config..."
+
 cat > bootstrap/etc/home.nix.default <<EOF
 { pkgs, ... }:
 
@@ -175,12 +221,38 @@ cat > bootstrap/etc/home.nix.default <<EOF
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
+  # Install and configure software declaratively
+  #programs.git = {
+  #  enable = true;
+  #  userName = "Jane Doe";
+  #  userEmail = "jane.doe@example.org";
+  #};
+
+  # Simply install just the packages
   home.packages = with pkgs; [
-    nix cacert tzdata coreutils
-    diffutils findutils utillinux
-    gnugrep gnupg gnused gnutar hostname man
-    bzip2 gzip unzip xz zip
-    bashInteractive less vim
+    # Stuff that you really really want to have
+    nix cacert coreutils  # think twice before removing these
+
+    # User-facing stuff that you really really want to have
+    bashInteractive   # think twice before removing thes
+    vim  # or some other editor, e.g. nano or neovim
+
+    # Some common stuff that people expect to have
+    #diffutils
+    #findutils
+    #utillinux
+    #tzdata
+    #hostname
+    #man
+    #gnugrep
+    #gnupg
+    #gnused
+    #gnutar
+    #bzip2
+    #gzip
+    #xz
+    #zip
+    #unzip
   ];
 }
 EOF
