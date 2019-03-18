@@ -61,7 +61,7 @@ TGT_NIX=$(find bootstrap/nix/store -path '*/bin/nix' | sed s/^bootstrap//)
 TGT_NIX=${TGT_NIX%/bin/nix}
 echo "nix derivation found at $TGT_NIX"
 
-TGT_CACERT=$(find bootstrap/nix/store -path *-nss-cacert-*/ca-bundle.crt | sed s/^bootstrap//)
+TGT_CACERT=$(find bootstrap/nix/store -path '*-nss-cacert-*/ca-bundle.crt' | sed s/^bootstrap//)
 echo "cacert found at $TGT_CACERT"
 
 PROOT_CMD="./proot-host -q ./qemu-aarch64 -r bootstrap -w /"
