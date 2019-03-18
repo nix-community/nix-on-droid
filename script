@@ -267,9 +267,10 @@ find bootstrap -executable -type f | \
 	> bootstrap/EXECUTABLES.txt
 
 echo "finding symlinks..."
-for LINK in $(find bootstrap -type l); do
-	LNK=$(echo "$LINK" | sed s@^bootstrap/@@)
-	TGT=$(readlink $LINK)
+find bootstrap -type l |
+while read -r LINK; do
+	LNK=${LINK#bootstrap/}
+	TGT=$(readlink "$LINK")
 	echo "$TGT←$LNK" >> bootstrap/SYMLINKS.txt
 	rm "$LINK"
 done
