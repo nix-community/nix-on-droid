@@ -191,8 +191,8 @@ echo "Installing home-manager and other good stuff..."
 echo "Subscribing to the stable (nixos-18.09) channel of nixpkgs..."
 echo "If you want unstable instead, you probably also know what to do."
 $TGT_NIX/bin/nix-channel --add https://nixos.org/channels/nixos-18.09 nixpkgs
-echo "Subscribing to a special of home-manager..."
-$TGT_NIX/bin/nix-channel --add https://github.com/rycee/home-manager/archive/avoid-stdenv-mkderivation.tar.gz home-manager
+echo "Subscribing to home-manager channel..."
+$TGT_NIX/bin/nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
 echo "Updating channels..."
 $TGT_NIX/bin/nix-channel --update
 echo "Whew."
