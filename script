@@ -98,7 +98,7 @@ export PROOT_TMP_DIR=$INST/tmp
 if [ ! -e $INST/etc/passwd ]; then
 	[ -n "$@" ] || echo "Creating /etc/passwd..."
 	echo "root:x:0:0:System administrator:$INST/root:/bin/sh" > $INST/etc/passwd
-	echo "nix-on-droid:x:\$(/system/bin/stat -c '%u:%g' $INST):nix-on-droid:/bin/sh" >> $INST/etc/passwd
+	echo "nix-on-droid:x:\$(/system/bin/stat -c '%u:%g' $INST):nix-on-droid:/data/data/com.termux.nix/files/home:/bin/sh" >> $INST/etc/passwd
 fi
 
 exec $INST/bin/proot \
