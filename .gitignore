@@ -1,0 +1,6 @@
+bootstrap-aarch64.zip
+bootstrap
+nix-*-aarch64-linux.tar.bz2
+proot-host
+proot-tgt
+qemu-aarch64

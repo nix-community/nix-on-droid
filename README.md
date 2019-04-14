@@ -1,7 +1,7 @@
 # Nix-on-Droid
 
 Nix on Android, in a single-click installable package.
-It's kind of a mess for now, but hey, it works!
+It's a bit of a mess for now, but hey, it works!
 
 This script installs Nix package manager on Android.
 It does not require root, user namespaces support or disabling SELinux,
@@ -18,6 +18,7 @@ and it's probably not an easy feat to pull off.
 
 This repository contains the script
 that is responsible for the initial bootstrap zipball generation.
+
 
 ## Try it out
 
