@@ -145,7 +145,7 @@ if [ "\$#" -eq 0 ]; then
 		echo "Congratulations. Now you have Nix installed, but that's kinda it."
 		echo "Hope you're a seasoned Nix user, because stuff is not pretty yet."
 		echo "If you wonder what to do next, and want to do it the hard way, start with running"
-		echo "  nix-channel --add https://nixos.org/channels/nixos-18.09 nixpkgs"
+		echo "  nix-channel --add https://nixos.org/channels/nixos-19.03 nixpkgs"
 		echo "  nix-channel --update"
 		echo "After that you can summon software from nixpkgs (e.g. gitMinimal):"
 		echo "* by asking for a shell that has it:"
@@ -188,9 +188,9 @@ fi
 
 echo "Installing home-manager and other good stuff..."
 
-echo "Subscribing to the stable (nixos-18.09) channel of nixpkgs..."
+echo "Subscribing to the stable (nixos-19.03) channel of nixpkgs..."
 echo "If you want unstable instead, you probably also know what to do."
-$TGT_NIX/bin/nix-channel --add https://nixos.org/channels/nixos-18.09 nixpkgs
+$TGT_NIX/bin/nix-channel --add https://nixos.org/channels/nixos-19.03 nixpkgs
 echo "Subscribing to home-manager channel..."
 $TGT_NIX/bin/nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
 echo "Updating channels..."
