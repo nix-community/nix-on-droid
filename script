@@ -91,12 +91,14 @@ echo "composing login scripts..."
 mkdir -p bootstrap/bin
 mkdir -p bootstrap/root
 mkdir -p bootstrap/tmp
+mkdir -p bootstrap/.l2s
 cat > bootstrap/bin/login <<EOF
 #!/system/bin/sh
 set -e
 
 export USER=\$(/system/bin/whoami)
 export PROOT_TMP_DIR=$INST/tmp
+export PROOT_L2S_DIR=$INST/.l2s
 
 if [ ! -e $INST/etc/passwd ]; then
 	[ -n "$@" ] || echo "Creating /etc/passwd..."
@@ -281,6 +283,6 @@ done
 
 echo "packing..."
 rm -f bootstrap-aarch64.zip
-(cd bootstrap; zip -q -9 -r ../bootstrap-aarch64 ./*)
+(cd bootstrap; zip -q -9 -r ../bootstrap-aarch64 ./* ./.l2s)
 
 echo "done"
