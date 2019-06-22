@@ -5,38 +5,21 @@ let
     sha256 = "1di2s3d9fqvidix2ww3jiaq2m96xl0qn3gxh7vlw8j0z8b13z175";
   };
 
-  overlay-openjdk8-linux5-fix = self: super: {
-    openjdk8 = super.openjdk8.overrideAttrs (oa: {
-      DISABLE_HOTSPOT_OS_VERSION_CHECK = "true";
-    });
-  };
+  buildPkgs = import pinnedPkgs {};
 
   overlay-jpeg-no-static = self: super: {
     libjpeg = buildPkgs.libjpeg;
   };
 
-  buildPkgs = import pinnedPkgs {
-    overlays = [
-      overlay-openjdk8-linux5-fix
-    ];
-  };
-
   crossPkgs = import pinnedPkgs {
     crossSystem = (import "${pinnedPkgs}/lib").systems.examples.aarch64-android-prebuilt;
-    overlays = [
-      overlay-openjdk8-linux5-fix
-    ];
   };
 
   crossStaticPkgs = import pinnedPkgs {
     crossSystem = (import "${pinnedPkgs}/lib").systems.examples.aarch64-android-prebuilt;
-    overlays = [
-      overlay-openjdk8-linux5-fix
-    ];
     crossOverlays = [
       (import "${pinnedPkgs}/pkgs/top-level/static.nix")
       overlay-jpeg-no-static
-      overlay-openjdk8-linux5-fix
     ];
   };
 
