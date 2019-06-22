@@ -1,8 +1,8 @@
 let
   pinnedPkgs = builtins.fetchTarball {
-    name = "nixos-unstable-2019-04-14";
-    url = https://github.com/nixos/nixpkgs/archive/acbdaa569f4ee387386ebe1b9e60b9f95b4ab21b.tar.gz;
-    sha256 = "0xzyghyxk3hwhicgdbi8yv8b8ijy1rgdsj5wb26y5j322v96zlpz";
+    name = "nixos-19.03-2019-06-14";
+    url = https://github.com/nixos/nixpkgs/archive/86191b5b91322bdd88303e31d4507a684fc1b120.tar.gz;
+    sha256 = "1di2s3d9fqvidix2ww3jiaq2m96xl0qn3gxh7vlw8j0z8b13z175";
   };
 
   overlay-openjdk8-linux5-fix = self: super: {
