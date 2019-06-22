@@ -18,8 +18,8 @@
 
 set -ue
 
-ARCHIVE=nix-2.2.1-aarch64-linux.tar.bz2
-BASEURL=https://nixos.org/releases/nix/nix-2.2.1
+ARCHIVE=nix-2.2.2-aarch64-linux.tar.bz2
+BASEURL=https://nixos.org/releases/nix/nix-2.2.2
 URL="$BASEURL/$ARCHIVE"
 INST="/data/data/com.termux.nix/files/usr"
 
