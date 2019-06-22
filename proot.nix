@@ -92,13 +92,13 @@ let
 
   proot = crossStaticPkgs.stdenv.mkDerivation rec {
     name = "proot-termux-${version}";
-    version = "2019-03-19";
+    version = "2019-05-05";
 
     src = crossStaticPkgs.fetchFromGitHub {
       repo = "proot";
       owner = "termux";
-      rev = "2a78bab91d01c723ecb7ce08069a096f6ff654c5";
-      sha256 = "1091si4i07349y7x7sx1r904gg3c9a3m39xkv24fakjlirpi3lpy";
+      rev = "0717de26d1394fec3acf90efdc1d172e01bc932b";
+      sha256 = "1g0r3a67x94sgffz3gksyqk8r06zynfcgfdi33w6kzxnb03gbm4m";
     };
 
     buildInputs = [ talloc ];
