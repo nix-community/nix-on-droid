@@ -32,7 +32,9 @@ is probably not interesting for you, just download and use a prebuilt one.
 If you really want to rebuild it, you can just use Android Studio for that.
 
 The zipball generation script is probably what you are after.
-Modify it, run it as `./generate_bootstrap_zipball aarch64`
+Get an x86_64 computer with Nix
+(running a reasonably recent version of NixOS would work out the best).
+Modify the script, run it as `./generate_bootstrap_zipball aarch64`
 or `./generate_bootstrap_zipball i686`,
 put the resulting files on some HTTP server,
 and specify the parent directory URL during the installation.
