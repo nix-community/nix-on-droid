@@ -25,6 +25,21 @@ that is responsible for the initial bootstrap zipball generation.
 Prebuilt stuff resides at https://nix-on-droid.unboiled.info
 
 
+## Building stuff on your own
+
+The [terminal emulator part](https://github.com/t184256/nix-on-droid-app)
+is probably not interesting for you, just download and use a prebuilt one.
+If you really want to rebuild it, you can just use Android Studio for that.
+
+The zipball generation script is probably what you are after.
+Modify it, run it as `./generate_bootstrap_zipball aarch64`
+or `./generate_bootstrap_zipball i686`,
+put the resulting files on some HTTP server,
+and specify the parent directory URL during the installation.
+To re-trigger the installation, use
+'clear data' on the Android app (after backing stuff up, obviously).
+
+
 ## Tips
 
 * Run `nix-on-droid-install`. Otherwise it's just Nix and that's too barebones.
