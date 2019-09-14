@@ -16,9 +16,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set -ue
+set -uex
 
-ARCHIVE=nix-2.2.2-aarch64-linux.tar.bz2
+ARCH=${1:-aarch64}
+
+ARCHIVE=nix-2.2.2-$ARCH-linux.tar.bz2
 BASEURL=https://nixos.org/releases/nix/nix-2.2.2
 URL="$BASEURL/$ARCHIVE"
 INST="/data/data/com.termux.nix/files/usr"
@@ -28,14 +30,16 @@ export PROOT_NO_SECCOMP=1  # see https://github.com/proot-me/PRoot/issues/106
 rm -rf ./bootstrap
 mkdir -p bootstrap
 
-echo "building proot-tgt (this may take a lot of time...)"
-nix build -f proot.nix -o proot-tgt
+echo "building proot for $ARCH (this may take a lot of time...)"
+nix build -f proot.nix -o proot-$ARCH --argstr arch aarch64
 
 wget https://github.com/proot-me/proot-static-build/blob/master/static/proot-x86_64?raw=true -O proot-host
 chmod +x proot-host
 
-wget https://github.com/multiarch/qemu-user-static/releases/download/v3.1.0-2/qemu-aarch64-static -O qemu-aarch64
-chmod +x qemu-aarch64
+if [[ $ARCH != x86_64 && $ARCH != i686 ]]; then
+	wget https://github.com/multiarch/qemu-user-static/releases/download/v4.0.0-4/qemu-$ARCH-static -O qemu-$ARCH
+	chmod +x qemu-$ARCH
+fi
 
 echo "downloading nix archive"
 wget $URL -O $ARCHIVE
@@ -67,7 +71,11 @@ echo "nix derivation found at $TGT_NIX"
 TGT_CACERT=$(find bootstrap/nix/store -path '*-nss-cacert-*/ca-bundle.crt' | sed s/^bootstrap//)
 echo "cacert found at $TGT_CACERT"
 
-PROOT_CMD="./proot-host -q ./qemu-aarch64 -r bootstrap -w /"
+if [[ $ARCH != x86_64 && $ARCH != i686 ]]; then
+	PROOT_CMD="./proot-host -q ./qemu-$ARCH -r bootstrap -w /"
+else
+	PROOT_CMD="./proot-host -b /dev -r bootstrap -w /"
+fi
 
 echo "initialising Nix database..."
 $PROOT_CMD "$TGT_NIX/bin/nix-store" --init
@@ -77,7 +85,7 @@ $PROOT_CMD "$TGT_NIX/bin/nix-store" --load-db < bootstrap/nix-installer/.reginfo
 
 echo "injecting proot..."
 mkdir -p bootstrap/bin
-cp proot-tgt/bin/proot bootstrap/bin/proot
+cp proot-$ARCH/bin/proot bootstrap/bin/proot
 
 echo "making up some resolv.conf..."
 mkdir -p bootstrap/etc
@@ -282,7 +290,7 @@ while read -r LINK; do
 done
 
 echo "packing..."
-rm -f bootstrap-aarch64.zip
-(cd bootstrap; zip -q -9 -r ../bootstrap-aarch64 ./* ./.l2s)
+rm -f bootstrap-$ARCH.zip
+(cd bootstrap; zip -q -9 -r ../bootstrap-$ARCH ./* ./.l2s)
 
 echo "done"

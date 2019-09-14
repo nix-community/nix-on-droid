@@ -1,8 +1,10 @@
+{arch}:
+
 let
   pinnedPkgs = builtins.fetchTarball {
-    name = "nixos-19.03-2019-06-14";
-    url = https://github.com/nixos/nixpkgs/archive/86191b5b91322bdd88303e31d4507a684fc1b120.tar.gz;
-    sha256 = "1di2s3d9fqvidix2ww3jiaq2m96xl0qn3gxh7vlw8j0z8b13z175";
+    name = "nixos-19.03-2019-07-14";
+    url = https://github.com/nixos/nixpkgs/archive/cf16778cd6870d349581eb30e350ff2f95a55e06.tar.gz;
+    sha256 = "1xzsybpw5k68fima6pxpl7b3ifgisrm1cyci4hi10gvx9q8xj97z";
   };
 
   buildPkgs = import pinnedPkgs {};
@@ -11,18 +13,22 @@ let
     libjpeg = buildPkgs.libjpeg;
   };
 
-  crossPkgs = import pinnedPkgs {
-    crossSystem = (import "${pinnedPkgs}/lib").systems.examples.aarch64-android-prebuilt;
+  crossSystem = rec {
+    config = arch + "-unknown-linux-android";
+    sdkVer = "24";
+    ndkVer = "18b";
+    useAndroidPrebuilt = true;
   };
 
+  crossPkgs = import pinnedPkgs { inherit crossSystem; };
+
   crossStaticPkgs = import pinnedPkgs {
-    crossSystem = (import "${pinnedPkgs}/lib").systems.examples.aarch64-android-prebuilt;
+    inherit crossSystem;
     crossOverlays = [
       (import "${pinnedPkgs}/pkgs/top-level/static.nix")
       overlay-jpeg-no-static
     ];
   };
-
 
   talloc = crossPkgs.stdenv.mkDerivation rec {
     name = "talloc-2.1.14";
