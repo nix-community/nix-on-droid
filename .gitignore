@@ -1,12 +1,1 @@
-bootstrap
-bootstrap-aarch64.zip
-bootstrap-i686.zip
-bootstrap-x86_64.zip
-nix-*-aarch64-linux.tar.bz2
-nix-*-i686-linux.tar.bz2
-nix-*-x86_64-linux.tar.bz2
-proot-host
-proot-aarch64
-proot-i686
-proot-x86_64
-qemu-aarch64
+result
