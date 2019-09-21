@@ -1,0 +1,17 @@
+language: nix
+
+sudo: false
+
+env:
+  global:
+    - CACHIX_CACHE=nix-on-droid
+
+install:
+  - nix-env -iA cachix -f https://cachix.org/api/v1/install
+  - cachix use "${CACHIX_CACHE}"
+
+script:
+  - nix-build ci.nix
+
+after_success:
+  - nix-build ci.nix | cachix push "${CACHIX_CACHE}"
