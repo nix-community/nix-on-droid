@@ -38,7 +38,7 @@ nix build -f ./src --argstr arch aarch64 bootstrapZip
 nix build -f ./src --argstr arch i686 bootstrapZip
 ```
 
-Put the zip file found `result` on some HTTP server
+Put the zip file from `result` on some HTTP server
 and specify the parent directory URL during the installation.
 To re-trigger the installation, use
 'clear data' on the Android app (after backing stuff up, obviously).
