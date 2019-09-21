@@ -13,7 +13,7 @@ let
 in
 
 {
-  homeNixDefault = callPackage ./home-nix-default.nix { };
+  homeNixDefault = writeText "home.nix.default" (builtins.readFile ./raw/home.nix.default);
 
   login = callPackage ./login.nix { };
 
