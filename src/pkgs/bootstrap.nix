@@ -5,7 +5,7 @@ let
 in
 
 buildPkgs.runCommand "bootstrap" { } ''
-  mkdir --parents $out/{.lfs,bin,etc/nix,nix,root,tmp,usr/bin}
+  mkdir --parents $out/{.l2s,bin,etc/nix,nix,root,tmp,usr/bin}
 
   cp --recursive ${nixDirectory}/store $out/nix/store
   cp --recursive ${nixDirectory}/var $out/nix/var
