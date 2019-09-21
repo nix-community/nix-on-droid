@@ -1,6 +1,7 @@
 { fetchFromGitHub, arch }:
 
 let
+  # head of nixos-19.03 as of 2019-09-15
   pinnedPkgs = fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
