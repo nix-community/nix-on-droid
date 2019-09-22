@@ -11,7 +11,7 @@ let
 
     bootstrapZip = callPackage ./bootstrap-zip.nix { };
 
-    files = callPackage ./files { };
+    files = callPackage ./files { } // { recurseForDerivations = true; };
 
     nixDirectory = callPackage ./nix-directory.nix { };
 
