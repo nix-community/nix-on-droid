@@ -9,6 +9,7 @@ env:
 install:
   - nix-env -iA cachix -f https://cachix.org/api/v1/install
   - cachix use "${CACHIX_CACHE}"
+  - cachix push "${CACHIX_CACHE}" -w &
 
 script:
   - nix-build ci.nix
