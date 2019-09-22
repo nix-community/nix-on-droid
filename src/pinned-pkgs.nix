@@ -12,7 +12,12 @@ let
     sha256 = "0293j9wib78n5nspywrmd9qkvcqq2vcrclrryxqnaxvj3bs1c0vj";
   };
 
-  buildPkgs = import pinnedPkgs { };
+  defaultNixpkgsArgs = {
+    config = { };
+    overlays = [ ];
+  };
+
+  buildPkgs = import pinnedPkgs defaultNixpkgsArgs;
 
   overlayJpegNoStatic = self: super: {
     inherit (buildPkgs) libjpeg;
@@ -29,14 +34,14 @@ in
 {
   inherit buildPkgs;
 
-  crossPkgs = import pinnedPkgs { inherit crossSystem; };
+  crossPkgs = import pinnedPkgs ({ inherit crossSystem; } // defaultNixpkgsArgs);
 
-  crossStaticPkgs = import pinnedPkgs {
+  crossStaticPkgs = import pinnedPkgs ({
     inherit crossSystem;
 
     crossOverlays = [
       (import "${pinnedPkgs}/pkgs/top-level/static.nix")
       overlayJpegNoStatic
     ];
-  };
+  } // defaultNixpkgsArgs);
 }
