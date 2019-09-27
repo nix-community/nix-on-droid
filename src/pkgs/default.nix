@@ -15,8 +15,6 @@ let
 
     nixDirectory = callPackage ./nix-directory.nix { };
 
-    nixInstallerSha256 = callPackage ./nix-installer-sha256.nix { };
-
     proot = callPackage ./proot.nix { };
 
     qemuAarch64Static = callPackage ./qemu-aarch64-static.nix { };
