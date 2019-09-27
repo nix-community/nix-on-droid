@@ -1,7 +1,7 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ arch, buildPkgs, nixInstallerSha256, qemuAarch64Static }:
+{ arch, buildPkgs, qemuAarch64Static }:
 
 let
   buildRootDirectory = "root-directory";
@@ -19,13 +19,14 @@ let
 in
 
 buildPkgs.stdenv.mkDerivation {
-  name = "nixDirectory";
+  name = "nix-directory";
 
-  # FIXME: find a source where sha256 never changes, nixInstallerSha256
-  # derivation is very impure..
   src = builtins.fetchurl {
     url = "https://nixos.org/releases/nix/nix-2.2.2/nix-2.2.2-${arch}-linux.tar.bz2";
-    sha256 = import nixInstallerSha256;
+    sha256 =
+      if arch == "aarch64"
+      then "1d5c5ede3d7be3963f34f6b51a7b37b3ce3adc5ce623f2a50c11501b9c95bd4e"
+      else "b055b9ac5e65d43cb6b1d1fe99eb106371a6b5782c3522209a73f473dc7b8779";
   };
 
   PROOT_NO_SECCOMP = 1;  # see https://github.com/proot-me/PRoot/issues/106
