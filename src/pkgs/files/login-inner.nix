@@ -3,12 +3,12 @@
 
 { initialBuild, instDir, packageInfo, writeTextDir }:
 
-writeTextDir "bin/login-inner" ''
+writeTextDir "usr/lib/login-inner" ''
   set -e
 
   [ "$#" -gt 1 ] || echo "Welcome to Nix-on-Droid!"
 
-  [ "$#" -gt 1 ] || echo "If nothing works, use the rescue shell and read ${instDir}/bin/login-inner"
+  [ "$#" -gt 1 ] || echo "If nothing works, use the rescue shell and read ${instDir}/usr/lib/login-inner"
   [ "$#" -gt 1 ] || echo "If it does not help, report bugs at https://github.com/t184256/nix-on-droid-bootstrap/issues"
 
   export USER="$1"
