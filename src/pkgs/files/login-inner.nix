@@ -1,9 +1,9 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ instDir, packageInfo, writeScript }:
+{ instDir, packageInfo, writeText }:
 
-writeScript "login-inner" ''
+writeText "login-inner" ''
   set -e
 
   [ "$#" -gt 1 ] || echo "Welcome to Nix-on-Droid!"
@@ -16,12 +16,32 @@ writeScript "login-inner" ''
   shift
 
   [ "$#" -gt 0 ] || echo "Sourcing Nix environment..."
-  . ${instDir}/${packageInfo.nix}/etc/profile.d/nix.sh
+  . ${packageInfo.nix}/etc/profile.d/nix.sh
 
-  if [ ! -e $HOME/.nix-profile/etc/ssl/certs/ca-bundle.crt ]; then
-    if [ -e ${packageInfo.cacert} ]; then
-      export NIX_SSL_CERT_FILE=${packageInfo.cacert}
-    fi
+  if [ -e ${instDir}/etc/UNINTIALISED ]; then
+    export NIX_SSL_CERT_FILE=${packageInfo.cacert}
+
+    echo "Installing and updating nix-channels..."
+    ${packageInfo.nix}/bin/nix-channel --add https://nixos.org/channels/nixos-19.03 nixpkgs
+    ${packageInfo.nix}/bin/nix-channel --add https://github.com/t184256/nix-on-droid-bootstrap/archive/master.tar.gz nix-on-droid
+    ${packageInfo.nix}/bin/nix-channel --update
+
+    echo "Installing nix-on-droid.basic-environment..."
+    ${packageInfo.nix}/bin/nix-env -iA nix-on-droid.basic-environment
+
+    echo "Setting up static symlinks via nix-on-droid-linker"
+    nix-on-droid-linker
+
+    ${packageInfo.coreutils}/bin/rm /etc/UNINTIALISED
+
+    echo
+    echo "Congratulations! Now you have Nix installed with some basic packages like"
+    echo "bashInteractive, coreutils, cacert and some scripts provided by nix-on-droid"
+    echo "itself."
+    echo
+    echo "You can go for the bare Nix setup or you can configure your phone via"
+    echo "home-manager. For that simply run hm-install."
+    echo
   fi
 
   if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
@@ -31,35 +51,6 @@ writeScript "login-inner" ''
   fi
 
   if [ "$#" -eq 0 ]; then
-    if [ ! -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-      echo "Congratulations. Now you have Nix installed, but that's kinda it."
-      echo "Hope you're a seasoned Nix user, because stuff is not pretty yet."
-      echo "If you wonder what to do next, and want to do it the hard way, start with running"
-      echo "  nix-channel --add https://nixos.org/channels/nixos-19.03 nixpkgs"
-      echo "  nix-channel --update"
-      echo "After that you can summon software from nixpkgs (e.g. gitMinimal):"
-      echo "* by asking for a shell that has it:"
-      echo "    nix run nixpkgs.bashInteractive nixpkgs.gitMinimal"
-      echo "* or installing it into the user environment (not recommended):"
-      echo "    nix-env -iA nixpkgs.gitMinimal"
-      echo "* or, the best way, declaratively with home-manager:"
-      echo "    0. nix-on-droid-install"
-      echo "    1. [get an editor and edit ~/.config/nixpkgs/home.nix]"
-      echo "    2. home-manager switch"
-      echo "or a myriad other ways."
-      echo "You should really consider installing at least: nix, cacert and coreutils."
-      echo "bashInteractive and a text editor should be high on the list too."
-      echo
-      echo "If you want the easy way, nix-on-droid-install should get all this covered."
-      echo
-      echo "TL;DR: run nix-on-droid-install and things will get better."
-      echo
-      echo "Dropping you into an extremely limited shell (that has Nix though). Happy hacking!"
-      export PATH="${packageInfo.nix}/bin:$PATH"
-      exec /bin/sh
-    fi
-
-    echo "Dropping you into a shell. Happy hacking!"
     exec /usr/bin/env bash
   else
     exec /usr/bin/env "$@"
