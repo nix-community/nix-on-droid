@@ -21,6 +21,8 @@ let
 in
 
 {
+  hmInstall = callPackage ./hm-install.nix { };
+
   homeNixDefault = writeTextDir "etc/home.nix.default" (builtins.readFile ./raw/home.nix.default);
 
   login = callPackage ./login.nix { };
@@ -32,6 +34,8 @@ in
     substituters = https://cache.nixos.org https://nix-on-droid.cachix.org
     trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-on-droid.cachix.org-1:56snoMJTXmDRC1Ei24CmKoUqvHJ9XCp+nidK7qkMQrU=
   '';
+
+  nixOnDroidLinker = callPackage ./nix-on-droid-linker.nix { };
 
   resolvConf = writeTextDir "etc/resolv.conf" ''
     nameserver 1.1.1.1
