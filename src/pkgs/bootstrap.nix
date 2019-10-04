@@ -20,7 +20,7 @@ buildPkgs.runCommand "bootstrap" { } ''
   install -D -m 0755 ${proot}/bin/proot $out/bin/proot
 
   cp ${files.login}/bin/login $out/bin/login
-  cp ${files.login-inner}/bin/login-inner $out/bin/login-inner
+  cp ${files.login-inner}/usr/lib/login-inner $out/usr/lib/login-inner
 
   cp ${files.home-nix-default}/etc/home.nix.default $out/etc/home.nix.default
   cp ${files.nix-conf}/etc/nix/nix.conf $out/etc/nix/nix.conf

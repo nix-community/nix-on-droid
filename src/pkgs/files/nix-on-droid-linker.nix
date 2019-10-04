@@ -16,7 +16,7 @@ writeScriptBin "nix-on-droid-linker" ''
     ${coreutils}/bin/ln -snf $HOME/.nix-profile/$from /$to
   }
 
-  for i in login login-inner proot sh; do
+  for i in login sh; do
     link bin/$i bin/$i
   done
 
@@ -25,4 +25,5 @@ writeScriptBin "nix-on-droid-linker" ''
   done
 
   link bin/env usr/bin/env
+  link usr/lib/login-inner usr/lib/login-inner
 ''

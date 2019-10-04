@@ -31,5 +31,5 @@ writeScriptBin "login" ''
     -b ${instDir}/usr:/usr \
     -b /:/android \
     --link2symlink \
-    ${instDir}/bin/sh ${instDir}/bin/login-inner $USER "$@"
+    ${instDir}/bin/sh ${instDir}/usr/lib/login-inner $USER "$@"
 ''
