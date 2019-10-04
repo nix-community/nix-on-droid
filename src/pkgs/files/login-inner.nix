@@ -1,14 +1,14 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ initialBuild, instDir, packageInfo, writeText }:
+{ initialBuild, instDir, packageInfo, writeTextDir }:
 
-writeText "login-inner" ''
+writeTextDir "bin/login-inner" ''
   set -e
 
   [ "$#" -gt 1 ] || echo "Welcome to Nix-on-Droid!"
 
-  [ "$#" -gt 1 ] || echo "If nothing works, use the rescue shell and read ${instDir}/bin/.login-inner"
+  [ "$#" -gt 1 ] || echo "If nothing works, use the rescue shell and read ${instDir}/bin/login-inner"
   [ "$#" -gt 1 ] || echo "If it does not help, report bugs at https://github.com/t184256/nix-on-droid-bootstrap/issues"
 
   export USER="$1"
