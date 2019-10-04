@@ -26,8 +26,6 @@ buildPkgs.runCommand "bootstrap" { } ''
   cp ${files.nixConf} $out/etc/nix/nix.conf
   cp ${files.resolvConf} $out/etc/resolv.conf
 
-  touch $out/etc/UNINTIALISED
-
   find $out -executable -type f | sed s@^$out/@@ > $out/EXECUTABLES.txt
 
   find $out -type l | while read -r LINK; do
