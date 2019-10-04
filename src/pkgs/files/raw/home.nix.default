@@ -16,7 +16,7 @@
 
   # Fix locale (perl apps panic without it)
   home.sessionVariables = {
-	LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
+    LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
   };
 
   # Simply install just the packages
