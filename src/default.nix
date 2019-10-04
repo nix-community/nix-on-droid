@@ -1,20 +1,21 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ arch }:
+{ arch, initialBuild ? true }:
 
 assert builtins.elem arch [ "aarch64" "i686" ];
 
 let
-  nixpkgs = import <nixpkgs> { };
+  pkgs = import <nixpkgs> { };
 
-  pinnedPkgs = import ./pinned-pkgs.nix {
+  pkgsList = import ./pkgs-list.nix {
     inherit arch;
-    inherit (nixpkgs) fetchFromGitHub;
+    inherit (pkgs) fetchFromGitHub;
   };
 in
 
 import ./pkgs {
-  inherit arch;
-  inherit (pinnedPkgs) buildPkgs crossPkgs crossStaticPkgs;
+  inherit arch initialBuild;
+  inherit (pkgsList) pinnedPkgs crossPkgs crossStaticPkgs;
+  buildPkgs = if initialBuild then pkgsList.pinnedPkgs else pkgs;
 }

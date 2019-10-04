@@ -5,7 +5,7 @@
 
 let
   # head of nixos-19.03 as of 2019-09-15
-  pinnedPkgs = fetchFromGitHub {
+  pinnedPkgsSrc = fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
     rev = "2dfae8e22fde5032419c3027964c406508332974";
@@ -17,10 +17,10 @@ let
     overlays = [ ];
   };
 
-  buildPkgs = import pinnedPkgs defaultNixpkgsArgs;
+  pinnedPkgs = import pinnedPkgsSrc defaultNixpkgsArgs;
 
   overlayJpegNoStatic = self: super: {
-    inherit (buildPkgs) libjpeg;
+    inherit (pinnedPkgs) libjpeg;
   };
 
   crossSystem = {
@@ -32,15 +32,15 @@ let
 in
 
 {
-  inherit buildPkgs;
+  inherit pinnedPkgs;
 
-  crossPkgs = import pinnedPkgs ({ inherit crossSystem; } // defaultNixpkgsArgs);
+  crossPkgs = import pinnedPkgsSrc ({ inherit crossSystem; } // defaultNixpkgsArgs);
 
-  crossStaticPkgs = import pinnedPkgs ({
+  crossStaticPkgs = import pinnedPkgsSrc ({
     inherit crossSystem;
 
     crossOverlays = [
-      (import "${pinnedPkgs}/pkgs/top-level/static.nix")
+      (import "${pinnedPkgsSrc}/pkgs/top-level/static.nix")
       overlayJpegNoStatic
     ];
   } // defaultNixpkgsArgs);
