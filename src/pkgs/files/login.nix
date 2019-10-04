@@ -7,14 +7,20 @@ writeScript "login" ''
   #!/system/bin/sh
   set -e
 
-  export USER=$(/system/bin/whoami)
+  export USER=nix-on-droid
   export PROOT_TMP_DIR=${instDir}/tmp
   export PROOT_L2S_DIR=${instDir}/.l2s
 
   if [ ! -e ${instDir}/etc/passwd ]; then
     [ -n "$@" ] || echo "Creating /etc/passwd..."
     echo "root:x:0:0:System administrator:${instDir}/root:/bin/sh" > ${instDir}/etc/passwd
-    echo "nix-on-droid:x:$(/system/bin/stat -c '%u:%g' ${instDir}):nix-on-droid:/data/data/com.termux.nix/files/home:/bin/sh" >> ${instDir}/etc/passwd
+    echo "$USER:x:$(/system/bin/stat -c '%u:%g' ${instDir}):$USER:/data/data/com.termux.nix/files/home:/bin/sh" >> ${instDir}/etc/passwd
+  fi
+
+  if [ ! -e ${instDir}/etc/group ]; then
+    [ -n "$@" ] || echo "Creating /etc/group..."
+    echo "root:x:0:" > ${instDir}/etc/group
+    echo "$USER:x:$(/system/bin/stat -c '%g' ${instDir}):$USER" >> ${instDir}/etc/group
   fi
 
   exec ${instDir}/bin/proot \
