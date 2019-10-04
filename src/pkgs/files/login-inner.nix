@@ -31,7 +31,7 @@ writeTextDir "bin/login-inner" ''
       echo "Installing nix-on-droid.basic-environment..."
       ${packageInfo.nix}/bin/nix-env -iA nix-on-droid.basic-environment
 
-      echo "Setting up static symlinks via nix-on-droid-linker"
+      echo "Setting up dynamic symlinks via nix-on-droid-linker"
       nix-on-droid-linker
 
       echo
