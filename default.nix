@@ -22,13 +22,13 @@ in
       nixpkgs.coreutils
       nixpkgs.nix
       # pkgs.proot
-      pkgs.files.hmInstall
-      pkgs.files.homeNixDefault
+      pkgs.files.hm-install
+      pkgs.files.home-nix-default
       pkgs.files.login
-      pkgs.files.loginInner
-      pkgs.files.nixConf
-      pkgs.files.nixOnDroidLinker
-      pkgs.files.resolvConf
+      pkgs.files.login-inner
+      pkgs.files.nix-conf
+      pkgs.files.nix-on-droid-linker
+      pkgs.files.resolv-conf
     ];
   };
 } // pkgs.files

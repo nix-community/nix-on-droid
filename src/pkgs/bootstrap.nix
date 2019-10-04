@@ -20,11 +20,11 @@ buildPkgs.runCommand "bootstrap" { } ''
   install -D -m 0755 ${proot}/bin/proot $out/bin/proot
 
   cp ${files.login}/bin/login $out/bin/login
-  cp ${files.loginInner}/bin/login-inner $out/bin/login-inner
+  cp ${files.login-inner}/bin/login-inner $out/bin/login-inner
 
-  cp ${files.homeNixDefault}/etc/home.nix.default $out/etc/home.nix.default
-  cp ${files.nixConf}/etc/nix/nix.conf $out/etc/nix/nix.conf
-  cp ${files.resolvConf}/etc/resolv.conf $out/etc/resolv.conf
+  cp ${files.home-nix-default}/etc/home.nix.default $out/etc/home.nix.default
+  cp ${files.nix-conf}/etc/nix/nix.conf $out/etc/nix/nix.conf
+  cp ${files.resolv-conf}/etc/resolv.conf $out/etc/resolv.conf
 
   find $out -executable -type f | sed s@^$out/@@ > $out/EXECUTABLES.txt
 
