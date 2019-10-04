@@ -28,8 +28,6 @@ in
     trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-on-droid.cachix.org-1:56snoMJTXmDRC1Ei24CmKoUqvHJ9XCp+nidK7qkMQrU=
   '';
 
-  nixOnDroidInstall = callPackage ./nix-on-droid-install.nix { };
-
   resolvConf = writeText "resolv.conf" ''
     nameserver 1.1.1.1
     nameserver 8.8.8.8

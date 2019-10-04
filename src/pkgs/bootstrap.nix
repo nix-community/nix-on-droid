@@ -21,7 +21,6 @@ buildPkgs.runCommand "bootstrap" { } ''
 
   cp ${files.login} $out/bin/login
   cp ${files.loginInner} $out/bin/.login-inner
-  cp ${files.nixOnDroidInstall} $out/bin/nix-on-droid-install
 
   cp ${files.homeNixDefault} $out/etc/home.nix.default
   cp ${files.nixConf} $out/etc/nix/nix.conf
