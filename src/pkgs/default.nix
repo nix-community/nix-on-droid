@@ -15,6 +15,8 @@ let
 
     files = callPackage ./files { } // { recurseForDerivations = true; };
 
+    ids = callPackage ./ids.nix { };
+
     nixDirectory = callPackage ./nix-directory.nix { };
 
     proot = callPackage ./proot.nix { };
