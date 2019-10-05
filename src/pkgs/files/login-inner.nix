@@ -6,10 +6,10 @@
 writeTextDir "usr/lib/login-inner" ''
   set -e
 
-  [ "$#" -gt 1 ] || echo "Welcome to Nix-on-Droid!"
+  [ "$#" -gt 0 ] || echo "Welcome to Nix-on-Droid!"
 
-  [ "$#" -gt 1 ] || echo "If nothing works, use the rescue shell and read ${instDir}/usr/lib/login-inner"
-  [ "$#" -gt 1 ] || echo "If it does not help, report bugs at https://github.com/t184256/nix-on-droid-bootstrap/issues"
+  [ "$#" -gt 0 ] || echo "If nothing works, use the rescue shell and read ${instDir}/usr/lib/login-inner"
+  [ "$#" -gt 0 ] || echo "If it does not help, report bugs at https://github.com/t184256/nix-on-droid-bootstrap/issues"
 
   export USER=nix-on-droid
   export HOME="/data/data/com.termux.nix/files/home"
