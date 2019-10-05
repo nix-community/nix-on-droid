@@ -11,8 +11,8 @@ writeTextDir "usr/lib/login-inner" ''
   [ "$#" -gt 0 ] || echo "If nothing works, use the rescue shell and read ${instDir}/usr/lib/login-inner"
   [ "$#" -gt 0 ] || echo "If it does not help, report bugs at https://github.com/t184256/nix-on-droid-bootstrap/issues"
 
-  export USER=nix-on-droid
-  export HOME="/data/data/com.termux.nix/files/home"
+  export USER='nix-on-droid'
+  export HOME='/data/data/com.termux.nix/files/home'
 
   ${
     if initialBuild
@@ -32,6 +32,21 @@ writeTextDir "usr/lib/login-inner" ''
 
       echo "Setting up dynamic symlinks via nix-on-droid-linker"
       nix-on-droid-linker
+
+      [ "$#" -gt 0 ] || echo "Sourcing Nix environment..."
+      . $HOME/.nix-profile/etc/profile.d/nix.sh
+
+      if [ ! -e ${instDir}/etc/passwd ]; then
+        [ -n "$@" ] || echo "Creating /etc/passwd..."
+        echo "root:x:0:0:System administrator:${instDir}/root:/bin/sh" > ${instDir}/etc/passwd
+        echo "$USER:x:$(id -u):$USER:/data/data/com.termux.nix/files/home:/bin/sh" >> ${instDir}/etc/passwd
+      fi
+
+      if [ ! -e ${instDir}/etc/group ]; then
+        [ -n "$@" ] || echo "Creating /etc/group..."
+        echo "root:x:0:" > ${instDir}/etc/group
+        echo "$USER:x:$(id -g):$USER" >> ${instDir}/etc/group
+      fi
 
       echo
       echo "Congratulations! Now you have Nix installed with some basic packages like"
