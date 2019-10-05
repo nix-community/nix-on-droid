@@ -33,21 +33,6 @@ writeTextDir "usr/lib/login-inner" ''
       echo "Setting up dynamic symlinks via nix-on-droid-linker"
       nix-on-droid-linker
 
-      [ "$#" -gt 0 ] || echo "Sourcing Nix environment..."
-      . $HOME/.nix-profile/etc/profile.d/nix.sh
-
-      if [ ! -e ${instDir}/etc/passwd ]; then
-        [ -n "$@" ] || echo "Creating /etc/passwd..."
-        echo "root:x:0:0:System administrator:${instDir}/root:/bin/sh" > ${instDir}/etc/passwd
-        echo "$USER:x:$(id -u):$USER:/data/data/com.termux.nix/files/home:/bin/sh" >> ${instDir}/etc/passwd
-      fi
-
-      if [ ! -e ${instDir}/etc/group ]; then
-        [ -n "$@" ] || echo "Creating /etc/group..."
-        echo "root:x:0:" > ${instDir}/etc/group
-        echo "$USER:x:$(id -g):$USER" >> ${instDir}/etc/group
-      fi
-
       echo
       echo "Congratulations! Now you have Nix installed with some basic packages like"
       echo "bashInteractive, coreutils, cacert and some scripts provided by nix-on-droid"
@@ -56,12 +41,11 @@ writeTextDir "usr/lib/login-inner" ''
       echo "You can go for the bare Nix setup or you can configure your phone via"
       echo "home-manager. For that simply run hm-install."
       echo
-    ''
-    else ''
-      [ "$#" -gt 0 ] || echo "Sourcing Nix environment..."
-      . $HOME/.nix-profile/etc/profile.d/nix.sh
-    ''
+    '' else ""
   }
+
+  [ "$#" -gt 0 ] || echo "Sourcing Nix environment..."
+  . $HOME/.nix-profile/etc/profile.d/nix.sh
 
   if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
     [ "$#" -gt 0 ] || echo "Sourcing home-manager environment..."

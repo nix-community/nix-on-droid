@@ -5,6 +5,9 @@
 
 let
   instDir = "/data/data/com.termux.nix/files/usr";
+  userName = "nix-on-droid";
+  groupName = "nix-on-droid";
+  shell = "/bin/sh";
 
   packageInfo = import "${nixDirectory}/nix-support/package-info.nix";
 
@@ -16,11 +19,16 @@ let
   };
 
   callPackage = buildPkgs.lib.callPackageWith (buildPkgs // {
-    inherit initialBuild instDir packageInfo writeTextDir;
+    inherit groupName initialBuild instDir packageInfo shell writeTextDir userName;
   });
 in
 
 {
+
+  etc-group = callPackage ./etc-group.nix { };
+
+  etc-passwd = callPackage ./etc-passwd.nix { };
+
   hm-install = callPackage ./hm-install.nix { };
 
   home-nix-default = writeTextDir "etc/home.nix.default" (builtins.readFile ./raw/home.nix.default);
