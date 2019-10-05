@@ -20,7 +20,7 @@ writeScriptBin "nix-on-droid-linker" ''
     link bin/$i bin/$i
   done
 
-  for i in home.nix.default nix/nix.conf resolv.conf; do
+  for i in group home.nix.default nix/nix.conf passwd resolv.conf; do
     link etc/$i etc/$i
   done
 

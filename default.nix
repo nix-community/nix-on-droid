@@ -22,6 +22,8 @@ in
       nixpkgs.coreutils
       nixpkgs.nix
       # pkgs.proot
+      pkgs.files.etc-group
+      pkgs.files.etc-passwd
       pkgs.files.hm-install
       pkgs.files.home-nix-default
       pkgs.files.login
