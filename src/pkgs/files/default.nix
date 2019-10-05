@@ -1,7 +1,7 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ buildPkgs, initialBuild, nixDirectory }:
+{ buildPkgs, initialBuild, nixDirectory, nixOnDroidChannelURL, nixpkgsChannelURL }:
 
 let
   instDir = "/data/data/com.termux.nix/files/usr";
@@ -19,7 +19,10 @@ let
   };
 
   callPackage = buildPkgs.lib.callPackageWith (buildPkgs // {
-    inherit groupName initialBuild instDir packageInfo shell writeTextDir userName;
+    inherit initialBuild instDir packageInfo writeTextDir;
+    inherit groupName userName;
+    inherit shell;
+    inherit nixOnDroidChannelURL nixpkgsChannelURL;
   });
 in
 

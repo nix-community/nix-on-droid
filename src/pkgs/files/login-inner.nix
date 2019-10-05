@@ -1,7 +1,12 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ initialBuild, instDir, packageInfo, writeTextDir }:
+{ initialBuild
+, nixpkgsChannelURL, nixOnDroidChannelURL
+, instDir
+, packageInfo
+, writeTextDir
+}:
 
 writeTextDir "usr/lib/login-inner" ''
   set -e
@@ -23,8 +28,8 @@ writeTextDir "usr/lib/login-inner" ''
       export NIX_SSL_CERT_FILE=${packageInfo.cacert}
 
       echo "Installing and updating nix-channels..."
-      ${packageInfo.nix}/bin/nix-channel --add https://nixos.org/channels/nixos-19.03 nixpkgs
-      ${packageInfo.nix}/bin/nix-channel --add https://github.com/t184256/nix-on-droid-bootstrap/archive/master.tar.gz nix-on-droid
+      ${packageInfo.nix}/bin/nix-channel --add ${nixpkgsChannelURL} nixpkgs
+      ${packageInfo.nix}/bin/nix-channel --add ${nixOnDroidChannelURL} nix-on-droid
       ${packageInfo.nix}/bin/nix-channel --update
 
       echo "Installing nix-on-droid.basic-environment..."
