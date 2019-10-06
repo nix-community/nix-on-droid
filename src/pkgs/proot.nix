@@ -19,6 +19,6 @@ crossStaticPkgs.stdenv.mkDerivation rec {
   makeFlags = [ "-Csrc CFLAGS=-D__ANDROID__" ];
 
   installPhase = ''
-    install -D -m 0755 src/proot $out/bin/proot
+    install -D -m 0755 src/proot $out/bin/proot-static
   '';
 }
