@@ -24,8 +24,10 @@ writeScriptBin "hm-install" ''
     ${coreutils}/bin/cp -n /etc/home.nix.default $HOME/.config/nixpkgs/home.nix
   fi
 
-  echo "Uninstalling basic-environment..."
-  ${nix}/bin/nix-env --uninstall basic-environment
+  ${nix}/bin/nix-env --set-flag priority 120 basic-environment
+
   echo "Installing home-manager..."
   ${nix}/bin/nix run nixpkgs.nix -c ${nix}/bin/nix-shell '<home-manager>' -A install
+
+  echo "home-manager is installed. Please, restart the session."
 ''
