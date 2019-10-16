@@ -3,7 +3,7 @@
 
 { arch
 , nixOnDroidChannelURL ? https://github.com/t184256/nix-on-droid-bootstrap/archive/testing.tar.gz
-, nixpkgsChannelURL ? https://nixos.org/channels/nixos-19.03
+, nixpkgsChannelURL ? https://nixos.org/channels/nixos-19.09
 , initialBuild ? true
 }:
 
