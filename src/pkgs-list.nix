@@ -4,12 +4,12 @@
 { fetchFromGitHub, arch }:
 
 let
-  # head of nixos-19.03 as of 2019-09-15
+  # head of nixos-19.09 as of 2019-10-14
   pinnedPkgsSrc = fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "2dfae8e22fde5032419c3027964c406508332974";
-    sha256 = "0293j9wib78n5nspywrmd9qkvcqq2vcrclrryxqnaxvj3bs1c0vj";
+    rev = "45a25ff41a2309099ff2e70b2f37debd5e567618";
+    sha256 = "0w37p98i47d7snhckz8a3a60v0f05b5047vsm4rczink9mk9x7r3";
   };
 
   defaultNixpkgsArgs = {
