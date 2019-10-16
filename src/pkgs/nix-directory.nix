@@ -5,6 +5,19 @@
 
 let
   buildRootDirectory = "root-directory";
+  filename = "nix-2.3.1-${arch}-linux.tar.xz.sha256";
+
+  sha256 = buildPkgs.stdenv.mkDerivation {
+    name = "nix-installer-sha256";
+
+    src = builtins.fetchurl "https://nixos.org/releases/nix/nix-2.3.1/${filename}";
+
+    unpackPhase = "true";
+
+    installPhase = ''
+      sed -e 's/\(.*\)/"\1"/' $src > $out
+    '';
+  };
 
   prootCommand = buildPkgs.lib.concatStringsSep " " [
     "${buildPkgs.proot}/bin/proot"
@@ -22,11 +35,11 @@ buildPkgs.stdenv.mkDerivation {
   name = "nix-directory";
 
   src = builtins.fetchurl {
-    url = "https://nixos.org/releases/nix/nix-2.2.2/nix-2.2.2-${arch}-linux.tar.bz2";
+    url = "https://nixos.org/releases/nix/nix-2.3.1/nix-2.3.1-${arch}-linux.tar.xz";
     sha256 =
       if arch == "aarch64"
-      then "1d5c5ede3d7be3963f34f6b51a7b37b3ce3adc5ce623f2a50c11501b9c95bd4e"
-      else "b055b9ac5e65d43cb6b1d1fe99eb106371a6b5782c3522209a73f473dc7b8779";
+      then "94a6a525bd0b2df82e14b96b5b0eaae86669b5d4671aacfc4db2db85325a81c1"
+      else "a5d3f26d4a449616bf654286f2fe29c1c1df4f029b7e29fa3ccf8494d598bfee";  # i686
   };
 
   PROOT_NO_SECCOMP = 1;  # see https://github.com/proot-me/PRoot/issues/106
@@ -43,8 +56,8 @@ buildPkgs.stdenv.mkDerivation {
     PKG_NIX=$(find ${buildRootDirectory}/nix/store -path '*/bin/nix' | sed 's,^${buildRootDirectory},,')
     PKG_NIX=''${PKG_NIX%/bin/nix}
 
-    ${prootCommand} "$PKG_NIX/bin/nix-store" --init
-    ${prootCommand} "$PKG_NIX/bin/nix-store" --load-db < .reginfo
+    USER=nix-on-droid ${prootCommand} "$PKG_NIX/bin/nix-store" --init
+    USER=nix-on-droid ${prootCommand} "$PKG_NIX/bin/nix-store" --load-db < .reginfo
 
     cat > package-info.nix <<EOF
     {

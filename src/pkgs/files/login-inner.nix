@@ -58,6 +58,9 @@ writeTextDir "usr/lib/login-inner" ''
     . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
   fi
 
+  # Workaround for https://github.com/NixOS/nix/issues/1865
+  export NIX_PATH=nixpkgs=$HOME/.nix-defexpr/channels/nixpkgs/:$NIX_PATH
+
   if [ "$#" -eq 0 ]; then
     exec /usr/bin/env bash
   else
