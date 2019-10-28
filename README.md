@@ -1,5 +1,9 @@
 # Nix-on-Droid
 
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+    alt="Get it on F-Droid"
+    height="80">](https://f-droid.org/packages/com.termux.nix)
+
 Nix package manager on Android, in a single-click installable package.
 This is not full NixOS running inside Android,
 but you get easy access to Nixpkgs' vast collection of (precompiled!) software
@@ -98,6 +102,10 @@ User's device:
     either to proceed with this minimal installation of Nix,
     or to install home-manager to manage the environment
     in a more declarative fashion (recommended).
+
+You can refer to a
+[NixCon 2019 presentation talk](https://nix-on-droid.unboiled.info/nixcon-2019-nix-on-droid.slides.pdf)
+for a more extensive overview of the subject.
 
 
 ## Licensing and credits
