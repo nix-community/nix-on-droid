@@ -1,32 +1,7 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ buildPkgs, initialBuild, nixDirectory
-, nixOnDroidChannelURL, nixpkgsChannelURL
-, ids }:
-
-let
-  instDir = "/data/data/com.termux.nix/files/usr";
-  userName = "nix-on-droid";
-  groupName = "nix-on-droid";
-  shell = "/bin/sh";
-
-  packageInfo = import "${nixDirectory}/nix-support/package-info.nix";
-
-  # TODO: remove when https://github.com/NixOS/nixpkgs/pull/64421 got merged into stable
-  writeTextDir = path: text: buildPkgs.writeTextFile {
-    inherit text;
-    name = builtins.baseNameOf path;
-    destination = "/${path}";
-  };
-
-  callPackage = buildPkgs.lib.callPackageWith (buildPkgs // {
-    inherit initialBuild instDir packageInfo writeTextDir;
-    inherit groupName userName ids;
-    inherit shell;
-    inherit nixOnDroidChannelURL nixpkgsChannelURL;
-  });
-in
+{ callPackage, writeTextDir }:
 
 {
   etc-group = callPackage ./etc-group.nix { };

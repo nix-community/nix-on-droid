@@ -1,7 +1,7 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ coreutils, instDir, nix, writeScriptBin }:
+{ coreutils, nix, writeScriptBin }:
 
 writeScriptBin "hm-install" ''
   #!/usr/bin/env sh

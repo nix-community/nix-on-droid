@@ -1,13 +1,13 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ arch, buildPkgs, qemuAarch64Static }:
+{ config, lib, stdenv, proot, qemuAarch64Static }:
 
 let
   buildRootDirectory = "root-directory";
-  filename = "nix-2.3.1-${arch}-linux.tar.xz.sha256";
+  filename = "nix-2.3.1-${config.core.arch}-linux.tar.xz.sha256";
 
-  sha256 = buildPkgs.stdenv.mkDerivation {
+  sha256 = stdenv.mkDerivation {
     name = "nix-installer-sha256";
 
     src = builtins.fetchurl "https://nixos.org/releases/nix/nix-2.3.1/${filename}";
@@ -19,10 +19,10 @@ let
     '';
   };
 
-  prootCommand = buildPkgs.lib.concatStringsSep " " [
-    "${buildPkgs.proot}/bin/proot"
+  prootCommand = lib.concatStringsSep " " [
+    "${proot}/bin/proot"
     (
-      if arch == "aarch64"
+      if config.core.arch == "aarch64"
       then "-q ${qemuAarch64Static}/bin/qemu-aarch64-static"
       else "-b /dev"
     )
@@ -31,13 +31,13 @@ let
   ];
 in
 
-buildPkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   name = "nix-directory";
 
   src = builtins.fetchurl {
-    url = "https://nixos.org/releases/nix/nix-2.3.1/nix-2.3.1-${arch}-linux.tar.xz";
+    url = "https://nixos.org/releases/nix/nix-2.3.1/nix-2.3.1-${config.core.arch}-linux.tar.xz";
     sha256 =
-      if arch == "aarch64"
+      if config.core.arch == "aarch64"
       then "94a6a525bd0b2df82e14b96b5b0eaae86669b5d4671aacfc4db2db85325a81c1"
       else "a5d3f26d4a449616bf654286f2fe29c1c1df4f029b7e29fa3ccf8494d598bfee";  # i686
   };

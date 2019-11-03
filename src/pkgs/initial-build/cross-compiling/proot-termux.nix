@@ -1,13 +1,17 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ pinnedPkgs, crossStaticPkgs, talloc }:
+{ callPackage, fetchFromGitHub, talloc }:
 
-crossStaticPkgs.stdenv.mkDerivation rec {
+let
+  pkgs = callPackage ./pkgs.nix { };
+in
+
+pkgs.crossStatic.stdenv.mkDerivation {
   pname = "proot-termux";
   version = "unstable-2019-09-05";
 
-  src = pinnedPkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     repo = "proot";
     owner = "termux";
     rev = "3ea655b1ae40bfa2ee612d45bf1e7ad97c4559f8";
