@@ -10,12 +10,12 @@ let
 in
 
 {
-  buildConfig = { arch, initialBuild, channelConfig ? { } }: (
+  buildConfig = { arch, initialBuild, nixOnDroidChannelURL }: (
     {
       channel = {
-        nix-on-droid = "https://github.com/t184256/nix-on-droid-bootstrap/archive/testing.tar.gz";
+        nix-on-droid = nixOnDroidChannelURL;
         nixpkgs = "https://nixos.org/channels/nixos-19.09";
-      } // channelConfig;
+      };
 
       core = {
         inherit arch initialBuild;

@@ -1,23 +1,27 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ pinnedPkgs, crossPkgs }:
+{ callPackage, fetchurl, python2, zlib }:
 
-crossPkgs.stdenv.mkDerivation rec {
+let
+  pkgs = callPackage ./pkgs.nix { };
+in
+
+pkgs.cross.stdenv.mkDerivation rec {
   name = "talloc-2.1.14";
 
-  src = pinnedPkgs.fetchurl {
+  src = fetchurl {
     url = "mirror://samba/talloc/${name}.tar.gz";
     sha256 = "1kk76dyav41ip7ddbbf04yfydb4jvywzi2ps0z2vla56aqkn11di";
   };
 
-  depsBuildBuild = [ pinnedPkgs.python2 pinnedPkgs.zlib ];
+  depsBuildBuild = [ python2 zlib ];
 
-  buildDeps = [ crossPkgs.zlib ];
+  buildDeps = [ pkgs.cross.zlib ];
 
   configurePhase = ''
     substituteInPlace buildtools/bin/waf \
-      --replace "/usr/bin/env python" "${pinnedPkgs.python2}/bin/python"
+      --replace "/usr/bin/env python" "${python2}/bin/python"
     ./configure --prefix=$out \
       --disable-rpath \
       --disable-python \
@@ -32,7 +36,7 @@ crossPkgs.stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out/lib
     make install
-    ${crossPkgs.stdenv.cc.targetPrefix}ar q $out/lib/libtalloc.a bin/default/talloc_[0-9]*.o
+    ${pkgs.cross.stdenv.cc.targetPrefix}ar q $out/lib/libtalloc.a bin/default/talloc_[0-9]*.o
   '';
 
   fixupPhase = "";
