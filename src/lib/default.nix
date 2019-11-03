@@ -10,11 +10,11 @@ let
 in
 
 {
-  buildConfig = { arch, initialBuild, nixOnDroidChannelURL }: (
+  buildConfig = { arch, initialBuild, nixOnDroidChannelURL, nixpkgsChannelURL }: (
     {
       channel = {
         nix-on-droid = nixOnDroidChannelURL;
-        nixpkgs = "https://nixos.org/channels/nixos-19.09";
+        nixpkgs = nixpkgsChannelURL;
       };
 
       core = {
