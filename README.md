@@ -61,7 +61,7 @@ this should not be needed anymore.
 
 If you want to change the nix-on-droid channel to your custom one,
 you can do that either with `nix-channel` after the installation,
-or by using `--argstr nixOnDroidChannelUrl <URL>`.
+or by using `--argstr nixOnDroidChannelURL <URL>`.
 
 
 ## Tips
