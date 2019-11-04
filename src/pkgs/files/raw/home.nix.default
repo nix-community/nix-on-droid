@@ -15,11 +15,6 @@ in
   #  userEmail = "jane.doe@example.org";
   #};
 
-  # Fix locale (perl apps panic without it)
-  home.sessionVariables = {
-    LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
-  };
-
   # Simply install just the packages
   home.packages = with pkgs; [
     # Stuff that you really really want to have
@@ -50,6 +45,11 @@ in
     #zip
     #unzip
   ];
+
+  # Fix locale (perl apps panic without it)
+  home.sessionVariables = {
+    LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
+  };
 }
 
 # vim: ft=nix
