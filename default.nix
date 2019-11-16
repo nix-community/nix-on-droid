@@ -13,7 +13,7 @@ let
 in
 
 {
-  inherit (pkgs) proot-termux;
+  # inherit (pkgs) proot-termux;
 
   basic-environment = nixpkgs.buildEnv {
     name = "basic-environment";
