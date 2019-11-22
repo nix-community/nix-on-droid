@@ -22,6 +22,7 @@ in
       nixpkgs.bashInteractive
       nixpkgs.cacert
       nixpkgs.coreutils
+      nixpkgs.less  # since nix tools really want a pager available, #27
       nixpkgs.nix
       # pkgs.proot-termux
       pkgs.files.etc-group

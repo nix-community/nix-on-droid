@@ -34,7 +34,6 @@ in
     #tzdata
     #hostname
     #man
-    #less
     #gnugrep
     #gnupg
     #gnused
