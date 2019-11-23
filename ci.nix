@@ -6,11 +6,11 @@ with import <nixpkgs> { };
 with lib;
 
 let
-  src = import ./src;
+  pkgs = import ./pkgs;
 
   attrs = genAttrs
     [ "aarch64" "i686" ]
-    (arch: (src { inherit arch; }) // { recurseForDerivations = true; });
+    (arch: (pkgs { inherit arch; }) // { recurseForDerivations = true; });
 
   isCacheable = p: !(p.preferLocalBuild or false);
   shouldRecurseForDerivations = p: isAttrs p && p.recurseForDerivations or false;
