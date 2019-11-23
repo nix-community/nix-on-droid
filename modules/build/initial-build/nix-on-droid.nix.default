@@ -1,0 +1,39 @@
+{ pkgs, ... }:
+
+{
+  # Simply install just the packages
+  environment.packages = with pkgs; [
+    # User-facing stuff that you really really want to have
+    vim  # or some other editor, e.g. nano or neovim
+
+    # Some common stuff that people expect to have
+    #diffutils
+    #findutils
+    #utillinux
+    #tzdata
+    #hostname
+    #man
+    #less
+    #gnugrep
+    #gnupg
+    #gnused
+    #gnutar
+    #bzip2
+    #gzip
+    #xz
+    #zip
+    #unzip
+  ];
+
+  # After installing home-manager channel like
+  #   nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
+  #   nix-channel --update
+  # you can configure home-manager in here like
+  #home-manager.config =
+  #  { pkgs, ... }:
+  #  {
+  #    # insert home-manager config
+  #  };
+}
+
+# vim: ft=nix
