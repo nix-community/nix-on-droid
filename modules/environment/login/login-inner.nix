@@ -18,6 +18,8 @@ writeText "login-inner" ''
   export USER="${config.user.userName}"
   export HOME="${config.user.home}"
 
+  export GC_NPROCS=1  # to prevent gc warnings of nix, see https://github.com/NixOS/nix/issues/3237
+
   ${lib.optionalString config.build.initialBuild ''
     [ "$#" -gt 0 ] || echo "Sourcing Nix environment..."
     . ${nix}/etc/profile.d/nix.sh
