@@ -44,7 +44,11 @@ function doSwitch() {
         activationPackage
 
     echo "Save profile activation package.."
-    generationDir="$(nix path-info --file "<nix-on-droid/modules>" activationPackage)"
+    generationDir="$(nix path-info \
+        --file "<nix-on-droid/modules>" \
+        ${PASSTHROUGH_OPTS[*]} \
+        activationPackage \
+    )"
     nix-env --profile "${profileDirectory}" --set "${generationDir}"
 
     echo "Run activation script.."
