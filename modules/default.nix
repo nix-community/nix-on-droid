@@ -31,9 +31,7 @@ let
     else showWarnings rawModule.config.warnings rawModule;
 in
 
-if initialBuild
-then module.config
-else {
+{
   inherit (module.config.build) activationPackage;
-  inherit (module.config.environment) path;
+  inherit (module) config;
 }

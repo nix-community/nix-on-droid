@@ -8,7 +8,7 @@ let
 
   nixpkgs = loadNixpkgs { };
 
-  config = import ../modules {
+  modules = import ../modules {
     pkgs = nixpkgs;
     initialBuild = true;
 
@@ -29,7 +29,10 @@ let
   };
 
   callPackage = nixpkgs.lib.callPackageWith (
-    nixpkgs // customPkgs // { inherit callPackage config; }
+    nixpkgs // customPkgs // {
+      inherit (modules) config;
+      inherit callPackage;
+    }
   );
 
   customPkgs = rec {
