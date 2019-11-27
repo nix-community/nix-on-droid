@@ -8,6 +8,8 @@ with lib;
 let
   cfg = config.build;
 
+  profileDirectory = "/nix/var/nix/profiles/nix-on-droid";
+
   # Programs that always should be available on the activation
   # script's PATH.
   activationBinPaths = lib.makeBinPath [
@@ -108,13 +110,6 @@ in
         internal = true;
         description = "Package containing /etc files.";
       };
-
-      profileDirectory = mkOption {
-        type = types.path;
-        readOnly = true;
-        internal = true;
-        description = "Path to nix-on-droid profile.";
-      };
     };
 
   };
@@ -126,8 +121,13 @@ in
 
     build = {
       activationAfter.linkProfile = ''
-        generationDir="$(dirname "$(realpath $0)")"
-        $DRY_RUN_CMD nix-env --profile "${cfg.profileDirectory}" --set "$generationDir"
+        generationDir="$(dirname $0)"
+
+        if [[ $generationDir =~ ^${profileDirectory}-([0-9]+)-link$ ]]; then
+          $DRY_RUN_CMD nix-env --profile "${profileDirectory}" --switch-generation "''${BASH_REMATCH[1]}"
+        else
+          $DRY_RUN_CMD nix-env --profile "${profileDirectory}" --set "$generationDir"
+        fi
       '';
 
       activationPackage =
@@ -151,8 +151,6 @@ in
             ln --symbolic ${config.environment.binSh} $out/filesystem/bin/sh
             ln --symbolic ${config.environment.usrBinEnv} $out/filesystem/usr/bin/env
           '';
-
-      profileDirectory = "/nix/var/nix/profiles/nix-on-droid";
     };
 
   };
