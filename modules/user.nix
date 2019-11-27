@@ -29,7 +29,7 @@ in
     user = {
       group = mkOption {
         type = types.str;
-        default = "nix-on-droid";
+        readOnly = true;
         description = "Group name.";
       };
 
@@ -47,7 +47,7 @@ in
 
       userName = mkOption {
         type = types.str;
-        default = "nix-on-droid";
+        readOnly = true;
         description = "User name.";
       };
     };
@@ -72,8 +72,10 @@ in
     };
 
     user = {
+      group = "nix-on-droid";
       home = "/data/data/com.termux.nix/files/home";
       shell = "/bin/sh";
+      userName = "nix-on-droid";
     };
 
   };
