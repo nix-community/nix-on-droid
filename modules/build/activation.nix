@@ -108,6 +108,13 @@ in
         internal = true;
         description = "Package containing /etc files.";
       };
+
+      profileDirectory = mkOption {
+        type = types.path;
+        readOnly = true;
+        internal = true;
+        description = "Path to nix-on-droid profile.";
+      };
     };
 
   };
@@ -117,27 +124,36 @@ in
 
   config = {
 
-    build.activationPackage =
-      pkgs.runCommand
-        "nix-on-droid-generation"
-        {
-          preferLocalBuild = true;
-          allowSubstitutes = false;
-        }
-        ''
-          mkdir --parents $out/filesystem/{bin,usr/{bin,lib}}
+    build = {
+      activationAfter.linkProfile = ''
+        generationDir="$(dirname "$(realpath $0)")"
+        $DRY_RUN_CMD nix-env --profile "${cfg.profileDirectory}" --set "$generationDir"
+      '';
 
-          cp ${activationScript} $out/activate
+      activationPackage =
+        pkgs.runCommand
+          "nix-on-droid-generation"
+          {
+            preferLocalBuild = true;
+            allowSubstitutes = false;
+          }
+          ''
+            mkdir --parents $out/filesystem/{bin,usr/{bin,lib}}
 
-          ln --symbolic ${config.build.etc}/etc $out/etc
-          ln --symbolic ${config.environment.path} $out/nix-on-droid-path
+            cp ${activationScript} $out/activate
 
-          ln --symbolic ${config.environment.files.login} $out/filesystem/bin/login
-          ln --symbolic ${config.environment.files.loginInner} $out/filesystem/usr/lib/login-inner
+            ln --symbolic ${config.build.etc}/etc $out/etc
+            ln --symbolic ${config.environment.path} $out/nix-on-droid-path
 
-          ln --symbolic ${config.environment.binSh} $out/filesystem/bin/sh
-          ln --symbolic ${config.environment.usrBinEnv} $out/filesystem/usr/bin/env
-        '';
+            ln --symbolic ${config.environment.files.login} $out/filesystem/bin/login
+            ln --symbolic ${config.environment.files.loginInner} $out/filesystem/usr/lib/login-inner
+
+            ln --symbolic ${config.environment.binSh} $out/filesystem/bin/sh
+            ln --symbolic ${config.environment.usrBinEnv} $out/filesystem/usr/bin/env
+          '';
+
+      profileDirectory = "/nix/var/nix/profiles/nix-on-droid";
+    };
 
   };
 
