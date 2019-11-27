@@ -19,11 +19,11 @@ let
     pkgs.nix
   ];
 
-  activationCmds = concatStringsSep "\n" (
+  mkActivationCmds = activation: concatStringsSep "\n" (
     mapAttrsToList (name: value: ''
       noteEcho "Activating ${name}"
       ${value}
-    '') cfg.activation
+    '') activation
   );
 
   activationScript = pkgs.writeScript "activation-script" ''
@@ -39,7 +39,9 @@ let
     ${builtins.readFile ../lib-bash/color-echo.sh}
     ${builtins.readFile ../lib-bash/activation-init.sh}
 
-    ${activationCmds}
+    ${mkActivationCmds cfg.activationBefore}
+    ${mkActivationCmds cfg.activation}
+    ${mkActivationCmds cfg.activationAfter}
   '';
 in
 
@@ -55,6 +57,36 @@ in
         type = types.attrs;
         description = ''
           Activation scripts for the nix-on-droid environment.
+          </para><para>
+          Any script should respect the <varname>DRY_RUN</varname>
+          variable, if it is set then no actual action should be taken.
+          The variable <varname>DRY_RUN_CMD</varname> is set to
+          <code>echo</code> if dry run is enabled. Thus, many cases you
+          can use the idiom <code>$DRY_RUN_CMD rm -rf /</code>.
+        '';
+      };
+
+      activationBefore = mkOption {
+        default = {};
+        type = types.attrs;
+        description = ''
+          Activation scripts for the nix-on-droid environment that
+          need to be run first.
+          </para><para>
+          Any script should respect the <varname>DRY_RUN</varname>
+          variable, if it is set then no actual action should be taken.
+          The variable <varname>DRY_RUN_CMD</varname> is set to
+          <code>echo</code> if dry run is enabled. Thus, many cases you
+          can use the idiom <code>$DRY_RUN_CMD rm -rf /</code>.
+        '';
+      };
+
+      activationAfter = mkOption {
+        default = {};
+        type = types.attrs;
+        description = ''
+          Activation scripts for the nix-on-droid environment that
+          need to be run last.
           </para><para>
           Any script should respect the <varname>DRY_RUN</varname>
           variable, if it is set then no actual action should be taken.
