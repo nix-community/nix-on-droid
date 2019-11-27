@@ -6,9 +6,10 @@
   ./build/config.nix
   ./environment/etc
   ./environment/files.nix
-  ./environment/login
   ./environment/links.nix
+  ./environment/login
   ./environment/path.nix
+  ./home-manager.nix
   ./user.nix
   <nixpkgs/nixos/modules/misc/assertions.nix>
 ]
