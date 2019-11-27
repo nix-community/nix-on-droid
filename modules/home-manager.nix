@@ -47,7 +47,7 @@ in
 
   config = mkIf (cfg.config != null) {
 
-    inherit (config) assertions warnings;
+    inherit (cfg.config) assertions warnings;
 
     build.activation.homeManager = ''
       ${cfg.config.home.activationPackage}/activate
