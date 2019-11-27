@@ -49,7 +49,7 @@ in
 
     inherit (cfg.config) assertions warnings;
 
-    build.activation.homeManager = ''
+    build.activationAfter.homeManager = ''
       ${cfg.config.home.activationPackage}/activate
     '';
 

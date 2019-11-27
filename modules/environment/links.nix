@@ -36,7 +36,7 @@ in
 
   config = {
 
-    build.activation = {
+    build.activationBefore = {
       linkBinSh = ''
         $DRY_RUN_CMD mkdir $VERBOSE_ARG --parents /bin
         $DRY_RUN_CMD ln $VERBOSE_ARG --symbolic --force ${cfg.binSh} /bin/.sh.tmp
