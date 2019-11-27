@@ -34,7 +34,9 @@ function doHelp() {
 }
 
 function doSwitch() {
-    local profileDirectory="/nix/var/nix/profiles/nix-on-droid"
+    if [[ -v VERBOSE ]]; then
+        PASSTHROUGH_OPTS+=(--show-trace)
+    fi
 
     echo "Building activation package..."
     nix build \
@@ -43,15 +45,13 @@ function doSwitch() {
         ${PASSTHROUGH_OPTS[*]} \
         activationPackage
 
-    echo "Save profile activation package..."
+    echo "Run activation script..."
     generationDir="$(nix path-info \
         --file "<nix-on-droid/modules>" \
         ${PASSTHROUGH_OPTS[*]} \
         activationPackage \
     )"
-    nix-env --profile "${profileDirectory}" --set "${generationDir}"
 
-    echo "Run activation script..."
     "${generationDir}/activate"
 }
 
