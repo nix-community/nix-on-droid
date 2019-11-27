@@ -31,6 +31,10 @@ writeScript "login" ''
       exec ${installationDir}/bin/login "$@"
     ''
     else ''
+      if [[ -x ${installationDir}/bin/.proot-static.new ]] && ! $(/system/bin/pgrep proot-static); then
+        /system/bin/mv ${installationDir}/bin/.proot-static.new ${installationDir}/bin/proot-static
+      fi
+
       exec ${installationDir}/bin/proot-static \
         -b ${installationDir}/nix:/nix \
         -b ${installationDir}/bin:/bin \
