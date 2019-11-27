@@ -18,19 +18,19 @@ in
   options = {
 
     environment.files = {
-
       login = mkOption {
         type = types.package;
         readOnly = true;
+        internal = true;
         description = "Login script.";
       };
 
       loginInner = mkOption {
         type = types.package;
         readOnly = true;
+        internal = true;
         description = "Login-inner script.";
       };
-
     };
 
   };
