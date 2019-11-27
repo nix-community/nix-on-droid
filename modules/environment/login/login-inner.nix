@@ -21,6 +21,9 @@ writeText "login-inner" ''
   export GC_NPROCS=1  # to prevent gc warnings of nix, see https://github.com/NixOS/nix/issues/3237
 
   ${lib.optionalString config.build.initialBuild ''
+    # link needed to force nix-env -i to install in the user profile
+    ${coreutils}/bin/ln --symbolic /nix/var/nix/profiles/per-user/$USER/profile $HOME/.nix-profile
+
     [ "$#" -gt 0 ] || echo "Sourcing Nix environment..."
     . ${nix}/etc/profile.d/nix.sh
 
