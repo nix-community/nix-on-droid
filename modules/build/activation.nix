@@ -15,6 +15,7 @@ let
   activationBinPaths = lib.makeBinPath [
     pkgs.bash
     pkgs.coreutils
+    pkgs.diffutils
     pkgs.findutils
     pkgs.gnused
     pkgs.ncurses          # For `tput`.
