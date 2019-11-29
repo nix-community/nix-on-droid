@@ -24,6 +24,9 @@
     #unzip
   ];
 
+  # Read the changelog before changing this value
+  system.stateVersion = "19.09";
+
   # After installing home-manager channel like
   #   nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
   #   nix-channel --update
