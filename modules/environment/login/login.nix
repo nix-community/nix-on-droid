@@ -15,14 +15,16 @@ writeScript "login" ''
   export PROOT_TMP_DIR=${installationDir}/tmp
   export PROOT_L2S_DIR=${installationDir}/.l2s
 
-  if test -e ${installationDir}/bin/.proot-static.new; then
-    echo "Install new proot-static..."
-    /system/bin/mv ${installationDir}/bin/.proot-static.new ${installationDir}/bin/proot-static
-  fi
+  if ! /system/bin/pgrep proot-static > /dev/null; then
+    if test -e ${installationDir}/bin/.proot-static.new; then
+      echo "Install new proot-static..."
+      /system/bin/mv ${installationDir}/bin/.proot-static.new ${installationDir}/bin/proot-static
+    fi
 
-  if test -e ${installationDir}/usr/lib/.login-inner.new; then
-    echo "Install new login-inner..."
-    /system/bin/mv ${installationDir}/usr/lib/.login-inner.new ${installationDir}/usr/lib/login-inner
+    if test -e ${installationDir}/usr/lib/.login-inner.new; then
+      echo "Install new login-inner..."
+      /system/bin/mv ${installationDir}/usr/lib/.login-inner.new ${installationDir}/usr/lib/login-inner
+    fi
   fi
 
   exec ${installationDir}/bin/proot-static \
