@@ -11,5 +11,6 @@
   ./environment/path.nix
   ./home-manager.nix
   ./user.nix
+  ./version.nix
   <nixpkgs/nixos/modules/misc/assertions.nix>
 ]
