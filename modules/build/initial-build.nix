@@ -38,7 +38,6 @@ with lib;
     # uid and gid need to be determined.
     environment.etc = {
       "group".enable = false;
-      "nix-on-droid.nix.default".text = builtins.readFile ./nix-on-droid.nix.default;
       "passwd".enable = false;
     };
 

@@ -43,7 +43,8 @@ rec {
 
         echo "Installing nix-on-droid.nix default config file..."
         ${pkgs.coreutils}/bin/mkdir --parents $HOME/.config/nixpkgs
-        ${pkgs.coreutils}/bin/cp ${./modules/build/initial-build/nix-on-droid.nix.default} $HOME/.config/nixpkgs/nix-on-droid.nix
+        ${pkgs.coreutils}/bin/cp ${./modules/environment/login/nix-on-droid.nix.default} $HOME/.config/nixpkgs/nix-on-droid.nix
+        ${pkgs.coreutils}/bin/chmod u+w $HOME/.config/nixpkgs/nix-on-droid.nix
 
         if command -v home-manager && [[ -n "$HOME_MANAGER_CONFIG" && -r "$HOME_MANAGER_CONFIG" || -r "$HOME/.config/nixpkgs/home.nix" ]]; then
           echo "Migrating home-manager installation..."
