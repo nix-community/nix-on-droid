@@ -6,6 +6,7 @@
 etc="${1}"
 static="/etc/static"
 new_etc="${2}"
+backup_extension="${3:-}"
 
 function atomic_symlink() {
     local source="${1}"
@@ -25,7 +26,7 @@ function cleanup() {
     for file in $(find "${etc}" -xtype l); do
         local target="$(readlink "${file}")"
         if [[ ! -L "${target}" ]]; then
-            echo "removing obsolete symlink '${file}'..."
+            echo "Removing obsolete symlink '${file}'..."
             rm "${file}"
         fi
     done
@@ -64,7 +65,14 @@ function link() {
         mkdir -p "$(dirname "${target}")"
 
         if [[ -e "${target}" ]] && ! is_static "${target}"; then
-            echo "Linking of ${target} failed. Please remove this file."
+            if [[ -n "${backup_extension}" ]]; then
+                echo "Backing up '${target}' to '${target}${backup_extension}'..."
+                cp "${target}" "${target}${backup_extension}"
+
+                atomic_symlink "${static}/${name}" "${target}"
+            else
+                echo "Linking of ${target} failed. Please remove this file."
+            fi
         else
             atomic_symlink "${static}/${name}" "${target}"
         fi
