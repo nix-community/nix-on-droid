@@ -4,7 +4,7 @@ rec {
   nix-on-droid = pkgs.callPackage ./nix-on-droid { };
 
   basic-environment = pkgs.runCommand
-    "basic-environment"
+    "basic-environment-2.0"
     {
       preferLocalBuild = true;
       allowSubstitutes = false;
