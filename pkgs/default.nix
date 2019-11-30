@@ -13,7 +13,7 @@ let
     initialBuild = true;
 
     config = {
-      imports = [ ../modules/build/initial-build ];
+      imports = [ ../modules/build/initial-build.nix ];
 
       _module.args = { inherit customPkgs; };
 

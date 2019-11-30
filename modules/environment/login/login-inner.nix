@@ -39,7 +39,8 @@ writeText "login-inner" ''
 
     echo "Copy default nix-on-droid config..."
     ${coreutils}/bin/mkdir --parents $HOME/.config/nixpkgs
-    ${coreutils}/bin/cp /etc/nix-on-droid.nix.default $HOME/.config/nixpkgs/nix-on-droid.nix
+    ${coreutils}/bin/cp ${./nix-on-droid.nix.default} $HOME/.config/nixpkgs/nix-on-droid.nix
+    ${coreutils}/bin/chmod u+w $HOME/.config/nixpkgs/nix-on-droid.nix
 
     echo "Installing first nix-on-droid generation..."
     ${nix}/bin/nix build --no-link --file "<nix-on-droid>" nix-on-droid
