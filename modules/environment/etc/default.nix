@@ -72,20 +72,37 @@ in
 
   options = {
 
-    environment.etc = mkOption {
-      type = types.loaOf fileType;
-      default = {};
-      example = literalExample ''
-        {
-          example-configuration-file = {
-            source = "/nix/store/.../etc/dir/file.conf.example";
-          };
-          "default/useradd".text = "GROUP=100 ...";
-        }
-      '';
-      description = ''
-        Set of files that have to be linked in <filename>/etc</filename>.
-      '';
+    environment = {
+      etc = mkOption {
+        type = types.loaOf fileType;
+        default = {};
+        example = literalExample ''
+          {
+            example-configuration-file = {
+              source = "/nix/store/.../etc/dir/file.conf.example";
+            };
+            "default/useradd".text = "GROUP=100 ...";
+          }
+        '';
+        description = ''
+          Set of files that have to be linked in <filename>/etc</filename>.
+        '';
+      };
+
+      etcBackupExtension = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = ".bak";
+        description = ''
+          Backup file extension.
+          </para><para>
+          If a file in <filename>/etc</filename> already exists and is not managed
+          by nix-on-droid, the activation fails because we do not overwrite unknown
+          files. When an extension is provided through this option, the original
+          file will be moved in respect of the backup extension and the activation
+          executes successfully.
+        '';
+      };
     };
 
   };
@@ -99,7 +116,7 @@ in
       inherit etc;
 
       activation.setUpEtc = ''
-        $DRY_RUN_CMD bash ${./setup-etc.sh} /etc ${etc}/etc
+        $DRY_RUN_CMD bash ${./setup-etc.sh} /etc ${etc}/etc ${config.environment.etcBackupExtension}
       '';
     };
 
