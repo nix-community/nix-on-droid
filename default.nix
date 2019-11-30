@@ -41,6 +41,8 @@ rec {
       shellHook = ''
         set -eu -o pipefail
 
+        export GC_NPROCS=1  # to prevent gc warnings of nix, see https://github.com/NixOS/nix/issues/3237
+
         echo "Installing nix-on-droid.nix default config file..."
         ${pkgs.coreutils}/bin/mkdir --parents $HOME/.config/nixpkgs
         ${pkgs.coreutils}/bin/cp ${./modules/environment/login/nix-on-droid.nix.default} $HOME/.config/nixpkgs/nix-on-droid.nix
@@ -50,7 +52,7 @@ rec {
           echo "Migrating home-manager installation..."
           if [[ -r "$HOME/.config/nixpkgs/home.nix" ]]; then
             ${pkgs.patch}/bin/patch --no-backup-if-mismatch $HOME/.config/nixpkgs/nix-on-droid.nix ${pkgs.writeText "patch" ''
-              @@ -27,15 +27,8 @@
+              @@ -27,15 +27,9 @@
                  # Read the changelog before changing this value
                  system.stateVersion = "19.09";
 
@@ -65,13 +67,14 @@ rec {
               -  #  };
               +  # Home Manager config file
               +  home-manager.config = import ./home.nix;
+              +  home-manager.useUserPackages = true;
                }
 
                # vim: ft=nix
             ''} > /dev/null
           else
             ${pkgs.patch}/bin/patch --no-backup-if-mismatch $HOME/.config/nixpkgs/nix-on-droid.nix ${pkgs.writeText "patch" ''
-              @@ -27,15 +27,8 @@
+              @@ -27,15 +27,9 @@
                  # Read the changelog before changing this value
                  system.stateVersion = "19.09";
 
@@ -86,11 +89,15 @@ rec {
               -  #  };
               +  # Home Manager config file
               +  home-manager.config = import (builtins.getEnv "HOME_MANAGER_CONFIG");
+              +  home-manager.useUserPackages = true;
                }
 
                # vim: ft=nix
             ''} > /dev/null
           fi
+
+          echo "Uninstall home-manager-path..."
+          ${pkgs.nix}/bin/nix-env --uninstall home-manager-path
         fi
 
         echo "Decrease priority of basic-environment..."
