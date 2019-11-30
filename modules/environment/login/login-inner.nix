@@ -61,11 +61,13 @@ writeText "login-inner" ''
   [ "$#" -gt 0 ] || echo "Sourcing Nix environment..."
   . $HOME/.nix-profile/etc/profile.d/nix.sh
 
-  if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-    [ "$#" -gt 0 ] || echo "Sourcing home-manager environment..."
-    export NIX_PATH=$HOME/.nix-defexpr/channels''${NIX_PATH:+:}$NIX_PATH
-    . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-  fi
+  ${lib.optionalString (config.home-manager.config != null) ''
+    if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+      [ "$#" -gt 0 ] || echo "Sourcing home-manager environment..."
+      export NIX_PATH=$HOME/.nix-defexpr/channels''${NIX_PATH:+:}$NIX_PATH
+      . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+    fi
+  ''}
 
   # Workaround for https://github.com/NixOS/nix/issues/1865
   export NIX_PATH=nixpkgs=$HOME/.nix-defexpr/channels/nixpkgs/:$NIX_PATH
