@@ -21,9 +21,10 @@ rec {
       echo "  nix-shell '<nix-on-droid>' -A migration"
       echo "to migrate your system to the new version."
       echo
-      echo "Please note, that all files in /etc currently provided by nix-on-droid are getting installed. The current \
-      files will be backuped with a '.bak' file extension."
-      echo "For setups with home-manager (only recognised of HOME_MANAGER_CONFIG is set or ~/.config/nixpkgs/home.nix \
+      echo "Please note, that all files in /etc currently provided by nix-on-droid will be created. The current files \
+      will be backed up with a '.bak' file extension."
+      echo
+      echo "For setups with home-manager (only recognised if HOME_MANAGER_CONFIG is set or ~/.config/nixpkgs/home.nix \
       is present) there is one manual step necessary *before* running the migration script: Remove basic-environment \
       package of 'home.packages' list."
       echo
