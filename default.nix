@@ -46,7 +46,7 @@ rec {
         ${pkgs.coreutils}/bin/cp ${./modules/environment/login/nix-on-droid.nix.default} $HOME/.config/nixpkgs/nix-on-droid.nix
         ${pkgs.coreutils}/bin/chmod u+w $HOME/.config/nixpkgs/nix-on-droid.nix
 
-        if command -v home-manager && [[ -n "$HOME_MANAGER_CONFIG" && -r "$HOME_MANAGER_CONFIG" || -r "$HOME/.config/nixpkgs/home.nix" ]]; then
+        if command -v home-manager > /dev/null && [[ -n "''${HOME_MANAGER_CONFIG:-}" && -r "$HOME_MANAGER_CONFIG" || -r "$HOME/.config/nixpkgs/home.nix" ]]; then
           echo "Migrating home-manager installation..."
           if [[ -r "$HOME/.config/nixpkgs/home.nix" ]]; then
             ${pkgs.patch}/bin/patch --no-backup-if-mismatch $HOME/.config/nixpkgs/nix-on-droid.nix ${pkgs.writeText "patch" ''
@@ -68,7 +68,7 @@ rec {
                }
 
                # vim: ft=nix
-            ''}
+            ''} > /dev/null
           else
             ${pkgs.patch}/bin/patch --no-backup-if-mismatch $HOME/.config/nixpkgs/nix-on-droid.nix ${pkgs.writeText "patch" ''
               @@ -27,15 +27,8 @@
@@ -89,7 +89,7 @@ rec {
                }
 
                # vim: ft=nix
-            ''}
+            ''} > /dev/null
           fi
         fi
 
