@@ -39,6 +39,7 @@ with lib;
     environment.etc = {
       "group".enable = false;
       "passwd".enable = false;
+      "UNINTIALISED".text = "";
     };
 
   };
