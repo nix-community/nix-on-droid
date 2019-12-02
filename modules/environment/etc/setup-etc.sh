@@ -3,6 +3,11 @@
 
 # inspired by https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/system/etc/setup-etc.pl
 
+set -eu -o pipefail
+
+: "${VERBOSE_ARG:=}"
+: "${VERBOSE_ECHO:=true}"
+
 etc="${1}"
 static="/etc/static"
 new_etc="${2}"
@@ -12,6 +17,8 @@ function atomic_symlink() {
     local source="${1}"
     local target="${2}"
     local target_tmp="${target}.tmp"
+
+    $VERBOSE_ECHO "Atomic symlink ${source} to ${target}..."
 
     mkdir -p "$(dirname "${target_tmp}")"
     ln -sf "${source}" "${target_tmp}"
@@ -23,7 +30,7 @@ function atomic_symlink() {
 # in the current one.
 function cleanup() {
     local file
-    for file in $(find "${etc}" -xtype l); do
+    for file in $(find "${etc}/" -xtype l); do
         local target="$(readlink "${file}")"
         if [[ ! -L "${target}" ]]; then
             echo "Removing obsolete symlink '${file}'..."
@@ -62,7 +69,7 @@ function link() {
     for name in $(find "${new_etc}/" -type l | sed -e "s,^${new_etc}/,,"); do
         local target="${etc}/${name}"
 
-        mkdir -p "$(dirname "${target}")"
+        mkdir $VERBOSE_ARG -p "$(dirname "${target}")"
 
         if [[ -e "${target}" ]] && ! is_static "${target}"; then
             if [[ -n "${backup_extension}" ]]; then
@@ -80,8 +87,8 @@ function link() {
 }
 
 # On initial build /etc/static is a directory instead of a symlink
-if [[ -d "${etc}/static" ]]; then
-    rm --recursive "${etc}/static"
+if [[ -e "${etc}/static" && ! -L "${etc}/static" ]]; then
+    rm $VERBOSE_ARG --recursive "${etc}/static"
 fi
 
 # Atomically update /etc/static to point at the etc files of the
