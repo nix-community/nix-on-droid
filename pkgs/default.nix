@@ -42,7 +42,7 @@ let
     packageInfo = import "${nixDirectory}/nix-support/package-info.nix";
     prootTermux = callPackage ./cross-compiling/proot-termux.nix { };
     qemuAarch64Static = callPackage ./qemu-aarch64-static.nix { };
-    talloc = callPackage ./cross-compiling/talloc.nix { };
+    tallocStatic = callPackage ./cross-compiling/talloc-static.nix { };
   };
 in
 

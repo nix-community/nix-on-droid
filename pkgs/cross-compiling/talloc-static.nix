@@ -8,7 +8,7 @@ let
 in
 
 pkgs.cross.stdenv.mkDerivation rec {
-  name = "talloc-2.1.14";
+  name = "talloc-static-2.1.14";
 
   src = fetchurl {
     url = "mirror://samba/talloc/${name}.tar.gz";
@@ -37,6 +37,7 @@ pkgs.cross.stdenv.mkDerivation rec {
     mkdir -p $out/lib
     make install
     ${pkgs.cross.stdenv.cc.targetPrefix}ar q $out/lib/libtalloc.a bin/default/talloc_[0-9]*.o
+    rm -f $out/lib/libtalloc.so*
   '';
 
   fixupPhase = "";

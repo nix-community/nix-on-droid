@@ -85,8 +85,8 @@ in
 
       prootStatic =
         if config.build.arch == "aarch64"
-        then "/nix/store/bfxybmnxc39fjid3jsxsdfxnnszyijh0-proot-termux-unstable-2019-09-05-aarch64-unknown-linux-android"
-        else "/nix/store/38lngpjscr4k3z1dnnr8q9v1m69vvvax-proot-termux-unstable-2019-09-05-i686-unknown-linux-android";
+        then "/nix/store/r09n7pp4fwhrld2a1k2al6bgdx2qqfaj-proot-termux-unstable-2019-09-05-aarch64-unknown-linux-android"
+        else "/nix/store/ccv4y9ndl1w7ksmwnsr9jm2iwnrrbgcq-proot-termux-unstable-2019-09-05-i686-unknown-linux-android";
     };
 
   };
