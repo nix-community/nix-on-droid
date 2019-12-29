@@ -1,7 +1,7 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ callPackage, fetchFromGitHub, talloc }:
+{ callPackage, fetchFromGitHub, tallocStatic }:
 
 let
   pkgs = callPackage ./pkgs.nix { };
@@ -18,7 +18,7 @@ pkgs.crossStatic.stdenv.mkDerivation {
     sha256 = "05y30ifbp4sn1pzy8wlifc5d9n2lrgspqzdjix1kxjj9j9947qgd";
   };
 
-  buildInputs = [ talloc ];
+  buildInputs = [ tallocStatic ];
 
   makeFlags = [ "-Csrc CFLAGS=-D__ANDROID__" ];
 
