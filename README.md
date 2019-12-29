@@ -4,26 +4,26 @@
     alt="Get it on F-Droid"
     height="80">](https://f-droid.org/packages/com.termux.nix)
 
-Nix package manager on Android, in a single-click installable package.
-This is not full NixOS running inside Android,
-but you get easy access to Nixpkgs' vast collection of (precompiled!) software
-and the best package manager under the sun.
-It's prototype-grade quality as of now, but hey, it works!
+Nix package manager on Android, in a single-click installable package. This is
+not full [NixOS](https://nixos.org/) running inside Android, but you get easy
+access to [nixpkgs](https://github.com/NixOS/nixpkgs)' vast collection of
+(precompiled!) software and the best package manager under the sun. It's
+prototype-grade quality as of now, but hey, it works!
 
 It does not require root, user namespaces support or disabling SELinux,
 but it relies on `proot` and other hacks instead.
 It uses [a fork](https://github.com/t184256/nix-on-droid-app)
 of [Termux-the-terminal-emulator app](https://github.com/termux/termux-app),
-but has no relation to Termux-the-distro.
+but has no relation to [Termux-the-distro](https://termux.com/).
 Please do not pester Termux folks about Nix-on-Droid.
 
 This repository contains:
 
 1. Nix expressions that generate a bootstrap zipball,
    which is then used to install Nix package manager on Android
-   along with some support scripts and configuration files.
-2. A channel that can be later used to deliver updates
-   for the latter.
+   along with the `nix-on-droid` executable.
+2. A module system for configuring the local Nix-on-Droid installation directly
+   on the device.
 
 It is only tested with aarch64 (64-bit ARM devices).
 It may also support x86 devices, but the developers don't own one
@@ -39,6 +39,77 @@ Prebuilt stuff resides at https://nix-on-droid.unboiled.info
 Install the APK, launch the app, press OK.
 
 
+## `nix-on-droid` and the module system
+
+### Config file
+
+The Nix-on-Droid system can be managed through a custom config
+file in `~/.config/nixpkgs/nix-on-droid.nix` as generated on first build,
+for example:
+
+```nix
+{ pkgs, ... }:
+
+{
+  environment.packages = [ pkgs.vim ];
+  system.stateVersion = "19.09";
+}
+```
+
+An alternative location is `~/.config/nixpkgs/config.nix` with the key
+`nix-on-droid`, for example:
+
+```nix
+{
+  nix-on-droid =
+    { pkgs, ... }:
+
+    {
+      environment.packages = [ pkgs.vim ];
+      system.stateVersion = "19.09";
+    };
+}
+```
+
+Currently there is no complete list of all available options. Please have a
+look inside the `./modules` directory for all modules.
+
+### [`home-manager`](https://github.com/rycee/home-manager) integration
+
+To enable `home-manager` you simply need to follow the instructions already provided in the example `nix-on-droid.nix`:
+
+1.  Add `home-manager` channel:
+    ```
+    nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
+    nix-channel --update
+    ```
+2.  Configure `home-manager`:
+    ```nix
+    { pkgs, ... }:
+
+    {
+      # insert nix-on-droid config
+
+      home-manager.config =
+        { pkgs, ... }:
+        {
+          # insert home-manager config
+        };
+
+      # or if you have a separate home.nix already present:
+      home-manager.config = import ./home.nix;
+    }
+    ```
+
+### `nix-on-droid` executable
+
+This executable is responsible for activating new configurations:
+Use `nix-on-droid switch` to activate the current configuration and
+`nix-on-droid rollback` to rollback to the latest build.
+
+For more information, please run `nix-on-droid help`.
+
+
 ## Build stuff on your own
 
 The [terminal emulator part](https://github.com/t184256/nix-on-droid-app)
@@ -48,33 +119,41 @@ If you really want to rebuild it, you can just use Android Studio for that.
 The zipball generation is probably what you are after.
 Get an x86_64 computer with Nix. Run one of the following:
 ```
-nix build -f ./src --argstr arch aarch64 bootstrapZip
-nix build -f ./src --argstr arch i686 bootstrapZip
+nix build -f ./pkgs --argstr arch aarch64 bootstrapZip
+nix build -f ./pkgs --argstr arch i686 bootstrapZip
 ```
 
 Put the zip file from `result` on some HTTP server
 and specify the parent directory URL during the installation.
 To re-trigger the installation, you can use
 'clear data' on the Android app (after backing stuff up, obviously).
-Now that we have an upgrade path for everything except for the `proot` binary,
+Now that we have an upgrade path for everything,
 this should not be needed anymore.
 
 If you want to change the nix-on-droid channel to your custom one,
 you can do that either with `nix-channel` after the installation,
 or by using `--argstr nixOnDroidChannelURL <URL>`.
 
+**Note**: The `proot` binary is currently not build on the android device
+because we are not able to pre-build and cache the proot package in cachix.
+The reason for that is that `proot` needs to be cross-compiled with bionic
+toolchain which results in different nix store paths in comparison to building
+it natively on the device.
+
+The current workaround is to hardcode the path to the wanted `proot` nix store
+path in `modules/environment/login/default.nix`. During evaluation time on
+the android device this store path will be downloaded from the binary cache
+(<https://nix-on-droid.cachix.org/>). This in return means the `proot`
+derivation has to be present there or in any other binary cache configured
+in the `nix.conf` on the device.
+
 
 ## Tips
 
-* Run `hm-install`. Otherwise you could find the system a bit too barebones.
-* If you don't want to, read the tips that are displayed at the beginning
-  of each new session.
 * To grant the app access to the storage, use the toggle in the app settings
   (reachable from Android settings).
 * If the terminal freezes, use 'Acquire wakelock' button in the notification
   and/or tone down your device's aggressive power saving measures.
-* If you have name resolution issues,
-  start with specifying your nameservers in `/etc/resolv.conf`.
 
 
 ## Technical overview
@@ -88,7 +167,8 @@ Developer's device:
    (to fake file paths like `/nix/store`; think 'userspace `chroot`')
 2. Target `nix` is taken from the original release tarball
 3. Target `nix` database is initialized (with host `proot` and `qemu-user`)
-4. Support scripts and config files are built with `nix`
+4. Support scripts and config files are built with `nix` and the Nix-on-Droid
+   module system
 5. From these, a bootstrap zipball is built and published on an HTTP server
 
 User's device:
@@ -97,11 +177,7 @@ User's device:
 7. Bootstrap zipball gets downloaded and unpacked
 8. 'First boot' begins, Nix builds the environment
    (or, possibly, pulls it from Cachix)
-9. Nix installs the environment, now it manages every file (except `proot`)
-10. The user is given an option
-    either to proceed with this minimal installation of Nix,
-    or to install home-manager to manage the environment
-    in a more declarative fashion (recommended).
+9. Nix installs the environment (login scripts, config files, etc.)
 
 You can refer to a
 [NixCon 2019 presentation talk](https://nix-on-droid.unboiled.info/nixcon-2019-nix-on-droid.slides.pdf)
