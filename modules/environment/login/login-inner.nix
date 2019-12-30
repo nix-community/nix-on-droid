@@ -77,7 +77,9 @@ writeText "login-inner" ''
   if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
     [ "$#" -gt 0 ] || echo "Sourcing home-manager environment..."
     export NIX_PATH=$HOME/.nix-defexpr/channels''${NIX_PATH:+:}$NIX_PATH
+    set +u
     . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+    set -u
   fi
 
   # Workaround for https://github.com/NixOS/nix/issues/1865
