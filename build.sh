@@ -27,8 +27,7 @@ for arch in $arches; do
 	echo $arch: building nix-on-droid...
 	nix build --show-trace -f pkgs --argstr arch $arch --argstr nixOnDroidChannelURL $nixOnDroidChannelURL bootstrapZip -o out/nix-on-droid-$arch
 
-	echo $arch: injecting talloc/proot for initial bootstrap
-	pwd
+	echo $arch: injecting talloc/proot for initial bootstrap...
 
 	cat out/nix-on-droid-$arch/bootstrap-$arch.zip > out/bootstrap-$arch.zip
 	nix-store --export --readonly-mode $talloc > out/talloc-$arch.closure
@@ -44,6 +43,7 @@ for arch in $arches; do
 	popd >/dev/null
 	chmod -R +w out/repack-$arch
 	rm -rf out/repack-$arch
+	echo $arch: done
 done
 
 
