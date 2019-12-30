@@ -32,6 +32,17 @@ writeText "login-inner" ''
 
       export NIX_SSL_CERT_FILE=${cacert}
 
+      if [ -r ${config.build.installationDir}/proot.closure ]; then
+        echo "Injecting bundled talloc closure..."
+        ${nix}/bin/nix-store --import < ${config.build.installationDir}/talloc.closure
+        ${coreutils}/bin/rm -f ${config.build.installationDir}/talloc.closure
+        echo "Injecting bundled proot closure..."
+        ${nix}/bin/nix-store --import < ${config.build.installationDir}/proot.closure
+        ${coreutils}/bin/rm -f ${config.build.installationDir}/proot.closure
+      else
+        echo "No bundled talloc/proot closures found, which is OK for official builds..."
+      fi
+
       echo "Installing and updating nix-channels..."
       ${nix}/bin/nix-channel --add ${config.build.channel.nixpkgs} nixpkgs
       ${nix}/bin/nix-channel --update nixpkgs
