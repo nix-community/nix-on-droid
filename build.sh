@@ -11,10 +11,6 @@ nixOnDroidChannelURL=https://github.com/$repo/archive/$branch.tar.gz
 mkdir -p out
 rm -f out/*
 for arch in $arches; do
-	echo $arch: building talloc...
-	nix build --show-trace -f pkgs --argstr arch $arch tallocStatic -o out/talloc-$arch
-	talloc=$(realpath out/talloc-$arch)
-
 	echo $arch: building proot...
 	nix build --show-trace -f pkgs --argstr arch $arch prootTermux -o out/proot-$arch
 	proot=$(realpath out/proot-$arch)
@@ -27,17 +23,15 @@ for arch in $arches; do
 	echo $arch: building nix-on-droid...
 	nix build --show-trace -f pkgs --argstr arch $arch --argstr nixOnDroidChannelURL $nixOnDroidChannelURL bootstrapZip -o out/nix-on-droid-$arch
 
-	echo $arch: injecting talloc/proot for initial bootstrap...
+	echo $arch: injecting proot for initial bootstrap...
 
 	cat out/nix-on-droid-$arch/bootstrap-$arch.zip > out/bootstrap-$arch.zip
-	nix-store --export --readonly-mode $talloc > out/talloc-$arch.closure
-	nix-store --export --readonly-mode $proot > out/proot-$arch.closure
+	nix-store --export --readonly-mode $(nix-store -qR $proot) > out/proot-$arch.closure
 
 	mkdir out/repack-$arch
 	pushd out/repack-$arch >/dev/null
 	unzip -q ../bootstrap-$arch.zip
 	rm ../bootstrap-$arch.zip
-	cp ../talloc-$arch.closure ./talloc.closure
 	cp ../proot-$arch.closure ./proot.closure
 	zip --quiet -r ../bootstrap-$arch.zip .
 	popd >/dev/null
