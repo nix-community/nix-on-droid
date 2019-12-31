@@ -23,7 +23,7 @@ writeText "login-inner" ''
   export GC_NPROCS=1  # to prevent gc warnings of nix, see https://github.com/NixOS/nix/issues/3237
 
   ${lib.optionalString config.build.initialBuild ''
-    if [[ -e /etc/UNINTIALISED ]]; then
+    if [ -e /etc/UNINTIALISED ]; then
       echo "Set default user profile..."
       ${nix}/bin/nix-env --switch-profile /nix/var/nix/profiles/per-user/$USER/profile
 
