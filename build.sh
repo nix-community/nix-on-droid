@@ -5,8 +5,8 @@ set -e
 repo=${repo:-t184256/nix-on-droid-bootstrap}  # set this to your fork!
 branch=${branch:-$(git rev-parse --abbrev-ref HEAD)}
 
-arches='aarch64 i686'
-nixOnDroidChannelURL=https://github.com/$repo/archive/$branch.tar.gz
+arches=${arches:-aarch64 i686}
+nixOnDroidChannelURL=${nixOnDroidChannelURL:-https://github.com/$repo/archive/$branch.tar.gz}
 
 mkdir -p out
 rm -f out/*
