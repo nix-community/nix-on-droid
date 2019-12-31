@@ -35,7 +35,7 @@ writeText "login-inner" ''
       if [ -r ${config.build.installationDir}/proot.closure ]; then
         echo "Injecting bundled proot closure..."
         ${nix}/bin/nix-store --import < ${config.build.installationDir}/proot.closure
-        ${coreutils}/bin/rm -f ${config.build.installationDir}/proot.closure
+        ${coreutils}/bin/rm --force ${config.build.installationDir}/proot.closure
       fi
 
       echo "Installing and updating nix-channels..."
