@@ -47,8 +47,8 @@ stdenv.mkDerivation {
     PKG_NIX=$(find ${buildRootDirectory}/nix/store -path '*/bin/nix' | sed 's,^${buildRootDirectory},,')
     PKG_NIX=''${PKG_NIX%/bin/nix}
 
-    USER=nix-on-droid ${prootCommand} "$PKG_NIX/bin/nix-store" --init
-    USER=nix-on-droid ${prootCommand} "$PKG_NIX/bin/nix-store" --load-db < .reginfo
+    USER=${config.user.userName} ${prootCommand} "$PKG_NIX/bin/nix-store" --init
+    USER=${config.user.userName} ${prootCommand} "$PKG_NIX/bin/nix-store" --load-db < .reginfo
 
     cat > package-info.nix <<EOF
     {
