@@ -102,7 +102,7 @@ rec {
         fi
 
         echo "Decrease priority of basic-environment..."
-        ${pkgs.nix}/bin/nix-env --set-flag priority 120 basic-environment
+        ${pkgs.nix}/bin/nix-env --set-flag priority 120 basic-environment || true
 
         echo "Install first nix-on-droid generation..."
         ${nix-on-droid}/bin/nix-on-droid switch
