@@ -110,7 +110,7 @@ Use `nix-on-droid switch` to activate the current configuration and
 For more information, please run `nix-on-droid help`.
 
 
-## Build stuff on your own
+## Build `nix-on-droid` on your own
 
 The [terminal emulator part](https://github.com/t184256/nix-on-droid-app)
 is probably not interesting for you, just download and use a prebuilt one.
@@ -134,18 +134,23 @@ If you want to change the nix-on-droid channel to your custom one,
 you can do that either with `nix-channel` after the installation,
 or by using `--argstr nixOnDroidChannelURL <URL>`.
 
-**Note**: The `proot` binary is currently not build on the android device
-because we are not able to pre-build and cache the proot package in cachix.
-The reason for that is that `proot` needs to be cross-compiled with bionic
-toolchain which results in different nix store paths in comparison to building
-it natively on the device.
-
+**Note**: The `proot` binary is not built on the android device
+(NDK is required for building it, and it's not available on mobile platforms).
+The way we work around it is to push proot derivation to cachix.
 The current workaround is to hardcode the path to the wanted `proot` nix store
 path in `modules/environment/login/default.nix`. During evaluation time on
 the android device this store path will be downloaded from the binary cache
 (<https://nix-on-droid.cachix.org/>). This in return means the `proot`
 derivation has to be present there or in any other binary cache configured
 in the `nix.conf` on the device.
+
+Obviously it's an annoyance if one wants to fork this repo and test something.
+To minimize the hassle with this scenario, proot derivation is also bundled
+with the bootstrap zipball. This way you only need your own binary cache
+if you are planning to maintain a long-term fork that users can update from.
+In case you only care about updates through wiping the data,
+you shouldn't need a binary cache for that.
+
 
 
 ## Tips
