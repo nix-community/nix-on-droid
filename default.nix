@@ -58,7 +58,7 @@ rec {
                  system.stateVersion = "19.09";
 
               -  # After installing home-manager channel like
-              -  #   nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
+              -  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager
               -  #   nix-channel --update
               -  # you can configure home-manager in here like
               -  #home-manager.config =
@@ -80,7 +80,7 @@ rec {
                  system.stateVersion = "19.09";
 
               -  # After installing home-manager channel like
-              -  #   nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
+              -  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager
               -  #   nix-channel --update
               -  # you can configure home-manager in here like
               -  #home-manager.config =
