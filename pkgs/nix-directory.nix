@@ -1,7 +1,7 @@
 # Licensed under GNU Lesser General Public License v3 or later, see COPYING.
 # Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
 
-{ config, lib, stdenv, proot, qemuAarch64Static }:
+{ config, lib, stdenv, closureInfo, prootTermux, proot, qemuAarch64Static }:
 
 let
   buildRootDirectory = "root-directory";
@@ -16,6 +16,10 @@ let
     "-r ${buildRootDirectory}"
     "-w /"
   ];
+
+  prootTermuxClosure = closureInfo {
+    rootPaths = [ prootTermux ];
+  };
 in
 
 stdenv.mkDerivation {
@@ -47,8 +51,13 @@ stdenv.mkDerivation {
     PKG_NIX=$(find ${buildRootDirectory}/nix/store -path '*/bin/nix' | sed 's,^${buildRootDirectory},,')
     PKG_NIX=''${PKG_NIX%/bin/nix}
 
+    for i in $(< ${prootTermuxClosure}/store-paths); do
+      cp --archive "$i" "${buildRootDirectory}$i"
+    done
+
     USER=${config.user.userName} ${prootCommand} "$PKG_NIX/bin/nix-store" --init
     USER=${config.user.userName} ${prootCommand} "$PKG_NIX/bin/nix-store" --load-db < .reginfo
+    USER=${config.user.userName} ${prootCommand} "$PKG_NIX/bin/nix-store" --load-db < ${prootTermuxClosure}/registration
 
     cat > package-info.nix <<EOF
     {
