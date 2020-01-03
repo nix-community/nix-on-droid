@@ -32,12 +32,6 @@ writeText "login-inner" ''
 
       export NIX_SSL_CERT_FILE=${cacert}
 
-      if [ -r ${config.build.installationDir}/proot.closure ]; then
-        echo "Injecting bundled proot closure..."
-        ${nix}/bin/nix-store --import < ${config.build.installationDir}/proot.closure
-        ${coreutils}/bin/rm --force ${config.build.installationDir}/proot.closure
-      fi
-
       echo "Installing and updating nix-channels..."
       ${nix}/bin/nix-channel --add ${config.build.channel.nixpkgs} nixpkgs
       ${nix}/bin/nix-channel --update nixpkgs
