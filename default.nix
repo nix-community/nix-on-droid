@@ -17,16 +17,34 @@ rec {
       from installing the basic-environment package to a real module system. For more information see \
       https://github.com/t184256/nix-on-droid-bootstrap."
       echo
-      echo "You can either reinstall the app or run"
-      echo "  nix-shell '<nix-on-droid>' -A migration"
-      echo "to migrate your system to the new version."
-      echo
-      echo "Please note, that all files in /etc currently provided by nix-on-droid will be created. The current files \
-      will be backed up with a '.bak' file extension."
+      echo "You can either reinstall the app or back up your data and attempt a migration."
       echo
       echo "For setups with home-manager (only recognised if HOME_MANAGER_CONFIG is set or ~/.config/nixpkgs/home.nix \
       is present) there is one manual step necessary *before* running the migration script: Remove basic-environment \
       package of 'home.packages' list."
+      echo
+      echo "Recommended: change home-manager channel to release-19.09:"
+      echo "  nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager"
+      echo
+      echo "Recommended: set nix-on-droid channel to a505862"
+      echo "  nix-channel --add https://github.com/t184256/nix-on-droid-bootstrap/archive/pre-module-system.tar.gz nix-on-droid"
+      echo
+      echo "Recommended: install basic-environment with nix-env:"
+      echo "  nix-env -iA nix-on-droid.basic-environment"
+      echo "(and if it fails with conflicts, retry after executing:"
+      echo "  nix-env --set-flag --priority 50 home-manager-path)"
+      echo
+      echo "Recommended: update with what you've used before (home-manager switch -or- nix-env -u)"
+      echo
+      echo "Required if you've followed the steps above: set nix-on-droid channel to master"
+      echo "  nix-channel --add https://github.com/t184256/nix-on-droid-bootstrap/archive/master.tar.gz nix-on-droid"
+      echo
+      echo "Finally,"
+      echo "  nix-shell '<nix-on-droid>' -A migration"
+      echo "to migrate your system to the new version."
+      echo
+      echo "Please note, that all files in /etc currently provided by nix-on-droid will be recreated. The current files \
+      will be backed up with a '.bak' file extension."
       echo
       echo "===================================================="
       echo
