@@ -17,6 +17,7 @@ let
     pkgs.coreutils
     pkgs.diffutils
     pkgs.findutils
+    pkgs.gnugrep
     pkgs.gnused
     pkgs.ncurses          # For `tput`.
     pkgs.nix
