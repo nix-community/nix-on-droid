@@ -49,9 +49,19 @@ in
 
     inherit (cfg.config) assertions warnings;
 
-    build.activationAfter.homeManager = ''
-      ${cfg.config.home.activationPackage}/activate
-    '';
+    build = {
+      activationBefore = mkIf cfg.useUserPackages {
+        setPriorityHomeManagerPath = ''
+          if nix-env -q | grep '^home-manager-path$'; then
+            $DRY_RUN_CMD nix-env $VERBOSE_ARG --set-flag priority 120 home-manager-path
+          fi
+        '';
+      };
+
+      activationAfter.homeManager = ''
+        ${cfg.config.home.activationPackage}/activate
+      '';
+    };
 
     environment.packages = mkIf cfg.useUserPackages cfg.config.home.packages;
 
