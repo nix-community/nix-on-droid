@@ -111,6 +111,12 @@ in
         internal = true;
         description = "Package containing /etc files.";
       };
+
+      sessionInit = mkOption {
+        type = types.path;
+        internal = true;
+        description = "File containing session init commands like exposing environment variables.";
+      };
     };
 
   };
