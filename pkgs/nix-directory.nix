@@ -18,7 +18,10 @@ let
   ];
 
   prootTermuxClosure = closureInfo {
-    rootPaths = [ prootTermux ];
+    rootPaths = [
+      config.build.sessionInit
+      prootTermux
+    ];
   };
 in
 

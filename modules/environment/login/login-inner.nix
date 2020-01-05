@@ -17,10 +17,9 @@ writeText "login-inner" ''
   [ "$#" -gt 0 ] || echo "If nothing works, use the rescue shell and read ${config.build.installationDir}/usr/lib/login-inner"
   [ "$#" -gt 0 ] || echo "If it does not help, report bugs at https://github.com/t184256/nix-on-droid-bootstrap/issues"
 
-  export USER="${config.user.userName}"
-  export HOME="${config.user.home}"
-
-  export GC_NPROCS=1  # to prevent gc warnings of nix, see https://github.com/NixOS/nix/issues/3237
+  set +u
+  . "/nix/var/nix/profiles/per-user/$USER/profile/etc/profile.d/nix-on-droid-session-init.sh"
+  set -u
 
   ${lib.optionalString config.build.initialBuild ''
     if [ -e /etc/UNINTIALISED ]; then

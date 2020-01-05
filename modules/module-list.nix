@@ -9,6 +9,7 @@
   ./environment/links.nix
   ./environment/login
   ./environment/path.nix
+  ./environment/session-init.nix
   ./home-manager.nix
   ./user.nix
   ./version.nix
