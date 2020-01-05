@@ -86,6 +86,8 @@ in
 
         # To prevent gc warnings of nix, see https://github.com/NixOS/nix/issues/3237
         GC_NPROCS = 1;
+        # Fix locale (perl apps panic without it)
+        LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
       };
     };
 
