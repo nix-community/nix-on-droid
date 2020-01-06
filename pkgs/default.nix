@@ -10,7 +10,6 @@ let
 
   modules = import ../modules {
     pkgs = nixpkgs;
-    initialBuild = true;
 
     config = {
       imports = [ ../modules/build/initial-build.nix ];

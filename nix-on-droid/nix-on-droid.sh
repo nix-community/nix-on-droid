@@ -23,6 +23,7 @@ function doHelp() {
     echo "  -h|--help       Print this help"
     echo "  -n|--dry-run    Do a dry run, only prints what actions would be taken"
     echo "  -v|--verbose    Verbose output"
+    echo "  -f|--file       Path to config file"
     echo
     echo "Options passed on to nix build"
     echo
@@ -50,6 +51,10 @@ function doHelp() {
 function doSwitch() {
     if [[ -v VERBOSE ]]; then
         PASSTHROUGH_OPTS+=(--show-trace)
+    fi
+
+    if [[ -n "$CONFIG_FILE" ]]; then
+        PASSTHROUGH_OPTS+=(--argstr config "$(realpath "$CONFIG_FILE")")
     fi
 
     echo "Building activation package..."
@@ -86,6 +91,7 @@ function doSwitchGeneration() {
 COMMAND=
 COMMAND_ARGS=()
 PASSTHROUGH_OPTS=()
+CONFIG_FILE=
 
 while [[ $# -gt 0 ]]; do
     opt="$1"
@@ -93,6 +99,10 @@ while [[ $# -gt 0 ]]; do
     case $opt in
         generations|help|rollback|switch|switch-generation)
             COMMAND="$opt"
+            ;;
+        -f|--file)
+            CONFIG_FILE="$1"
+            shift
             ;;
         -h|--help)
             doHelp
