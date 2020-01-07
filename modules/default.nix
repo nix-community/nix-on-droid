@@ -16,7 +16,7 @@ let
   rawModule = evalModules {
     modules = [
       {
-        _module.args = { inherit pkgs; };
+        _module.args.pkgs = mkDefault pkgs;
       }
       configModule
     ] ++ import ./module-list.nix;

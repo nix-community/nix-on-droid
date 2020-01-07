@@ -10,6 +10,7 @@
   ./environment/path.nix
   ./environment/session-init.nix
   ./home-manager.nix
+  ./nixpkgs.nix
   ./user.nix
   ./version.nix
   <nixpkgs/nixos/modules/misc/assertions.nix>
