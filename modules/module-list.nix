@@ -11,6 +11,7 @@
   ./environment/session-init.nix
   ./home-manager.nix
   ./nixpkgs.nix
+  ./time.nix
   ./user.nix
   ./version.nix
   <nixpkgs/nixos/modules/misc/assertions.nix>
