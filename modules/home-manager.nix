@@ -28,6 +28,16 @@ in
   options = {
 
     home-manager = {
+      backupFileExtension = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "backup";
+        description = ''
+          On activation move existing files by appending the given
+          file extension rather than exiting with an error.
+        '';
+      };
+
       config = mkOption {
         type = types.nullOr hmModule;
         default = null;
@@ -58,9 +68,12 @@ in
         '';
       };
 
-      activationAfter.homeManager = ''
-        ${cfg.config.home.activationPackage}/activate
-      '';
+      activationAfter.homeManager = concatStringsSep " " (
+        optional
+          (cfg.backupFileExtension != null)
+          "HOME_MANAGER_BACKUP_EXT='${cfg.backupFileExtension}'"
+        ++ [ "${cfg.config.home.activationPackage}/activate" ]
+      );
     };
 
     environment.packages = mkIf cfg.useUserPackages cfg.config.home.packages;
