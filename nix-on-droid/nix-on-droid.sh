@@ -25,10 +25,11 @@ function doHelp() {
     echo "  -h|--help       Print this help"
     echo "  -n|--dry-run    Do a dry run, only prints what actions would be taken"
     echo "  -v|--verbose    Verbose output"
-    echo "  -f|--file       Path to config file"
+    echo "  -f|--file FILE  Path to config file"
     echo
     echo "Options passed on to nix build"
     echo
+    echo "  -I|--include PATH"
     echo "  --cores NUM"
     echo "  --keep-failed"
     echo "  --keep-going"
@@ -90,10 +91,10 @@ function doSwitchGeneration() {
 }
 
 
-COMMAND=
 COMMAND_ARGS=()
-PASSTHROUGH_OPTS=()
+COMMAND=
 CONFIG_FILE=
+PASSTHROUGH_OPTS=()
 
 while [[ $# -gt 0 ]]; do
     opt="$1"
@@ -109,6 +110,10 @@ while [[ $# -gt 0 ]]; do
         -h|--help)
             doHelp
             exit 0
+            ;;
+        -I|--include)
+            PASSTHROUGH_OPTS+=(-I "$1")
+            shift
             ;;
         -n|--dry-run)
             export DRY_RUN=1
