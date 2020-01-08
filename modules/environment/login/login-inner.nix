@@ -5,6 +5,11 @@
 
 let
   inherit (customPkgs.packageInfo) cacert coreutils nix;
+
+  sessionInitPackage =
+    if config.build.initialBuild
+    then config.build.sessionInit
+    else "/nix/var/nix/profiles/per-user/${config.user.userName}/profile";
 in
 
 writeText "login-inner" ''
@@ -17,12 +22,9 @@ writeText "login-inner" ''
   [ "$#" -gt 0 ] || echo "If nothing works, use the rescue shell and read ${config.build.installationDir}/usr/lib/login-inner"
   [ "$#" -gt 0 ] || echo "If it does not help, report bugs at https://github.com/t184256/nix-on-droid-bootstrap/issues"
 
-  ${lib.optionalString (! config.build.initialBuild) ''
   set +u
-  . "/nix/var/nix/profiles/per-user/$USER/profile/etc/profile.d/nix-on-droid-session-init.sh"
+  . "${sessionInitPackage}/etc/profile.d/nix-on-droid-session-init.sh"
   set -u
-  ''
-  }
 
   ${lib.optionalString config.build.initialBuild ''
     if [ -e /etc/UNINTIALISED ]; then
