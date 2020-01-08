@@ -10,6 +10,7 @@
   ./environment/path.nix
   ./environment/session-init.nix
   ./home-manager.nix
+  ./host-name.nix
   ./nixpkgs.nix
   ./time.nix
   ./user.nix
