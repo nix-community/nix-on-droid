@@ -1,5 +1,4 @@
-# Licensed under GNU Lesser General Public License v3 or later, see COPYING.
-# Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
+# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { callPackage, fetchFromGitHub, tallocStatic }:
 

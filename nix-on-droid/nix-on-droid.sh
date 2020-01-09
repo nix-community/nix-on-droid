@@ -1,5 +1,7 @@
 #!@bash@/bin/bash
 
+# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+
 PATH=@coreutils@/bin:@nix@/bin:${PATH:+:}$PATH
 
 set -eu

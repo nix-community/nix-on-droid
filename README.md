@@ -191,10 +191,10 @@ for a more extensive overview of the subject.
 
 ## Licensing and credits
 
-Licensed under GNU Lesser General Public License v3 or later, see COPYING.
-Copyright (c) 2019 Alexander Sosedkin and other contributors, see AUTHORS.
+Licensed under MIT License, see LICENSE.
+Copyright (c) 2019-2020 Alexander Sosedkin and other contributors, see AUTHORS.
 
-Initially based off the official Nix install script
+Two rewrites ago it was based off the official Nix install script
 (https://nixos.org/nix/install),
 presumably written by Eelco Dolstra.
 
