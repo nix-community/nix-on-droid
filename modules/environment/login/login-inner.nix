@@ -18,8 +18,7 @@ writeText "login-inner" ''
 
   [ "$#" -gt 0 ] || echo "Welcome to Nix-on-Droid!"
 
-  [ "$#" -gt 0 ] || echo "If nothing works, use the rescue shell and read ${config.build.installationDir}/usr/lib/login-inner"
-  [ "$#" -gt 0 ] || echo "If it does not help, report bugs at https://github.com/t184256/nix-on-droid-bootstrap/issues"
+  [ "$#" -gt 0 ] || echo "If nothing works, open an issue at https://github.com/t184256/nix-on-droid-bootstrap/issues or try the rescue shell."
 
   set +u
   . "${sessionInitPackage}/etc/profile.d/nix-on-droid-session-init.sh"
@@ -27,7 +26,7 @@ writeText "login-inner" ''
 
   ${lib.optionalString config.build.initialBuild ''
     if [ -e /etc/UNINTIALISED ]; then
-      echo "Set default user profile..."
+      echo "Setting default user profile..."
       ${nix}/bin/nix-env --switch-profile /nix/var/nix/profiles/per-user/$USER/profile
 
       [ "$#" -gt 0 ] || echo "Sourcing Nix environment..."
@@ -41,7 +40,7 @@ writeText "login-inner" ''
       ${nix}/bin/nix-channel --add ${config.build.channel.nix-on-droid} nix-on-droid
       ${nix}/bin/nix-channel --update nix-on-droid
 
-      echo "Copy default nix-on-droid config..."
+      echo "Copying default nix-on-droid config..."
       ${coreutils}/bin/mkdir --parents $HOME/.config/nixpkgs
       ${coreutils}/bin/cp $(${nix}/bin/nix-instantiate --eval --expr "<nix-on-droid/modules/environment/login/nix-on-droid.nix.default>") $HOME/.config/nixpkgs/nix-on-droid.nix
       ${coreutils}/bin/chmod u+w $HOME/.config/nixpkgs/nix-on-droid.nix

@@ -66,7 +66,7 @@ function doSwitch() {
         ${PASSTHROUGH_OPTS[*]} \
         activationPackage
 
-    echo "Run activation script..."
+    echo "Executing activation script..."
     generationDir="$(nix path-info \
         --file "<nix-on-droid/modules>" \
         ${PASSTHROUGH_OPTS[*]} \
@@ -80,7 +80,7 @@ function doSwitchGeneration() {
     local generationNum=$1
 
     if [[ -x "${PROFILE_DIRECTORY}-${generationNum}-link/activate" ]]; then
-        echo "Run activation script..."
+        echo "Executing activation script..."
         "${PROFILE_DIRECTORY}-${generationNum}-link/activate"
     else
         errorEcho "Activation was not successful, generation is either broken or already garbage collected."

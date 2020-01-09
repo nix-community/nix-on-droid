@@ -117,17 +117,17 @@ rec {
             ''} > /dev/null
           fi
 
-          echo "Uninstall home-manager-path..."
+          echo "Uninstalling home-manager-path..."
           ${pkgs.nix}/bin/nix-env --uninstall home-manager-path
         fi
 
-        echo "Decrease priority of basic-environment..."
+        echo "Decreasing priority of basic-environment..."
         ${pkgs.nix}/bin/nix-env --set-flag priority 120 basic-environment || true
 
-        echo "Install first nix-on-droid generation..."
+        echo "Installing first nix-on-droid generation..."
         ${nix-on-droid}/bin/nix-on-droid switch
 
-        echo "Uninstall basic-environment..."
+        echo "Uninstalling basic-environment..."
         ${pkgs.nix}/bin/nix-env --uninstall basic-environment
 
         echo "Installation successful! Please restart the app to complete the migration as starting new sessions will fail."
