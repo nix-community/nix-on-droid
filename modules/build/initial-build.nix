@@ -19,7 +19,7 @@ with lib;
 
       nix-on-droid = mkOption {
         type = types.str;
-        default = "https://github.com/t184256/nix-on-droid-bootstrap/archive/master.tar.gz";
+        default = "https://github.com/t184256/nix-on-droid/archive/master.tar.gz";
         description = "Channel URL for nix-on-droid.";
       };
     };

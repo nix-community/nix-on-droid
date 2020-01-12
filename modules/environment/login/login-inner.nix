@@ -18,7 +18,7 @@ writeText "login-inner" ''
 
   [ "$#" -gt 0 ] || echo "Welcome to Nix-on-Droid!"
 
-  [ "$#" -gt 0 ] || echo "If nothing works, open an issue at https://github.com/t184256/nix-on-droid-bootstrap/issues or try the rescue shell."
+  [ "$#" -gt 0 ] || echo "If nothing works, open an issue at https://github.com/t184256/nix-on-droid/issues or try the rescue shell."
 
   set +u
   . "${sessionInitPackage}/etc/profile.d/nix-on-droid-session-init.sh"

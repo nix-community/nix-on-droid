@@ -17,7 +17,7 @@ rec {
       echo
       echo "You are currently using an old installation of nix-on-droid. The way it manages your device has changed \
       from installing the basic-environment package to a real module system. For more information see \
-      https://github.com/t184256/nix-on-droid-bootstrap."
+      https://github.com/t184256/nix-on-droid."
       echo
       echo "You can either reinstall the app or back up your data and attempt a migration."
       echo
