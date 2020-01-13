@@ -1,6 +1,6 @@
 # Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, lib, stdenv, closureInfo, prootTermux, proot, qemuAarch64Static }:
+{ config, lib, stdenv, closureInfo, proot, qemuAarch64Static }:
 
 let
   buildRootDirectory = "root-directory";
@@ -16,10 +16,9 @@ let
     "-w /"
   ];
 
-  prootTermuxClosure = closureInfo {
+  initialClosure = closureInfo {
     rootPaths = [
       config.build.sessionInit
-      prootTermux
     ];
   };
 in
@@ -53,13 +52,13 @@ stdenv.mkDerivation {
     PKG_NIX=$(find ${buildRootDirectory}/nix/store -path '*/bin/nix' | sed 's,^${buildRootDirectory},,')
     PKG_NIX=''${PKG_NIX%/bin/nix}
 
-    for i in $(< ${prootTermuxClosure}/store-paths); do
+    for i in $(< ${initialClosure}/store-paths); do
       cp --archive "$i" "${buildRootDirectory}$i"
     done
 
     USER=${config.user.userName} ${prootCommand} "$PKG_NIX/bin/nix-store" --init
     USER=${config.user.userName} ${prootCommand} "$PKG_NIX/bin/nix-store" --load-db < .reginfo
-    USER=${config.user.userName} ${prootCommand} "$PKG_NIX/bin/nix-store" --load-db < ${prootTermuxClosure}/registration
+    USER=${config.user.userName} ${prootCommand} "$PKG_NIX/bin/nix-store" --load-db < ${initialClosure}/registration
 
     cat > package-info.nix <<EOF
     {

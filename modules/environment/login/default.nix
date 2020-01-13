@@ -82,14 +82,7 @@ in
     environment.files = {
       inherit login loginInner;
 
-      prootStatic =
-        let
-          crossCompiledPaths = {
-           aarch64 = "/nix/store/r09n7pp4fwhrld2a1k2al6bgdx2qqfaj-proot-termux-unstable-2019-09-05-aarch64-unknown-linux-android";
-           i686 = "/nix/store/4gpm0rmrq0mm69kl3cb1gjslr7ihhp01-proot-termux-unstable-2019-09-05-i686-unknown-linux-android";
-          };
-        in
-          "${crossCompiledPaths.${config.build.arch}}";
+      prootStatic = pkgs.proot-termux;
     };
 
   };

@@ -2,4 +2,5 @@
 
 [
   (import ./htop.nix)
+  (import ./proot-termux.nix)
 ]
