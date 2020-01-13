@@ -1,0 +1,107 @@
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p gnutar rsync
+
+# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+
+set -eu
+set -o pipefail
+
+SCRIPTS_DIR="$(dirname "$(realpath "$0")")"
+CONFIG_FILE="${SCRIPTS_DIR}/config.sh"
+
+function errorEcho() {
+    >&2 echo $@
+}
+
+function doHelp() {
+    echo "Usage: $0 [COMMAND]"
+    echo
+    echo "Commands (default: all)"
+    echo
+    echo "  all         Build and upload bootstrap zip ball and channel if enabled"
+    echo "  bootstrap   Build and upload bootstrap zip ball"
+    echo "  channel     Build and upload channel tar ball if enabled"
+    echo "  help        Print this help"
+}
+
+if [[ ! -r "${CONFIG_FILE}" ]]; then
+    errorEcho "Config file not found: ${CONFIG_FILE}"
+    exit 1
+fi
+
+. "${CONFIG_FILE}"
+
+COPY_TO="${COPY_TO:-}"
+RSYNC_OPTIONS="${RSYNC_OPTIONS:---progress}"
+NIX_ON_DROID_CHANNEL="${NIX_ON_DROID_CHANNEL:-}"
+UPLOAD_CUSTOM_CHANNEL="${UPLOAD_CUSTOM_CHANNEL:-}"
+DEFAULT_ARCHES="${DEFAULT_ARCHES:-aarch64 i686}"
+
+if [[ "${COPY_TO}" == "" || "${NIX_ON_DROID_CHANNEL}" == "" ]]; then
+    errorEcho "At least COPY_TO and NIX_ON_DROID_CHANNEL have to be set in ${CONFIG_FILE}"
+    exit 1
+fi
+
+if [[ $# -gt 1 ]]; then
+    errorEcho "Too many arguments"
+    doHelp >&2
+    exit 1
+fi
+
+ARGUMENT="${1:-all}"
+COMMAND_BOOTSTRAP=0
+COMMAND_CHANNEL=0
+
+case "${ARGUMENT}" in
+    all)
+        COMMAND_BOOTSTRAP=1
+        COMMAND_CHANNEL=1
+        ;;
+    bootstrap)
+        COMMAND_BOOTSTRAP=1
+        ;;
+    channel)
+        COMMAND_CHANNEL=1
+        ;;
+    help)
+        doHelp
+        exit 0
+        ;;
+    *)
+        errorEcho "Unknown command: ${ARGUMENT}"
+        doHelp >&2
+        exit 1
+        ;;
+esac
+
+UPLOAD_PATHS=()
+
+if [[ "${COMMAND_BOOTSTRAP}" -eq 1 ]]; then
+    for arch in ${DEFAULT_ARCHES[*]}; do
+        echo "Build bootstrap zip ball for $arch"
+        nix build --no-link \
+            --file "${SCRIPTS_DIR}/../pkgs" \
+            --argstr arch "${arch}" \
+            --argstr nixOnDroidChannelURL "${NIX_ON_DROID_CHANNEL}/channel.tar.bz2" \
+            bootstrapZip
+
+        UPLOAD_PATHS+=("$(nix path-info \
+            --file "${SCRIPTS_DIR}/../pkgs" \
+            --argstr arch "${arch}" \
+            --argstr nixOnDroidChannelURL "${NIX_ON_DROID_CHANNEL}/channel.tar.bz2" \
+            bootstrapZip)/bootstrap-${arch}.zip")
+    done
+fi
+
+if [[ "${COMMAND_CHANNEL}" -eq 1 && "${UPLOAD_CUSTOM_CHANNEL}" -eq 1 ]]; then
+    echo "Build channel"
+    tar --exclude=".git" --exclude="result" --transform 's,^,nix-on-droid/,' -cjf /tmp/channel.tar.bz2 -C $SCRIPTS_DIR/.. .
+    UPLOAD_PATHS+=(/tmp/channel.tar.bz2)
+fi
+
+if [[ "${#UPLOAD_PATHS}" -gt 0 ]]; then
+    echo "Upload files: ${UPLOAD_PATHS[*]}"
+    rsync ${RSYNC_OPTIONS} ${UPLOAD_PATHS[*]} "${COPY_TO}"
+fi
+
+# vim: ft=sh

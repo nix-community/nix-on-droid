@@ -1,0 +1,13 @@
+# rsync destination path
+#COPY_TO="host.name:/path/to/directory/"  # with trailing slash
+
+# url to custom nix-on-droid channel, either via github like:
+#NIX_ON_DROID_CHANNEL="https://github.com/<USER>/<REPO>/archive/<BRANCH>.tar.gz"
+# or via upload to $COPY_TO like:
+#NIX_ON_DROID_CHANNEL="https://example.com/path/to/"  # with trailing slash, "channel.tar.bz2" will be appended
+#UPLOAD_CUSTOM_CHANNEL=1
+
+# list of all arches to build and upload
+#DEFAULT_ARCHES="aarch64 i686"
+
+# vim: ft=sh

@@ -152,6 +152,25 @@ In case you only care about updates through wiping the data,
 you shouldn't need a binary cache for that.
 
 
+### `scripts/deploy` helper script
+
+To simplify the local development and deployment there is a `scripts/deploy`:
+
+```
+$ ./scripts/deploy help
+Usage: ./scripts/deploy [COMMAND]
+
+Commands (default: all)
+
+  all         Build and upload bootstrap zip ball and channel if enabled
+  bootstrap   Build and upload bootstrap zip ball
+  channel     Build and upload channel tar ball if enabled
+  help        Print this help
+```
+
+Some static config needs to be set in `scripts/config.sh` (see
+`scripts/config.sh.dist`).
+
 
 ## Tips
 
