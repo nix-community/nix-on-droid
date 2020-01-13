@@ -166,5 +166,7 @@ in
 
     _module.args.pkgs = _pkgs;
 
+    nixpkgs.overlays = import ../overlays;
+
   };
 }
