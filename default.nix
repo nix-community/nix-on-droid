@@ -29,7 +29,7 @@ rec {
       echo "  nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager"
       echo
       echo "Recommended: set nix-on-droid channel to a505862"
-      echo "  nix-channel --add https://github.com/t184256/nix-on-droid-bootstrap/archive/pre-module-system.tar.gz nix-on-droid"
+      echo "  nix-channel --add https://github.com/t184256/nix-on-droid/archive/pre-module-system.tar.gz nix-on-droid"
       echo
       echo "Recommended: install basic-environment with nix-env:"
       echo "  nix-env -iA nix-on-droid.basic-environment"
@@ -39,7 +39,7 @@ rec {
       echo "Recommended: update with what you've used before (home-manager switch -or- nix-env -u)"
       echo
       echo "Required if you've followed the steps above: set nix-on-droid channel to master"
-      echo "  nix-channel --add https://github.com/t184256/nix-on-droid-bootstrap/archive/master.tar.gz nix-on-droid"
+      echo "  nix-channel --add https://github.com/t184256/nix-on-droid/archive/master.tar.gz nix-on-droid"
       echo
       echo "Finally,"
       echo "  nix-shell '<nix-on-droid>' -A migration"
