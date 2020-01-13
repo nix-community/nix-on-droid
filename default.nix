@@ -34,7 +34,7 @@ rec {
       echo "Recommended: install basic-environment with nix-env:"
       echo "  nix-env -iA nix-on-droid.basic-environment"
       echo "(and if it fails with conflicts, retry after executing:"
-      echo "  nix-env --set-flag --priority 50 home-manager-path)"
+      echo "  nix-env --set-flag priority 50 home-manager-path)"
       echo
       echo "Recommended: update with what you've used before (home-manager switch -or- nix-env -u)"
       echo
