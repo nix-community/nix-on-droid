@@ -7,17 +7,27 @@ with lib;
 let
   cfg = config.home-manager;
 
-  hmModule = types.submodule ({ name, ... }: {
-    imports = import <home-manager/modules/modules.nix> { inherit lib pkgs; };
+  extendedLib = import <home-manager/modules/lib/stdlib-extended.nix> pkgs.lib;
 
-    config = {
-      submoduleSupport.enable = true;
-      submoduleSupport.externalPackageInstall = cfg.useUserPackages;
+  hmModule = types.submoduleWith {
+    specialArgs = { lib = extendedLib; };
+    modules = [
+      ({ name, ... }: {
+        imports = import <home-manager/modules/modules.nix> {
+          inherit pkgs;
+          lib = extendedLib;
+        };
 
-      home.username = config.user.userName;
-      home.homeDirectory = config.user.home;
-    };
-  });
+        config = {
+          submoduleSupport.enable = true;
+          submoduleSupport.externalPackageInstall = cfg.useUserPackages;
+
+          home.username = config.user.userName;
+          home.homeDirectory = config.user.home;
+        };
+      })
+    ];
+  };
 in
 
 {
