@@ -19,6 +19,20 @@ let
       [ -n "$__NOD_SESS_INIT_SOURCED" ] && return
       export __NOD_SESS_INIT_SOURCED=1
 
+      . $HOME/.nix-profile/etc/profile.d/nix.sh
+
+      ${optionalString (config.home-manager.config != null) ''
+        if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+          export NIX_PATH=$HOME/.nix-defexpr/channels''${NIX_PATH:+:}$NIX_PATH
+          set +u
+          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+          set -u
+        fi
+      ''}
+
+      # Workaround for https://github.com/NixOS/nix/issues/1865
+      export NIX_PATH=nixpkgs=$HOME/.nix-defexpr/channels/nixpkgs/:$NIX_PATH
+
       ${exportAll cfg.sessionVariables}
     '';
   };

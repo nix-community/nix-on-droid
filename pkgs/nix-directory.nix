@@ -18,7 +18,6 @@ let
 
   prootTermuxClosure = closureInfo {
     rootPaths = [
-      config.build.sessionInit
       prootTermux
     ];
   };

@@ -4,11 +4,6 @@
 
 let
   inherit (customPkgs.packageInfo) cacert coreutils nix;
-
-  sessionInitPackage =
-    if config.build.initialBuild
-    then config.build.sessionInit
-    else "/nix/var/nix/profiles/per-user/${config.user.userName}/profile";
 in
 
 writeText "login-inner" ''
@@ -20,12 +15,14 @@ writeText "login-inner" ''
 
   [ "$#" -gt 0 ] || echo "If nothing works, open an issue at https://github.com/t184256/nix-on-droid/issues or try the rescue shell."
 
-  set +u
-  . "${sessionInitPackage}/etc/profile.d/nix-on-droid-session-init.sh"
-  set -u
-
   ${lib.optionalString config.build.initialBuild ''
     if [ -e /etc/UNINTIALISED ]; then
+      export HOME="${config.user.home}"
+      export USER="${config.user.userName}"
+
+      # To prevent gc warnings of nix, see https://github.com/NixOS/nix/issues/3237
+      export GC_NPROCS=1
+
       echo "Setting default user profile..."
       ${nix}/bin/nix-env --switch-profile /nix/var/nix/profiles/per-user/$USER/profile
 
@@ -62,19 +59,9 @@ writeText "login-inner" ''
     fi
   ''}
 
-  [ "$#" -gt 0 ] || echo "Sourcing Nix environment..."
-  . $HOME/.nix-profile/etc/profile.d/nix.sh
-
-  if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-    [ "$#" -gt 0 ] || echo "Sourcing home-manager environment..."
-    export NIX_PATH=$HOME/.nix-defexpr/channels''${NIX_PATH:+:}$NIX_PATH
-    set +u
-    . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-    set -u
-  fi
-
-  # Workaround for https://github.com/NixOS/nix/issues/1865
-  export NIX_PATH=nixpkgs=$HOME/.nix-defexpr/channels/nixpkgs/:$NIX_PATH
+  set +u
+  . "${config.user.home}/.nix-profile/etc/profile.d/nix-on-droid-session-init.sh"
+  set -u
 
   if [ "$#" -eq 0 ]; then
     exec /usr/bin/env bash
