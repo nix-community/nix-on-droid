@@ -16,6 +16,7 @@ let
         imports = import <home-manager/modules/modules.nix> {
           inherit pkgs;
           lib = extendedLib;
+          useNixpkgsModule = !cfg.useGlobalPkgs;
         };
 
         config = {
@@ -52,6 +53,12 @@ in
         default = null;
         description = "Home Manager configuration.";
       };
+
+      useGlobalPkgs = mkEnableOption ''
+        using the system configuration's <literal>pkgs</literal>
+        argument in Home Manager. This disables the Home Manager
+        options <option>nixpkgs.*</option>
+      '';
 
       useUserPackages = mkEnableOption ''
         installation of user packages through the
