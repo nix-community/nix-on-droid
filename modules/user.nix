@@ -40,7 +40,7 @@ in
 
       shell = mkOption {
         type = types.path;
-        readOnly = true;
+        default = "${pkgs.bashInteractive}/bin/bash";
         description = "Path to login shell.";
       };
 
@@ -73,7 +73,6 @@ in
     user = {
       group = "nix-on-droid";
       home = "/data/data/com.termux.nix/files/home";
-      shell = "/bin/sh";
       userName = "nix-on-droid";
     };
 
