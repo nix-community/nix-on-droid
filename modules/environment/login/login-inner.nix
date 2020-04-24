@@ -11,9 +11,10 @@ writeText "login-inner" ''
 
   set -eu -o pipefail
 
-  [ "$#" -gt 0 ] || echo "Welcome to Nix-on-Droid!"
-
-  [ "$#" -gt 0 ] || echo "If nothing works, open an issue at https://github.com/t184256/nix-on-droid/issues or try the rescue shell."
+  if [ "$#" -eq 0 ]; then  # if script is called from within nix-on-droid app
+    echo "Welcome to Nix-on-Droid!"
+    echo "If nothing works, open an issue at https://github.com/t184256/nix-on-droid/issues or try the rescue shell."
+  fi
 
   ${lib.optionalString config.build.initialBuild ''
     if [ -e /etc/UNINTIALISED ]; then
@@ -63,9 +64,11 @@ writeText "login-inner" ''
   . "${config.user.home}/.nix-profile/etc/profile.d/nix-on-droid-session-init.sh"
   set -u
 
-  if [ "$#" -eq 0 ]; then
-    exec /usr/bin/env bash
-  else
+  if [ "$#" -gt 0 ]; then  # if script is not called from within nix-on-droid app
     exec /usr/bin/env "$@"
+  elif [ -x "${config.user.shell}" ]; then
+    exec "${config.user.shell}"
+  else
+    exec /usr/bin/env bash
   fi
 ''
