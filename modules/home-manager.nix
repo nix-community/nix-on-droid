@@ -7,6 +7,9 @@ with lib;
 let
   cfg = config.home-manager;
 
+  tryEval = builtins.tryEval <home-manager/modules/modules.nix>;
+  assertion = tryEval.success && builtins.functionArgs (import tryEval.value) ? useNixpkgsModule;
+
   extendedLib = import <home-manager/modules/lib/stdlib-extended.nix> pkgs.lib;
 
   hmModule = types.submoduleWith {
@@ -49,7 +52,10 @@ in
       };
 
       config = mkOption {
-        type = types.nullOr hmModule;
+        type =
+          if assertion
+          then types.nullOr hmModule
+          else types.unspecified;
         default = null;
         description = "Home Manager configuration.";
       };
@@ -71,28 +77,43 @@ in
 
   ###### implementation
 
-  config = mkIf (cfg.config != null) {
+  config = mkIf (cfg.config != null) (mkMerge [
 
-    inherit (cfg.config) assertions warnings;
+    {
+      assertions = [
+        {
+          inherit assertion;
+          message = "You are currently using release-19.09 branch of home-manager, you need "
+            + "to update to the release-20.03 channel.";
+        }
+      ];
+    }
 
-    build = {
-      activationBefore = mkIf cfg.useUserPackages {
-        setPriorityHomeManagerPath = ''
-          if nix-env -q | grep '^home-manager-path$'; then
-            $DRY_RUN_CMD nix-env $VERBOSE_ARG --set-flag priority 120 home-manager-path
-          fi
-        '';
+    # hack to determine if cfg.config is a valid home-manager config
+    (mkIf (cfg.config ? home && cfg.config.home ? activationPackage) {
+
+      inherit (cfg.config) assertions warnings;
+
+      build = {
+        activationBefore = mkIf cfg.useUserPackages {
+          setPriorityHomeManagerPath = ''
+            if nix-env -q | grep '^home-manager-path$'; then
+              $DRY_RUN_CMD nix-env $VERBOSE_ARG --set-flag priority 120 home-manager-path
+            fi
+          '';
+        };
+
+        activationAfter.homeManager = concatStringsSep " " (
+          optional
+            (cfg.backupFileExtension != null)
+            "HOME_MANAGER_BACKUP_EXT='${cfg.backupFileExtension}'"
+          ++ [ "${cfg.config.home.activationPackage}/activate" ]
+        );
       };
 
-      activationAfter.homeManager = concatStringsSep " " (
-        optional
-          (cfg.backupFileExtension != null)
-          "HOME_MANAGER_BACKUP_EXT='${cfg.backupFileExtension}'"
-        ++ [ "${cfg.config.home.activationPackage}/activate" ]
-      );
-    };
+      environment.packages = mkIf cfg.useUserPackages cfg.config.home.packages;
 
-    environment.packages = mkIf cfg.useUserPackages cfg.config.home.packages;
+    })
 
-  };
+  ]);
 }
