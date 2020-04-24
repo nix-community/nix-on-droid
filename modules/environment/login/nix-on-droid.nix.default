@@ -28,10 +28,10 @@
   environment.etcBackupExtension = ".bak";
 
   # Read the changelog before changing this value
-  system.stateVersion = "19.09";
+  system.stateVersion = "20.03";
 
   # After installing home-manager channel like
-  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager
+  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager
   #   nix-channel --update
   # you can configure home-manager in here like
   #home-manager.config =

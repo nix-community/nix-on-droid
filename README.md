@@ -52,7 +52,7 @@ for example:
 
 {
   environment.packages = [ pkgs.vim ];
-  system.stateVersion = "19.09";
+  system.stateVersion = "20.03";
 }
 ```
 
@@ -66,7 +66,7 @@ An alternative location is `~/.config/nixpkgs/config.nix` with the key
 
     {
       environment.packages = [ pkgs.vim ];
-      system.stateVersion = "19.09";
+      system.stateVersion = "20.03";
     };
 }
 ```
@@ -80,7 +80,7 @@ To enable `home-manager` you simply need to follow the instructions already prov
 
 1.  Add `home-manager` channel:
     ```
-    nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager
+    nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager
     nix-channel --update
     ```
 2.  Configure `home-manager`:

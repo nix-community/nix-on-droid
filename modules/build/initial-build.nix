@@ -13,7 +13,7 @@ with lib;
     build.channel = {
       nixpkgs = mkOption {
         type = types.str;
-        default = "https://nixos.org/channels/nixos-19.09";
+        default = "https://nixos.org/channels/nixos-20.03";
         description = "Channel URL for nixpkgs.";
       };
 

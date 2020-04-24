@@ -25,8 +25,8 @@ rec {
       is present) there is one manual step necessary *before* running the migration script: Remove basic-environment \
       package of 'home.packages' list."
       echo
-      echo "Recommended: change home-manager channel to release-19.09:"
-      echo "  nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager"
+      echo "Recommended: change home-manager channel to release-20.03:"
+      echo "  nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager"
       echo
       echo "Recommended: set nix-on-droid channel to a505862"
       echo "  nix-channel --add https://github.com/t184256/nix-on-droid/archive/pre-module-system.tar.gz nix-on-droid"
@@ -75,10 +75,10 @@ rec {
             ${pkgs.patch}/bin/patch --no-backup-if-mismatch $HOME/.config/nixpkgs/nix-on-droid.nix ${pkgs.writeText "patch" ''
               @@ -27,15 +27,9 @@
                  # Read the changelog before changing this value
-                 system.stateVersion = "19.09";
+                 system.stateVersion = "20.03";
 
               -  # After installing home-manager channel like
-              -  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager
+              -  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager
               -  #   nix-channel --update
               -  # you can configure home-manager in here like
               -  #home-manager.config =
@@ -97,10 +97,10 @@ rec {
             ${pkgs.patch}/bin/patch --no-backup-if-mismatch $HOME/.config/nixpkgs/nix-on-droid.nix ${pkgs.writeText "patch" ''
               @@ -27,15 +27,9 @@
                  # Read the changelog before changing this value
-                 system.stateVersion = "19.09";
+                 system.stateVersion = "20.03";
 
               -  # After installing home-manager channel like
-              -  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-19.09.tar.gz home-manager
+              -  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager
               -  #   nix-channel --update
               -  # you can configure home-manager in here like
               -  #home-manager.config =
