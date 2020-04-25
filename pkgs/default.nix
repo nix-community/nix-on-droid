@@ -14,7 +14,9 @@ let
     pkgs = nixpkgs;
 
     config = {
+      # Fix invoking bash after initial build.
       user.shell = "${packageInfo.bash}/bin/bash";
+
       imports = [ ../modules/build/initial-build.nix ];
 
       _module.args = { inherit customPkgs; };
