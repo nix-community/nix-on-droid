@@ -69,6 +69,7 @@ writeText "login-inner" ''
   elif [ -x "${config.user.shell}" ]; then
     exec "${config.user.shell}"
   else
+    echo "Cannot execute shell '${config.user.shell}', falling back to bash"
     exec /usr/bin/env bash
   fi
 ''
