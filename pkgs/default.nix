@@ -5,12 +5,16 @@
 let
   loadNixpkgs = import lib/load-nixpkgs.nix;
 
+  nixDirectory = callPackage ./nix-directory.nix { };
+  packageInfo = import "${nixDirectory}/nix-support/package-info.nix";
+
   nixpkgs = loadNixpkgs { };
 
   modules = import ../modules {
     pkgs = nixpkgs;
 
     config = {
+      user.shell = "${packageInfo.bash}/bin/bash";
       imports = [ ../modules/build/initial-build.nix ];
 
       _module.args = { inherit customPkgs; };
@@ -34,10 +38,9 @@ let
   );
 
   customPkgs = rec {
+    inherit nixDirectory packageInfo;
     bootstrap = callPackage ./bootstrap.nix { };
     bootstrapZip = callPackage ./bootstrap-zip.nix { };
-    nixDirectory = callPackage ./nix-directory.nix { };
-    packageInfo = import "${nixDirectory}/nix-support/package-info.nix";
     prootTermux = callPackage ./cross-compiling/proot-termux.nix { };
     qemuAarch64Static = callPackage ./qemu-aarch64-static.nix { };
     tallocStatic = callPackage ./cross-compiling/talloc-static.nix { };
