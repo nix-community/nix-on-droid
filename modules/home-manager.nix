@@ -8,7 +8,9 @@ let
   cfg = config.home-manager;
 
   tryEval = builtins.tryEval <home-manager/modules/modules.nix>;
-  assertion = tryEval.success && builtins.functionArgs (import tryEval.value) ? useNixpkgsModule;
+  assertionNixpkgs = types ? submoduleWith;
+  assertionHomeManager = tryEval.success && builtins.functionArgs (import tryEval.value) ? useNixpkgsModule;
+  assertion = assertionNixpkgs && assertionHomeManager;
 
   extendedLib = import <home-manager/modules/lib/stdlib-extended.nix> pkgs.lib;
 
@@ -82,7 +84,12 @@ in
     {
       assertions = [
         {
-          inherit assertion;
+          assertion = assertionNixpkgs;
+          message = "You are currently using release-19.09 branch of nixpkgs, you need "
+            + "to update to the release-20.03 channel.";
+        }
+        {
+          assertion = assertionHomeManager;
           message = "You are currently using release-19.09 branch of home-manager, you need "
             + "to update to the release-20.03 channel.";
         }
