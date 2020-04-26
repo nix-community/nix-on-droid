@@ -38,8 +38,8 @@ rec {
       echo
       echo "Recommended: update with what you've used before (home-manager switch -or- nix-env -u)"
       echo
-      echo "Required if you've followed the steps above: set nix-on-droid channel to master"
-      echo "  nix-channel --add https://github.com/t184256/nix-on-droid/archive/master.tar.gz nix-on-droid"
+      echo "Required if you've followed the steps above: set nix-on-droid channel to release-20.03"
+      echo "  nix-channel --add https://github.com/t184256/nix-on-droid/archive/release-20.03.tar.gz nix-on-droid"
       echo
       echo "Finally,"
       echo "  nix-shell '<nix-on-droid>' -A migration"
