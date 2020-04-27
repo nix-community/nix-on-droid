@@ -12,6 +12,7 @@ writeScript "login" ''
   set -eu -o pipefail
 
   export USER="${config.user.userName}"
+  export HOME="${config.user.home}"
   export PROOT_TMP_DIR=${installationDir}/tmp
   export PROOT_L2S_DIR=${installationDir}/.l2s
 
