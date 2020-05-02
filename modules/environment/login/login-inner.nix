@@ -64,6 +64,10 @@ writeText "login-inner" ''
   . "${config.user.home}/.nix-profile/etc/profile.d/nix-on-droid-session-init.sh"
   set -u
 
+  ${lib.optionalString config.build.initialBuild ''
+    exec /usr/bin/env bash  # otherwise it'll be a limited bash that came with Nix
+  ''}
+
   if [ "$#" -gt 0 ]; then  # if script is not called from within nix-on-droid app
     exec /usr/bin/env "$@"
   elif [ -x "${config.user.shell}" ]; then
