@@ -13,6 +13,25 @@ function errorEcho() {
     >&2 echo $@
 }
 
+function setupPasstroughOpts() {
+    if [[ -v VERBOSE ]]; then
+        PASSTHROUGH_OPTS+=(--show-trace)
+    fi
+
+    if [[ -n "$CONFIG_FILE" ]]; then
+        PASSTHROUGH_OPTS+=(--argstr config "$(realpath "$CONFIG_FILE")")
+    fi
+}
+
+
+function doBuild() {
+    echo "Building activation package..."
+    nix build \
+        --file "<nix-on-droid/modules>" \
+        ${PASSTHROUGH_OPTS[*]} \
+        activationPackage
+}
+
 function doGenerations() {
     nix-env --profile $PROFILE_DIRECTORY --list-generations
 }
@@ -45,6 +64,8 @@ function doHelp() {
     echo
     echo "  rollback        Rollback and activate configuration"
     echo
+    echo "  build           Build configuration"
+    echo
     echo "  switch          Build and activate configuration"
     echo
     echo "  switch-generation NUM"
@@ -52,14 +73,6 @@ function doHelp() {
 }
 
 function doSwitch() {
-    if [[ -v VERBOSE ]]; then
-        PASSTHROUGH_OPTS+=(--show-trace)
-    fi
-
-    if [[ -n "$CONFIG_FILE" ]]; then
-        PASSTHROUGH_OPTS+=(--argstr config "$(realpath "$CONFIG_FILE")")
-    fi
-
     echo "Building activation package..."
     nix build \
         --no-link \
@@ -100,7 +113,7 @@ while [[ $# -gt 0 ]]; do
     opt="$1"
     shift
     case $opt in
-        generations|help|rollback|switch|switch-generation)
+        build|generations|help|rollback|switch|switch-generation)
             COMMAND="$opt"
             ;;
         -f|--file)
@@ -147,12 +160,17 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+setupPasstroughOpts
+
 if [[ -z $COMMAND ]]; then
     doHelp >&2
     exit 1
 fi
 
 case $COMMAND in
+    build)
+        doBuild
+        ;;
     generations)
         doGenerations
         ;;
