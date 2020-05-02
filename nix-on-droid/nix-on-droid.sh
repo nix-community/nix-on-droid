@@ -49,6 +49,7 @@ function doHelp() {
     echo "Options passed on to nix build"
     echo
     echo "  -I|--include PATH"
+    echo "  --builders BUILDERS"
     echo "  --cores NUM"
     echo "  --keep-failed"
     echo "  --keep-going"
@@ -135,7 +136,7 @@ while [[ $# -gt 0 ]]; do
             PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
             shift 2
             ;;
-        --max-jobs|--cores)
+        --builders|--cores|--max-jobs)
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
             ;;
