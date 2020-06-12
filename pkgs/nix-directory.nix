@@ -27,12 +27,12 @@ stdenv.mkDerivation {
   name = "nix-directory";
 
   src = builtins.fetchurl {
-    url = "https://nixos.org/releases/nix/nix-2.3.1/nix-2.3.1-${config.build.arch}-linux.tar.xz";
+    url = "https://nixos.org/releases/nix/nix-2.3.6/nix-2.3.6-${config.build.arch}-linux.tar.xz";
     sha256 =
       let
         archShas = {
-         aarch64 = "94a6a525bd0b2df82e14b96b5b0eaae86669b5d4671aacfc4db2db85325a81c1";
-         i686 = "a5d3f26d4a449616bf654286f2fe29c1c1df4f029b7e29fa3ccf8494d598bfee";
+         aarch64 = "96bfea4540342c97b5337a707cf9c0f0d00028e443536a6a191ee61a169d5ecb";
+         i686 = "f2ec612c0f96c1e6129df570ac5dfc2045334554d2863b014618d67e05fa18fa";
         };
       in
         "${archShas.${config.build.arch}}";
