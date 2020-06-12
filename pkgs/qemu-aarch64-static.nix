@@ -6,8 +6,8 @@ stdenv.mkDerivation {
   name = "qemu-aarch64-static";
 
   src = builtins.fetchurl {
-    url = "https://github.com/multiarch/qemu-user-static/releases/download/v4.1.0-1/qemu-aarch64-static";
-    sha256 = "06491ivqjz1n4c391dvl8fzgkc82ijcgg7qz1fnjh0hks12fd85s";
+    url = "https://github.com/multiarch/qemu-user-static/releases/download/v5.0.0-2/qemu-aarch64-static";
+    sha256 = "0q4hxq7kfxm70wvqybrcr9db8akwlzxf5jljdxv4lff8ivlhr6rw";
   };
 
   unpackPhase = "true";
