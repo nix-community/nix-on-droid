@@ -6,6 +6,9 @@ env:
   global:
     - CACHIX_CACHE=nix-on-droid
 
+before_install:
+  - nix upgrade-nix
+
 install:
   - nix-env -iA cachix -f https://cachix.org/api/v1/install
   - cachix use "${CACHIX_CACHE}"
