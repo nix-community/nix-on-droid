@@ -1,0 +1,35 @@
+diff -ru typespeed-0.6.5/src/typespeed.c typespeed/src/typespeed.c
+--- a/src/typespeed.c	2008-08-13 16:36:51.000000000 +0200
++++ b/src/typespeed.c	2020-06-12 20:59:08.682552635 +0200
+@@ -322,31 +322,6 @@
+ 	if ((hfd = open(HIGHFILE, O_RDWR, 0)) == -1)
+ 		xerr(1, "main: open: %s", HIGHFILE);
+ 
+-#ifndef WIN32
+-	/* drop privileges */
+-	mygid = getgid();
+-#if defined(HAVE_SETRESGID)
+-	if (setresgid(mygid, mygid, mygid) == -1) {
+-		fputs("Cannot drop privilege!\n", stderr);
+-		exit(1);
+-	}
+-#elif defined(HAVE_RESREGID)
+-	if (setregid(mygid, mygid) == -1) {
+-		fputs("Cannot drop privilege!\n", stderr);
+-		exit(1);
+-	}
+-#else
+-	if (setegid(mygid) == -1) {
+-		fputs("Cannot drop privilege!\n", stderr);
+-		exit(1);
+-	}
+-	if (setgid(mygid) == -1) {
+-		fputs("Cannot drop privilege!\n", stderr);
+-		exit(1);
+-	}
+-#endif /* HAVE_SETRESGID */
+-#endif /* WIN32 */
+-
+ 	/* check file descriptors for consistency */
+ 	if (hfd == STDIN_FILENO || hfd == STDOUT_FILENO ||
+ 	    hfd == STDERR_FILENO)
