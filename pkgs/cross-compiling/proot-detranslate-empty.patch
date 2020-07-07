@@ -1,0 +1,37 @@
+From 7d7479c490de083729253f120a5e9a9c5bd47d0c Mon Sep 17 00:00:00 2001
+From: Florian Wernli <florian.wernli@gmail.com>
+Date: Sat, 14 Mar 2020 17:52:19 +0100
+Subject: [PATCH] detranslate: check for empty path or t_referrer.
+ cmpare_paths2: either the asserts or the followed if statement is wrong
+
+---
+ src/path/path.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/src/path/path.c b/src/path/path.c
+index d5c9ec6..7a5e398 100644
+--- a/src/path/path.c
++++ b/src/path/path.c
+@@ -413,11 +413,11 @@ int detranslate_path(Tracee *tracee, char path[PATH_MAX], const char t_referrer[
+ 
+ 	/* Don't try to detranslate relative paths (typically the
+ 	 * target of a relative symbolic link). */
+-	if (path[0] != '/')
++	if (path[0] != '/' || path[0] == 0)
+ 		return 0;
+ 
+ 	/* Is it a symlink?  */
+-	if (t_referrer != NULL) {
++	if (t_referrer != NULL && t_referrer[0] != 0) {
+ 		Comparison comparison;
+ 
+ 		sanity_check = false;
+@@ -543,8 +543,6 @@ Comparison compare_paths2(const char *path1, size_t length1, const char *path2,
+ 	assert(length(path1) == length1);
+ 	assert(length(path2) == length2);
+ #endif
+-	assert(length1 > 0);
+-	assert(length2 > 0);
+ 
+ 	if (!length1 || !length2) {
+ 		return PATHS_ARE_NOT_COMPARABLE;

@@ -19,6 +19,8 @@ pkgs.crossStatic.stdenv.mkDerivation {
 
   buildInputs = [ tallocStatic ];
 
+  patches = [ ./proot-detranslate-empty.patch ];
+
   makeFlags = [ "-Csrc CFLAGS=-D__ANDROID__" ];
 
   installPhase = ''
