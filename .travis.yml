@@ -6,10 +6,10 @@ env:
   global:
     - CACHIX_CACHE=nix-on-droid
 
-before_install:
-  - nix upgrade-nix
-
 install:
+  # for cachix we need travis to be a trusted nix user
+  - echo "trusted-users = $USER" | sudo tee -a /etc/nix/nix.conf
+  - sudo systemctl restart nix-daemon
   - nix-env -iA cachix -f https://cachix.org/api/v1/install
   - cachix use "${CACHIX_CACHE}"
   - cachix push "${CACHIX_CACHE}" -w &
