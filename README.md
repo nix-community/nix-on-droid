@@ -100,6 +100,10 @@ To enable `home-manager` you simply need to follow the instructions already prov
       home-manager.config = import ./home.nix;
     }
     ```
+3.  Allow `home-manager` to reolve conflicts automatically (optional):
+    ```nix
+    home-manager.useUserPackages = true;
+    ```
 
 ### `nix-on-droid` executable
 

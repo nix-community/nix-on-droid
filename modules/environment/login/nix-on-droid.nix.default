@@ -39,6 +39,10 @@
   #  {
   #    # insert home-manager config
   #  };
+
+  # To avoid the `same priority` conflicts,
+  # you can set
+  #home-manager.useUserPackages = true;
 }
 
 # vim: ft=nix
