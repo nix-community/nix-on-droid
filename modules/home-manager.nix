@@ -71,7 +71,9 @@ in
       useUserPackages = mkEnableOption ''
         installation of user packages through the
         <option>environment.packages</option> option.
-      '';
+      '' // {
+        default = versionAtLeast config.system.stateVersion "20.09";
+      };
     };
 
   };
