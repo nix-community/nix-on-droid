@@ -87,13 +87,13 @@ in
       assertions = [
         {
           assertion = assertionNixpkgs;
-          message = "You are currently using release-19.09 branch of nixpkgs, you need "
-            + "to update to the release-20.03 channel.";
+          message = "You are currently using release-19.09 branch or older of nixpkgs, you need "
+            + "to update to the release-20.03 channel or newer.";
         }
         {
           assertion = assertionHomeManager;
-          message = "You are currently using release-19.09 branch of home-manager, you need "
-            + "to update to the release-20.03 channel.";
+          message = "You are currently using release-19.09 branch or older of home-manager, you need "
+            + "to update to the release-20.03 channel or newer.";
         }
       ];
     }

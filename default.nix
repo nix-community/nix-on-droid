@@ -25,8 +25,8 @@ rec {
       is present) there is one manual step necessary *before* running the migration script: Remove basic-environment \
       package of 'home.packages' list."
       echo
-      echo "Recommended: change home-manager channel to release-20.03:"
-      echo "  nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager"
+      echo "Recommended: change home-manager channel to release-20.09:"
+      echo "  nix-channel --add https://github.com/rycee/home-manager/archive/release-20.09.tar.gz home-manager"
       echo
       echo "Recommended: set nix-on-droid channel to a505862"
       echo "  nix-channel --add https://github.com/t184256/nix-on-droid/archive/pre-module-system.tar.gz nix-on-droid"
@@ -38,8 +38,8 @@ rec {
       echo
       echo "Recommended: update with what you've used before (home-manager switch -or- nix-env -u)"
       echo
-      echo "Required if you've followed the steps above: set nix-on-droid channel to release-20.03"
-      echo "  nix-channel --add https://github.com/t184256/nix-on-droid/archive/release-20.03.tar.gz nix-on-droid"
+      echo "Required if you've followed the steps above: set nix-on-droid channel to release-20.09"
+      echo "  nix-channel --add https://github.com/t184256/nix-on-droid/archive/release-20.09.tar.gz nix-on-droid"
       echo
       echo "Finally,"
       echo "  nix-shell '<nix-on-droid>' -A migration"
@@ -73,44 +73,48 @@ rec {
           echo "Migrating home-manager installation..."
           if [[ -r "$HOME/.config/nixpkgs/home.nix" ]]; then
             ${pkgs.patch}/bin/patch --no-backup-if-mismatch $HOME/.config/nixpkgs/nix-on-droid.nix ${pkgs.writeText "patch" ''
-              @@ -27,15 +27,9 @@
+              @@ -30,18 +30,8 @@
                  # Read the changelog before changing this value
-                 system.stateVersion = "20.03";
+                 system.stateVersion = "20.09";
 
               -  # After installing home-manager channel like
-              -  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager
+              -  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-20.09.tar.gz home-manager
               -  #   nix-channel --update
               -  # you can configure home-manager in here like
               -  #home-manager.config =
               -  #  { pkgs, ... }:
               -  #  {
+              -  #    # Read the changelog before changing this value
+              -  #    system.stateVersion = "20.09";
+              -  #
               -  #    # insert home-manager config
               -  #  };
               +  # Home Manager config file
               +  home-manager.config = import ./home.nix;
-              +  home-manager.useUserPackages = true;
                }
 
                # vim: ft=nix
             ''} > /dev/null
           else
             ${pkgs.patch}/bin/patch --no-backup-if-mismatch $HOME/.config/nixpkgs/nix-on-droid.nix ${pkgs.writeText "patch" ''
-              @@ -27,15 +27,9 @@
+              @@ -30,18 +30,8 @@
                  # Read the changelog before changing this value
-                 system.stateVersion = "20.03";
+                 system.stateVersion = "20.09";
 
               -  # After installing home-manager channel like
-              -  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager
+              -  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-20.09.tar.gz home-manager
               -  #   nix-channel --update
               -  # you can configure home-manager in here like
               -  #home-manager.config =
               -  #  { pkgs, ... }:
               -  #  {
+              -  #    # Read the changelog before changing this value
+              -  #    system.stateVersion = "20.09";
+              -  #
               -  #    # insert home-manager config
               -  #  };
               +  # Home Manager config file
               +  home-manager.config = import (builtins.getEnv "HOME_MANAGER_CONFIG");
-              +  home-manager.useUserPackages = true;
                }
 
                # vim: ft=nix
