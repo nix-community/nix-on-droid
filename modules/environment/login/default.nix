@@ -85,8 +85,8 @@ in
       prootStatic =
         let
           crossCompiledPaths = {
-           aarch64 = "/nix/store/r9mavszgwsd2260a252i696fr7j69a3a-proot-termux-unstable-2020-04-25-aarch64-unknown-linux-android";
-           i686 = "/nix/store/wkzmc8ly7qgyrfi61pqsz31hxin9wmyz-proot-termux-unstable-2020-04-25-i686-unknown-linux-android";
+           aarch64 = "/nix/store/ly8ffgwwg7xsgqfcw865vdi0bqaj4vp9-proot-termux-unstable-2020-10-25-aarch64-unknown-linux-android";
+           i686 = "/nix/store/9kgif2f321vrbjd7x0pj7rcyg84zrhgz-proot-termux-unstable-2020-10-25-i686-unknown-linux-android";
           };
         in
           "${crossCompiledPaths.${config.build.arch}}";

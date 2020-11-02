@@ -1,45 +1,31 @@
 # Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ callPackage, fetchurl, python2, zlib }:
+{ callPackage, fetchurl, python3, wafHook }:
 
 let
   pkgs = callPackage ./pkgs.nix { };
 in
 
-pkgs.cross.stdenv.mkDerivation rec {
-  name = "talloc-static-2.1.14";
+pkgs.cross.talloc.overrideAttrs (old: rec {
+  pname = "talloc-static";
+  version = "2.1.14";
+  name = "${pname}-${version}";
 
-  src = fetchurl {
-    url = "mirror://samba/talloc/${name}.tar.gz";
-    sha256 = "1kk76dyav41ip7ddbbf04yfydb4jvywzi2ps0z2vla56aqkn11di";
-  };
+  nativeBuildInputs = [ python3 wafHook ];
+  buildInputs = [];
 
-  depsBuildBuild = [ python2 zlib ];
+  wafPath = "./buildtools/bin/waf";
+  wafConfigureFlags = [
+      "--disable-rpath"
+      "--disable-python"
+      "--cross-compile"
+      "--cross-answers=cross-answers.txt"
+  ];
 
-  buildDeps = [ pkgs.cross.zlib ];
-
-  configurePhase = ''
-    substituteInPlace buildtools/bin/waf \
-      --replace "/usr/bin/env python" "${python2}/bin/python"
-    ./configure --prefix=$out \
-      --disable-rpath \
-      --disable-python \
-      --cross-compile \
-      --cross-answers=cross-answers.txt
-  '';
-
-  buildPhase = ''
-    make
-  '';
-
-  installPhase = ''
-    mkdir -p $out/lib
-    make install
-    ${pkgs.cross.stdenv.cc.targetPrefix}ar q $out/lib/libtalloc.a bin/default/talloc_[0-9]*.o
+  postInstall = ''
+    ${pkgs.cross.stdenv.cc.targetPrefix}ar q $out/lib/libtalloc.a bin/default/talloc.c.[0-9]*.o
     rm -f $out/lib/libtalloc.so*
   '';
-
-  fixupPhase = "";
 
   prePatch = ''
     cat <<EOF > cross-answers.txt
@@ -70,4 +56,4 @@ pkgs.cross.stdenv.mkDerivation rec {
     Checking getconf large file support flags work: OK
     EOF
   '';
-}
+})
