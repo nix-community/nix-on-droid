@@ -8,13 +8,13 @@ in
 
 pkgs.crossStatic.stdenv.mkDerivation {
   pname = "proot-termux";
-  version = "unstable-2020-04-25";
+  version = "unstable-2020-10-25";
 
   src = fetchFromGitHub {
     repo = "proot";
     owner = "termux";
-    rev = "b9588b1edff5069118c50f2f9b19397fce39f5c7";
-    sha256 = "0izs2vqbn7zaa0fxwr78p1kaa4f3k9rhv4g94zsmw38cqlmidv56";
+    rev = "66b34c6fb38983b09da3400b8bcf86005ebe8dd1";
+    sha256 = "0isrjcblkdkikw6l6f7a2p326vsy3plbs9ga48r20lpa8rsz4jnf";
   };
 
   buildInputs = [ tallocStatic ];
