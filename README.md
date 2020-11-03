@@ -88,11 +88,17 @@ To enable `home-manager` you simply need to follow the instructions already prov
     { pkgs, ... }:
 
     {
+      # Read nix-on-droid changelog before changing this value
+      system.stateVersion = "20.09";
+
       # insert nix-on-droid config
 
       home-manager.config =
         { pkgs, ... }:
         {
+          # Read home-manager changelog before changing this value
+          home.stateVersion = "20.09";
+
           # insert home-manager config
         };
 
