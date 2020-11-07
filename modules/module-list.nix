@@ -14,5 +14,6 @@
   ./time.nix
   ./user.nix
   ./version.nix
+  ./workaround-make.nix
   <nixpkgs/nixos/modules/misc/assertions.nix>
 ]
