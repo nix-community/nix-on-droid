@@ -3,7 +3,7 @@
 { config, writeScript }:
 
 let
-  inherit (config.build) installationDir;
+  inherit (config.build) installationDir extraProotOptions;
 in
 
 writeScript "login" ''
@@ -36,5 +36,6 @@ writeScript "login" ''
     -b ${installationDir}/usr:/usr \
     -b /:/android \
     --link2symlink \
+    ${builtins.concatStringsSep " " extraProotOptions} \
     ${installationDir}/bin/sh ${installationDir}/usr/lib/login-inner "$@"
 ''
