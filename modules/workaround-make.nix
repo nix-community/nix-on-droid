@@ -43,11 +43,13 @@ in
         enable the option; nix-on-droid switch, relogin, build,
         disable the option; nix-on-droid switch, relogin.
 
-        If you leave it on Nix-store validation will fail,
+        If you leave it on, Nix-store validation will fail,
         repairs will break the working make,
         updates will do bad things. You have been warned.
 
-        Consider building remotely as an alternative for such devices:
+        If you find yourself needing that hack, please report details at
+        https://github.com/t184256/nix-on-droid/issues/91
+        and consider building remotely as an alternative for such devices:
         https://github.com/t184256/nix-on-droid/wiki/Remote-building
       '';
     };
