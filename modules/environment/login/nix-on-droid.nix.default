@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
   # Simply install just the packages
@@ -39,6 +39,9 @@
   #  {
   #    # Read the changelog before changing this value
   #    home.stateVersion = "20.09";
+  #
+  #    # Use the same overlays as the system packages
+  #    nixpkgs.overlays = config.nixpkgs.overlays;
   #
   #    # insert home-manager config
   #  };
