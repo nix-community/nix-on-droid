@@ -122,6 +122,14 @@ in
 
       environment.packages = mkIf cfg.useUserPackages cfg.config.home.packages;
 
+      # home-manager has a quirk redefining the profile location
+      # to "/etc/profiles/per-user/${cfg.username}" if useUserPackages is on.
+      # https://github.com/nix-community/home-manager/blob/0006da1381b87844c944fe8b925ec864ccf19348/modules/home-environment.nix#L414
+      # Fortunately, it's not that hard to us to workaround with just a symlink.
+      environment.etc = mkIf cfg.useUserPackages {
+        "profiles/per-user/${config.user.userName}".source =
+          builtins.toPath "${config.user.home}/.nix-profile";
+      };
     })
 
   ]);
