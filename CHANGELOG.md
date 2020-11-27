@@ -19,4 +19,6 @@ if the `system.stateVersion` option is set to `"20.09"` or later.
 
 * If `make` fails on your device with `Function not implemented`,
   report that in https://github.com/t184256/nix-on-droid/issues/91
-  and consider setting `system.workaround.make-posix-spawn.enable = true;`
+  and consider either
+  [remote building](https://github.com/t184256/nix-on-droid/wiki/Remote-building)
+  or setting `system.workaround.make-posix-spawn.enable = true;`
