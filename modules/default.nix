@@ -19,7 +19,7 @@ let
         _module.args.pkgs = mkDefault pkgs;
       }
       configModule
-    ] ++ import ./module-list.nix;
+    ] ++ import ./module-list.nix { inherit pkgs; };
   };
 
   failedAssertions = map (x: x.message) (filter (x: !x.assertion) rawModule.config.assertions);

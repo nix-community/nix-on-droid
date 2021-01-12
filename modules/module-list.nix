@@ -1,5 +1,7 @@
 # Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
 
+{ pkgs }:
+
 [
   ./build/activation.nix
   ./build/config.nix
@@ -15,5 +17,5 @@
   ./user.nix
   ./version.nix
   ./workaround-make.nix
-  <nixpkgs/nixos/modules/misc/assertions.nix>
+  (pkgs.path + "/nixos/modules/misc/assertions.nix")
 ]
