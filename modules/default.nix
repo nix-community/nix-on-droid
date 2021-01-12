@@ -1,6 +1,6 @@
 # Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ pkgs ? import <nixpkgs> { }, config ? null }:
+{ pkgs ? import <nixpkgs> { }, home-manager ? import <home-manager>, config ? null }:
 
 with pkgs.lib;
 
@@ -17,6 +17,7 @@ let
     modules = [
       {
         _module.args.pkgs = mkDefault pkgs;
+        _module.args.home-manager = home-manager;
       }
       configModule
     ] ++ import ./module-list.nix;
