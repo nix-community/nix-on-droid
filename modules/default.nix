@@ -1,6 +1,6 @@
 # Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ pkgs ? import <nixpkgs> { }, config ? null }:
+{ pkgs ? import <nixpkgs> { }, home-manager ? import <home-manager> { }, config ? null }:
 
 with pkgs.lib;
 
@@ -16,10 +16,11 @@ let
   rawModule = evalModules {
     modules = [
       {
+        _module.args.home-manager = home-manager;
         _module.args.pkgs = mkDefault pkgs;
       }
       configModule
-    ] ++ import ./module-list.nix;
+    ] ++ import ./module-list.nix { inherit pkgs; };
   };
 
   failedAssertions = map (x: x.message) (filter (x: !x.assertion) rawModule.config.assertions);

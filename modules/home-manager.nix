@@ -1,24 +1,24 @@
 # Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, home-manager, ... }:
 
 with lib;
 
 let
   cfg = config.home-manager;
 
-  tryEval = builtins.tryEval <home-manager/modules/modules.nix>;
+  tryEval = builtins.tryEval (home-manager.path + "/modules/modules.nix");
   assertionNixpkgs = types ? submoduleWith;
   assertionHomeManager = tryEval.success && builtins.functionArgs (import tryEval.value) ? useNixpkgsModule;
   assertion = assertionNixpkgs && assertionHomeManager;
 
-  extendedLib = import <home-manager/modules/lib/stdlib-extended.nix> pkgs.lib;
+  extendedLib = import (home-manager.path + "/modules/lib/stdlib-extended.nix") pkgs.lib;
 
   hmModule = types.submoduleWith {
     specialArgs = { lib = extendedLib; };
     modules = [
       ({ name, ... }: {
-        imports = import <home-manager/modules/modules.nix> {
+        imports = import (home-manager.path + "/modules/modules.nix") {
           inherit pkgs;
           lib = extendedLib;
           useNixpkgsModule = !cfg.useGlobalPkgs;
