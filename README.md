@@ -157,7 +157,23 @@ if you are planning to maintain a long-term fork that users can update from.
 In case you only care about updates through wiping the data,
 you shouldn't need a binary cache for that.
 
+## Nix flakes
 
+Example, to use with nix flakes:
+
+```nix
+{
+  description = "nix-on-droid configuration";
+
+  inputs.nix-on-droid.url = "/home/bbigras/src/nix-on-droid";
+
+  outputs = { nix-on-droid, ... }: {
+    nix-on-droid = (nix-on-droid.lib.aarch64-linux.nix-on-droid { config = ./your_config.nix; } ).activationPackage;
+  };
+}
+```
+
+Build with `nix build .#nix-on-droid --impure`.
 
 ## Tips
 

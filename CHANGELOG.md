@@ -15,6 +15,10 @@ if the `system.stateVersion` option is set to `"20.09"` or later.
   either or attempt an upgrade to `release-19.09`
   and follow the instructions, or backup and reinstall (preferred).
 
+## Nix flakes support
+
+* A `flake.nix` file was added.
+
 ## Known issues:
 
 * If `make` fails on your device with `Function not implemented`,
