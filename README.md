@@ -159,21 +159,33 @@ you shouldn't need a binary cache for that.
 
 ## Nix flakes
 
-Example, to use with nix flakes:
+Note that nix flake support is experimental at the moment.
+Still, there's some minimal usage example.
+You can build an activation package by procuring flake-powered nix
+(`nix run nixpkgs.nixFlakes`,
+ `echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf`)
+writing a `flake.nix`:
 
 ```nix
 {
   description = "nix-on-droid configuration";
 
-  inputs.nix-on-droid.url = "/home/bbigras/src/nix-on-droid";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/release-20.09";
+    nix-on-droid.url = "github:t184256/nix-on-droid/master";
+    nix-on-droid.inputs.nixpkgs.follows = "nixpkgs";
+  };
 
   outputs = { nix-on-droid, ... }: {
-    nix-on-droid = (nix-on-droid.lib.aarch64-linux.nix-on-droid { config = ./your_config.nix; } ).activationPackage;
+    nix-on-droid = (nix-on-droid.lib.aarch64-linux.nix-on-droid {
+      config = ./.config/nixpkgs/nix-on-droid.nix;
+    }).activationPackage;
   };
 }
 ```
 
-Build with `nix build .#nix-on-droid --impure`.
+building it with `nix build .#nix-on-droid --impure`
+and activating it with `result/activate`.
 
 ## Tips
 
