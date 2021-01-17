@@ -7,7 +7,7 @@ with lib;
 let
   cfg = config.user;
 
-  idsDerivation = pkgs.runCommand "ids.nix" {} ''
+  idsDerivation = pkgs.runCommandLocal "ids.nix" {} ''
     cat > $out <<EOF
     {
       gid = "$(${pkgs.coreutils}/bin/id -g)";
