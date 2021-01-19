@@ -10,8 +10,8 @@ let
   idsDerivation = pkgs.runCommandLocal "ids.nix" {} ''
     cat > $out <<EOF
     {
-      gid = "$(${pkgs.coreutils}/bin/id -g)";
-      uid = "$(${pkgs.coreutils}/bin/id -u)";
+      gid = "${toString cfg.gid}";
+      uid = "${toString cfg.uid}";
     }
     EOF
   '';
@@ -48,6 +48,18 @@ in
         type = types.str;
         readOnly = true;
         description = "User name.";
+      };
+
+      uid = mkOption {
+        type = types.int;
+        default = toInt "$(${pkgs.coreutils}/bin/id -u)";
+        description = "Uid.";
+      };
+
+      gid = mkOption {
+        type = types.int;
+        default = toInt "$(${pkgs.coreutils}/bin/id -g)";
+        description = "Gid.";
       };
     };
 
