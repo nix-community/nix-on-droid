@@ -10,8 +10,8 @@ let
   idsDerivation = pkgs.runCommandLocal "ids.nix" {} ''
     cat > $out <<EOF
     {
-      gid = "$(${pkgs.coreutils}/bin/id -g)";
-      uid = "$(${pkgs.coreutils}/bin/id -u)";
+      gid = $(${pkgs.coreutils}/bin/id -g);
+      uid = $(${pkgs.coreutils}/bin/id -u);
     }
     EOF
   '';
@@ -32,6 +32,14 @@ in
         description = "Group name.";
       };
 
+      gid = mkOption {
+        type = types.int;
+        default = ids.gid;
+        description = ''
+          Gid.  This value should not be set manually except you know what you are doing.
+        '';
+      };
+
       home = mkOption {
         type = types.path;
         readOnly = true;
@@ -49,6 +57,14 @@ in
         readOnly = true;
         description = "User name.";
       };
+
+      uid = mkOption {
+        type = types.int;
+        default = ids.uid;
+        description = ''
+          Uid.  This value should not be set manually except you know what you are doing.
+        '';
+      };
     };
 
   };
@@ -61,12 +77,12 @@ in
     environment.etc = {
       "group".text = ''
         root:x:0:
-        ${cfg.group}:x:${ids.gid}:${cfg.userName}
+        ${cfg.group}:x:${toString cfg.gid}:${cfg.userName}
       '';
 
       "passwd".text = ''
         root:x:0:0:System administrator:${config.build.installationDir}/root:/bin/sh
-        ${cfg.userName}:x:${ids.uid}:${ids.gid}:${cfg.userName}:${cfg.home}:${cfg.shell}
+        ${cfg.userName}:x:${toString cfg.uid}:${toString cfg.gid}:${cfg.userName}:${cfg.home}:${cfg.shell}
       '';
     };
 
