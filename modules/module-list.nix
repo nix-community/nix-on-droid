@@ -6,10 +6,10 @@
   ./build/activation.nix
   ./build/config.nix
   ./environment/etc
-  ./environment/files.nix
   ./environment/links.nix
   ./environment/login
   ./environment/networking.nix
+  ./environment/nix.nix
   ./environment/path.nix
   ./environment/session-init.nix
   ./home-manager.nix
