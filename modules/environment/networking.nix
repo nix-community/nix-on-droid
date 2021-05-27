@@ -29,6 +29,11 @@ with lib;
         127.0.0.1 localhost
         ::1 localhost
       '';
+
+      "resolv.conf".text = ''
+        nameserver 1.1.1.1
+        nameserver 8.8.8.8
+      '';
     };
 
   };
