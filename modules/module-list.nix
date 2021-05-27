@@ -5,6 +5,7 @@
 [
   ./build/activation.nix
   ./build/config.nix
+  ./environment/ca.nix
   ./environment/etc
   ./environment/links.nix
   ./environment/login
