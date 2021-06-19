@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, customPkgs, ... }:
 
@@ -85,8 +85,8 @@ in
       prootStatic =
         let
           crossCompiledPaths = {
-           aarch64 = "/nix/store/ly8ffgwwg7xsgqfcw865vdi0bqaj4vp9-proot-termux-unstable-2020-10-25-aarch64-unknown-linux-android";
-           i686 = "/nix/store/9kgif2f321vrbjd7x0pj7rcyg84zrhgz-proot-termux-unstable-2020-10-25-i686-unknown-linux-android";
+           aarch64 = "/nix/store/0xfjhi3529lzym7z7025xs7kignmgy0r-proot-termux-aarch64-unknown-linux-android-unstable-2020-10-25";
+           i686 = "/nix/store/jl91v6ya3ablh8v41k63vcwsim5b4v1s-proot-termux-i686-unknown-linux-android-unstable-2020-10-25";
           };
         in
           "${crossCompiledPaths.${config.build.arch}}";
