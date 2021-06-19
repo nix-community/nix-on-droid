@@ -19,7 +19,10 @@ pkgs.crossStatic.stdenv.mkDerivation {
 
   buildInputs = [ tallocStatic ];
 
-  patches = [ ./proot-detranslate-empty.patch ];
+  patches = [
+    ./proot-detranslate-empty.patch
+    ./proot-setresxid.patch
+  ];
 
   makeFlags = [ "-Csrc CFLAGS=-D__ANDROID__" ];
 
