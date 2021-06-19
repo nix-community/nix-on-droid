@@ -1,14 +1,14 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ callPackage, fetchurl, python3, wafHook }:
+{ callPackage, python3, wafHook }:
 
 let
   pkgs = callPackage ./pkgs.nix { };
 in
 
-pkgs.cross.talloc.overrideAttrs (old: rec {
+pkgs.cross.talloc.overrideAttrs (_: rec {
   pname = "talloc-static";
-  version = "2.1.14";
+  version = "2.3.2";
   name = "${pname}-${version}";
 
   nativeBuildInputs = [ python3 wafHook ];
@@ -27,7 +27,7 @@ pkgs.cross.talloc.overrideAttrs (old: rec {
     rm -f $out/lib/libtalloc.so*
   '';
 
-  prePatch = ''
+  preConfigure = ''
     cat <<EOF > cross-answers.txt
     Checking uname sysname type: "Linux"
     Checking uname machine type: "dontcare"
