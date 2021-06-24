@@ -11,6 +11,8 @@
 
 * `system.workaround.make-posix-spawn.enable = true;` is no longer needed
   is deprecated.
+* i686 support will be deprecated in the next release
+  unless somebody steps up to test it.
 
 ## Release 20.09
 
