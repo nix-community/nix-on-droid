@@ -1,6 +1,6 @@
 # Changelog
 
-## Release 21.05 (unreleased)
+## Release 21.05
 
 ### New Options
 
