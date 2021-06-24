@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, home-manager, ... }:
 
