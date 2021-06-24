@@ -23,7 +23,7 @@ in
       patchShebangs scripts/MakeHeader.py
     '';
 
-    meta = with nixpkgs.stdenv.lib; {
+    meta = with nixpkgs.lib; {
       description = "An interactive process viewer for Linux";
       homepage = "https://hisham.hm/htop/";
       license = licenses.gpl2Plus;
