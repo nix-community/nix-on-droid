@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, stdenv, closureInfo, prootTermux, proot, qemuAarch64Static }:
 
@@ -27,12 +27,12 @@ stdenv.mkDerivation {
   name = "nix-directory";
 
   src = builtins.fetchurl {
-    url = "https://nixos.org/releases/nix/nix-2.3.6/nix-2.3.6-${config.build.arch}-linux.tar.xz";
+    url = "https://nixos.org/releases/nix/nix-2.3.13/nix-2.3.13-${config.build.arch}-linux.tar.xz";
     sha256 =
       let
         archShas = {
-         aarch64 = "96bfea4540342c97b5337a707cf9c0f0d00028e443536a6a191ee61a169d5ecb";
-         i686 = "f2ec612c0f96c1e6129df570ac5dfc2045334554d2863b014618d67e05fa18fa";
+         aarch64 = "1hl6pd02nssscn32mrndif2fxfssxiarrpjvqyjicwnz6yn9mhpq";
+         i686 = "0249sbmgmi7cah099wywlqx3ygwpjgl6vcyivqix9rwpnpap417x";
         };
       in
         "${archShas.${config.build.arch}}";
