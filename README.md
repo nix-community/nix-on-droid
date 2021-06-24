@@ -52,7 +52,7 @@ for example:
 
 {
   environment.packages = [ pkgs.vim ];
-  system.stateVersion = "20.09";
+  system.stateVersion = "21.05";
 }
 ```
 
@@ -66,7 +66,7 @@ An alternative location is `~/.config/nixpkgs/config.nix` with the key
 
     {
       environment.packages = [ pkgs.vim ];
-      system.stateVersion = "20.09";
+      system.stateVersion = "21.05";
     };
 }
 ```
@@ -80,7 +80,7 @@ To enable `home-manager` you simply need to follow the instructions already prov
 
 1.  Add `home-manager` channel:
     ```
-    nix-channel --add https://github.com/rycee/home-manager/archive/release-20.09.tar.gz home-manager
+    nix-channel --add https://github.com/rycee/home-manager/archive/release-21.05.tar.gz home-manager
     nix-channel --update
     ```
 2.  Configure `home-manager`:
@@ -89,7 +89,7 @@ To enable `home-manager` you simply need to follow the instructions already prov
 
     {
       # Read nix-on-droid changelog before changing this value
-      system.stateVersion = "20.09";
+      system.stateVersion = "21.05";
 
       # insert nix-on-droid config
 
@@ -97,7 +97,7 @@ To enable `home-manager` you simply need to follow the instructions already prov
         { pkgs, ... }:
         {
           # Read home-manager changelog before changing this value
-          home.stateVersion = "20.09";
+          home.stateVersion = "21.05";
 
           # insert home-manager config
         };
@@ -171,7 +171,7 @@ writing a `flake.nix`:
   description = "nix-on-droid configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-20.09";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-21.05";
     nix-on-droid.url = "github:t184256/nix-on-droid/master";
     nix-on-droid.inputs.nixpkgs.follows = "nixpkgs";
   };
