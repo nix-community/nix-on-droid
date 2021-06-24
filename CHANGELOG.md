@@ -7,6 +7,11 @@
 * The `/etc/nix/nix.conf` file is now fully configurable with the
   new options `nix.*`.
 
+### Deprecations
+
+* `system.workaround.make-posix-spawn.enable = true;` is no longer needed
+  is deprecated.
+
 ## Release 20.09
 
 ### State version changes
