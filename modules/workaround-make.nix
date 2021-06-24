@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
@@ -59,6 +59,12 @@ in
   ###### implementation
 
   config = {
+    warnings = lib.optionals cfg.enable [
+      ("system.workaround.make-posix-spawn.enable " +
+       "should no longer be needed on 21.05 " +
+       "and will be removed in 21.11 unless somebody objects")
+    ];
+
     build.extraProotOptions =
       lib.optionals cfg.enable [
         "-b"
