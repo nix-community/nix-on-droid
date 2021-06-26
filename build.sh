@@ -109,7 +109,7 @@ for arch in $arches; do
                 elif [[ $url =~ https://github.com/* ]]; then
                    autodetected_repository=${url##https://github.com}
                 fi
-                if [[ $autodetected_repository =~ *.git ]]; then
+                if [[ $autodetected_repository =~ \.git ]]; then
                    autodetected_repository=${autodetected_repository%%.git}
                 fi
                 echo $arch: autodetected repository: $autodetected_repository
