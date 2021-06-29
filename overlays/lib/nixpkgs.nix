@@ -13,6 +13,6 @@ let
 in
 
 import pinnedPkgsSrc {
-  inherit (super) config;
+  inherit (super) config system;
   overlays = [ ];
 }
