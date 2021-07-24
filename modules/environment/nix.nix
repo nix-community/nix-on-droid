@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
@@ -15,6 +15,15 @@ in
   options = {
 
     nix = {
+      package = mkOption {
+        type = types.package;
+        default = pkgs.nix;
+        defaultText = "pkgs.nix";
+        description = ''
+          This option specifies the Nix package instance to use throughout the system.
+        '';
+      };
+
       substituters = mkOption {
         type = types.listOf types.str;
         default = [];

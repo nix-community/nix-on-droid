@@ -7,6 +7,8 @@
 * The `/etc/nix/nix.conf` file is now fully configurable with the
   new options `nix.*`.
 
+* [Backport from 21.11] The `nix.package` can be used to set the system-wide nix package.
+
 ### Deprecations
 
 * `system.workaround.make-posix-spawn.enable = true;` is no longer needed

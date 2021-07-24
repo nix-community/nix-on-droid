@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
@@ -42,12 +42,12 @@ in
 
     environment = {
       packages = [
-        (pkgs.callPackage ../../nix-on-droid { })
+        (pkgs.callPackage ../../nix-on-droid { nix = config.nix.package; })
         pkgs.bashInteractive
         pkgs.cacert
         pkgs.coreutils
         pkgs.less  # since nix tools really want a pager available, #27
-        pkgs.nix
+        config.nix.package
       ];
 
       path = pkgs.buildEnv {
