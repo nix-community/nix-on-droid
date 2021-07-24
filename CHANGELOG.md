@@ -1,5 +1,11 @@
 # Changelog
 
+## Release 21.11 (unreleased)
+
+### New Options
+
+* The `nix.package` can be used to set the system-wide nix package.
+
 ## Release 21.05
 
 ### New Options
