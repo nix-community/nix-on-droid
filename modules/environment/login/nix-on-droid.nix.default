@@ -35,13 +35,13 @@
   #   nix-channel --update
   # you can configure home-manager in here like
   #home-manager.config =
-  #  { pkgs, ... }:
+  #  { pkgs, lib, ... }:
   #  {
   #    # Read the changelog before changing this value
   #    home.stateVersion = "21.05";
   #
   #    # Use the same overlays as the system packages
-  #    nixpkgs.overlays = config.nixpkgs.overlays;
+  #    nixpkgs.overlays = lib.mkIf (lib.hasAttrByPath [ "nixpkgs" "overlays" ] config) config.nixpkgs.overlays;
   #
   #    # insert home-manager config
   #  };
