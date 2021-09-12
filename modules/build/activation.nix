@@ -133,7 +133,7 @@ in
         if [[ $generationDir =~ ^${profileDirectory}-([0-9]+)-link$ ]]; then
           $DRY_RUN_CMD nix-env --profile "${profileDirectory}" --switch-generation "''${BASH_REMATCH[1]}"
         else
-          $DRY_RUN_CMD nix-env --profile "${profileDirectory}" --set "$generationDir"
+          $DRY_RUN_CMD nix-env --profile "${profileDirectory}" --set "$(realpath "$generationDir")"
         fi
       '';
 
