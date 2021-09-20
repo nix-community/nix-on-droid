@@ -35,9 +35,9 @@ let
     set -eu
     set -o pipefail
 
-    cd $HOME
-
     export PATH="${activationBinPaths}"
+    _NOD_GENERATION_DIR="$(realpath "$(dirname "$0")")"
+    cd "$HOME"
 
     ${builtins.readFile ../lib-bash/color-echo.sh}
     ${builtins.readFile ../lib-bash/activation-init.sh}
@@ -133,7 +133,7 @@ in
         if [[ $generationDir =~ ^${profileDirectory}-([0-9]+)-link$ ]]; then
           $DRY_RUN_CMD nix-env --profile "${profileDirectory}" --switch-generation "''${BASH_REMATCH[1]}"
         else
-          $DRY_RUN_CMD nix-env --profile "${profileDirectory}" --set "$(realpath "$generationDir")"
+          $DRY_RUN_CMD nix-env --profile "${profileDirectory}" --set "$_NOD_GENERATION_DIR"
         fi
       '';
 
