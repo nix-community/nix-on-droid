@@ -7,7 +7,7 @@ let
 in
 
 runCommand "bootstrap" { } ''
-  mkdir --parents $out/{.l2s,bin,etc,nix,root,tmp,usr/{bin,lib}}
+  mkdir --parents $out/{.l2s,bin,dev/shm,etc,nix,root,tmp,usr/{bin,lib}}
 
   cp --recursive ${nixDirectory}/store $out/nix/store
   cp --recursive ${nixDirectory}/var $out/nix/var
