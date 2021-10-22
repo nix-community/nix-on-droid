@@ -24,9 +24,7 @@ let
       ${optionalString (config.home-manager.config != null) ''
         if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
           export NIX_PATH=$HOME/.nix-defexpr/channels''${NIX_PATH:+:}$NIX_PATH
-          set +u
           . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-          set -u
         fi
       ''}
 

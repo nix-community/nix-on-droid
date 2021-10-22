@@ -60,9 +60,7 @@ writeText "login-inner" ''
     fi
   ''}
 
-  set +u
   . "${config.user.home}/.nix-profile/etc/profile.d/nix-on-droid-session-init.sh"
-  set -u
 
   ${lib.optionalString config.build.initialBuild ''
     exec /usr/bin/env bash  # otherwise it'll be a limited bash that came with Nix
