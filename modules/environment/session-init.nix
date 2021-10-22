@@ -26,9 +26,7 @@ let
 
       ${optionalString (config.home-manager.config != null) ''
         if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-          set +u
           . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-          set -u
         fi
       ''}
 
