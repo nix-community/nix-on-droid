@@ -33,7 +33,6 @@ writeScript "login" ''
     -b ${installationDir}/bin:/bin \
     -b ${installationDir}/etc:/etc \
     -b ${installationDir}/tmp:/tmp \
-    -b ${installationDir}/tmp:/dev/shm \
     -b ${installationDir}/usr:/usr \
     -b ${installationDir}/dev/shm:/dev/shm \
     -b /:/android \
