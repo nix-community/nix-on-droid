@@ -9,32 +9,24 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, flake-utils }:
-    {
-      overlays = import ./overlays;
-    } //
-    flake-utils.lib.eachSystem [
-      "aarch64-linux"
-      "i686-linux"
-    ]
-      (system:
-        let pkgs = import nixpkgs {
-          inherit system;
-          overlays = self.overlays;
-        }; in
-        rec {
-          lib = {
-            nix-on-droid = { config }: import ./modules {
-              inherit pkgs config;
-              isFlake = true;
-              home-manager = (import home-manager { });
-            };
-          };
+  outputs = { self, nixpkgs, home-manager, flake-utils }: let
+    supportedSystems = [ "aarch64-linux" "i686-linux" ];
+  in flake-utils.lib.eachSystem supportedSystems (system: let
+    defaultPkgs = import nixpkgs {
+      inherit system;
+      overlays = [ self.overlay ];
+    };
+  in rec {
+    lib.nix-on-droid = { pkgs ? defaultPkgs, config }: import ./modules {
+      inherit pkgs home-manager config;
+      isFlake = true;
+    };
 
-          apps.nix-on-droid = flake-utils.lib.mkApp {
-            drv = (pkgs.callPackage ./nix-on-droid { });
-          };
-          defaultApp = apps.nix-on-droid;
-        }
-      );
+    apps.nix-on-droid = flake-utils.lib.mkApp {
+      drv = (defaultPkgs.callPackage ./nix-on-droid { });
+    };
+    defaultApp = apps.nix-on-droid;
+  }) // {
+    overlay = nixpkgs.lib.composeManyExtensions (import ./overlays);
+  };
 }
