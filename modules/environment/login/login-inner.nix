@@ -49,7 +49,7 @@ writeText "login-inner" ''
 
       echo
       echo "Congratulations! Now you have Nix installed with some default packages like bashInteractive, \
-    coreutils, cacert and most important nix-on-droid itself to manage local configuration, see"
+    coreutils, cacert and, most importantly, nix-on-droid itself to manage local configuration, see"
       echo "  nix-on-droid help"
       echo "or in the config file"
       echo "  ~/.config/nixpkgs/nix-on-droid.nix"
