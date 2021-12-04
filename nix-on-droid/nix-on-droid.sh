@@ -1,6 +1,6 @@
 #!@bash@/bin/bash
 
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 PATH=@coreutils@/bin:@nix@/bin:${PATH:+:}$PATH
 
@@ -73,6 +73,13 @@ function doHelp() {
     echo "                  Switch generation and activate configuration"
 }
 
+function doOnDeviceTest() {
+    # This is for maintainer convenience only, see tests/on-device/.run.sh
+    nix-channel --update nix-on-droid
+    exec "$(nix-instantiate --eval --expr \
+                            "<nix-on-droid/tests/on-device/.run.sh>")"
+}
+
 function doSwitch() {
     echo "Building activation package..."
     nix build \
@@ -114,7 +121,7 @@ while [[ $# -gt 0 ]]; do
     opt="$1"
     shift
     case $opt in
-        build|generations|help|rollback|switch|switch-generation)
+        build|generations|help|rollback|switch|switch-generation|on-device-test)
             COMMAND="$opt"
             ;;
         -f|--file)
@@ -177,6 +184,9 @@ case $COMMAND in
         ;;
     help)
         doHelp
+        ;;
+    on-device-test)
+        doOnDeviceTest
         ;;
     rollback)
         if [[ $(readlink $PROFILE_DIRECTORY) =~ ^nix-on-droid-([0-9]+)-link$ ]]; then
