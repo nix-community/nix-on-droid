@@ -6,11 +6,11 @@ let
     overlays = [ ];
   };
 
-  # head of nixos-21.05 as of 2021-06-24
+  # head of nixos-21.11 as of 2021-12-01
   # note: when updating nixpkgs, update store paths of proot-termux in modules/environment/login/default.nix
   pinnedPkgsSrc = builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/0b8b127125e5271f5c8636680b6fe274844aaa9d.tar.gz";
-    sha256 = "1rjb1q28ivaf20aqj3v60kzjyi5lqb3krag0k8wwjqch45ik2f86";
+    url = "https://github.com/NixOS/nixpkgs/archive/a640d8394f34714578f3e6335fc767d0755d78f9.tar.gz";
+    sha256 = "1dyyzgcmlhpsdb4ngiy8m0x10qmh0r56ky75r8ppvvh730m3lhfj";
   };
 in
 
