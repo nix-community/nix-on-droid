@@ -6,6 +6,10 @@
 
 * The `nix.package` can be used to set the system-wide nix package.
 
+## Removed Options
+
+* The `system.workaround.make-posix-spawn.enable` has been removed.
+
 ## Release 21.05
 
 ### New Options
