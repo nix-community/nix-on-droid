@@ -41,10 +41,12 @@
   #    home.stateVersion = "21.11";
   #
   #    # Use the same overlays as the system packages
-  #    nixpkgs.overlays = lib.mkIf (lib.hasAttrByPath [ "nixpkgs" "overlays" ] config) config.nixpkgs.overlays;
+  #    nixpkgs = { inherit (config.nixpkgs) overlays; };
   #
   #    # insert home-manager config
   #  };
+  # If you want the same pkgs instance to be used for nix-on-droid and home-manager
+  #home-manager.useGlobalPkgs = true;
 }
 
 # vim: ft=nix
