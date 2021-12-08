@@ -205,7 +205,7 @@ Developer's device:
 1. `proot` for the target platform is cross-compiled against `bionic`,
    (to fake file paths like `/nix/store`; think 'userspace `chroot`')
 2. Target `nix` is taken from the original release tarball
-3. Target `nix` database is initialized (with host `proot` and `qemu-user`)
+3. Target `nix` database is initialized (using host `proot`)
 4. Support scripts and config files are built with `nix` and the Nix-on-Droid
    module system
 5. From these, a bootstrap zipball is built and published on an HTTP server
