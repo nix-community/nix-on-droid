@@ -1,17 +1,13 @@
 # Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, lib, stdenv, closureInfo, prootTermux, proot, qemuAarch64Static }:
+{ config, lib, stdenv, closureInfo, prootTermux, proot, pkgsStatic }:
 
 let
   buildRootDirectory = "root-directory";
 
   prootCommand = lib.concatStringsSep " " [
     "${proot}/bin/proot"
-    (
-      if config.build.arch == "aarch64"
-      then "-q ${qemuAarch64Static}/bin/qemu-aarch64-static"
-      else "-b /dev"
-    )
+    "-b ${pkgsStatic.nix}:/static-nix"
     "-r ${buildRootDirectory}"
     "-w /"
   ];
@@ -56,9 +52,9 @@ stdenv.mkDerivation {
       cp --archive "$i" "${buildRootDirectory}$i"
     done
 
-    USER=${config.user.userName} ${prootCommand} "$PKG_NIX/bin/nix-store" --init
-    USER=${config.user.userName} ${prootCommand} "$PKG_NIX/bin/nix-store" --load-db < .reginfo
-    USER=${config.user.userName} ${prootCommand} "$PKG_NIX/bin/nix-store" --load-db < ${prootTermuxClosure}/registration
+    USER=${config.user.userName} ${prootCommand} "/static-nix/bin/nix-store" --init
+    USER=${config.user.userName} ${prootCommand} "/static-nix/bin/nix-store" --load-db < .reginfo
+    USER=${config.user.userName} ${prootCommand} "/static-nix/bin/nix-store" --load-db < ${prootTermuxClosure}/registration
 
     cat > package-info.nix <<EOF
     {

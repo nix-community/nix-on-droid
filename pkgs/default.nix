@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { arch, nixOnDroidChannelURL ? null, nixpkgsChannelURL ? null }:
 
@@ -44,7 +44,6 @@ let
     bootstrap = callPackage ./bootstrap.nix { };
     bootstrapZip = callPackage ./bootstrap-zip.nix { };
     prootTermux = callPackage ./cross-compiling/proot-termux.nix { };
-    qemuAarch64Static = callPackage ./qemu-aarch64-static.nix { };
     tallocStatic = callPackage ./cross-compiling/talloc-static.nix { };
   };
 in
