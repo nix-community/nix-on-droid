@@ -16,9 +16,10 @@
       inherit system;
       overlays = [ self.overlay ];
     };
+    defaultHm = home-manager.outPath;
   in rec {
-    lib.nix-on-droid = { pkgs ? defaultPkgs, config }: import ./modules {
-      inherit pkgs home-manager config;
+    lib.nix-on-droid = { pkgs ? defaultPkgs, home-manager-path ? defaultHm, config }: import ./modules {
+      inherit pkgs home-manager-path config;
       isFlake = true;
     };
 
