@@ -1,15 +1,11 @@
 # Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ pkgs ? import <nixpkgs> { }, home-manager ? <home-manager>, config ? null, isFlake ? false }:
+{ pkgs ? import <nixpkgs> { }, home-manager-path ? <home-manager>, config ? null, isFlake ? false }:
 
 with pkgs.lib;
 
 let
   defaultConfigFile = "${builtins.getEnv "HOME"}/.config/nixpkgs/nix-on-droid.nix";
-
-  hmPath = if home-manager ? install then
-    pkgs.lib.warn "Passing an initialized home-manager is useless - The overridden pkgs will not be used" home-manager.path
-  else home-manager;
 
   configModule =
     if config != null                             then config
@@ -20,7 +16,7 @@ let
   rawModule = evalModules {
     modules = [
       {
-        _module.args.home-manager = hmPath;
+        _module.args.home-manager-path = home-manager-path;
         _module.args.pkgs = mkDefault pkgs;
         _module.args.isFlake = isFlake;
       }
