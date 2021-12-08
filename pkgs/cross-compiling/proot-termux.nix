@@ -8,13 +8,13 @@ in
 
 pkgs.crossStatic.stdenv.mkDerivation {
   pname = "proot-termux";
-  version = "unstable-2021-05-19";
+  version = "unstable-2021-11-21";
 
   src = fetchFromGitHub {
     repo = "proot";
     owner = "termux";
-    rev = "3b7369b8eb8b2a879aade2b403b3ac0eb848b9ed";  # the one with make fix
-    sha256 = "1wrrar08axfwrma7yp2zlf61cz4crypr3m1jnhkqng7p1pry1cay";
+    rev = "7d6bdd9f6cf31144e11ce65648dab2a1e495a7de";
+    sha256 = "sha256-sbueMoqhOw0eChgp6KOZbhwRnSmDZhHq+jm06mGqxC4=";
 
     # 1 step behind 6f12fbee "Implement shmat", use if ashmem.h is missing
     #rev = "ffd811ee726c62094477ed335de89fc107cadf17";
