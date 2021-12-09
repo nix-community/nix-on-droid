@@ -22,14 +22,4 @@ let
   };
 in
 
-{
-  cross = loadNixpkgs { inherit crossSystem; };
-
-  crossStatic = loadNixpkgs {
-    inherit crossSystem;
-
-    crossOverlays = [
-      (import "${path}/pkgs/top-level/static.nix")
-    ];
-  };
-}
+loadNixpkgs { inherit crossSystem; }

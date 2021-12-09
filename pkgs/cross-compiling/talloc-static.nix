@@ -3,10 +3,10 @@
 { callPackage, python3, wafHook }:
 
 let
-  pkgs = callPackage ./pkgs.nix { };
+  pkgsCross = callPackage ./cross-pkgs.nix { };
 in
 
-pkgs.cross.talloc.overrideAttrs (_: rec {
+pkgsCross.talloc.overrideAttrs (_: rec {
   pname = "talloc-static";
   version = "2.3.2";
   name = "${pname}-${version}";
@@ -23,7 +23,7 @@ pkgs.cross.talloc.overrideAttrs (_: rec {
   ];
 
   postInstall = ''
-    ${pkgs.cross.stdenv.cc.targetPrefix}ar q $out/lib/libtalloc.a bin/default/talloc.c.[0-9]*.o
+    ${pkgsCross.stdenv.cc.targetPrefix}ar q $out/lib/libtalloc.a bin/default/talloc.c.[0-9]*.o
     rm -f $out/lib/libtalloc.so*
   '';
 
