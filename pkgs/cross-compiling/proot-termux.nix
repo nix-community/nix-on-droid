@@ -3,10 +3,12 @@
 { callPackage, fetchFromGitHub, tallocStatic }:
 
 let
-  pkgs = callPackage ./pkgs.nix { };
+  pkgsCross = callPackage ./cross-pkgs.nix { };
+
+  stdenv = pkgsCross.pkgsStatic.stdenvAdapters.makeStaticBinaries pkgsCross.stdenv;
 in
 
-pkgs.crossStatic.stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "proot-termux";
   version = "unstable-2021-11-21";
 
