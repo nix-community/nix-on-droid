@@ -1,11 +1,11 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 # Inspired by
 # https://github.com/rycee/home-manager/blob/master/modules/misc/nixpkgs.nix
 # (Copyright (c) 2017-2019 Robert Helgesson and Home Manager contributors,
 #  licensed under MIT License as well)
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, isFlake, ... }:
 
 with lib;
 
@@ -53,11 +53,6 @@ let
     check = builtins.isFunction;
     merge = lib.mergeOneOption;
   };
-
-  _pkgs = import <nixpkgs> (
-    filterAttrs (n: v: v != null) config.nixpkgs
-  );
-
 in
 
 {
@@ -164,9 +159,13 @@ in
 
   config = {
 
-    _module.args.pkgs = _pkgs;
-
-    nixpkgs.overlays = import ../overlays;
+    assertions = [
+      {
+        assertion = isFlake -> config.nixpkgs.config == null && (config.nixpkgs.overlays == null || config.nixpkgs.overlays == []);
+        message = "In a flake setup, the options nixpkgs.* should not be used. Instead, rely on the provided flake "
+          + "outputs and pass in the necessary nixpkgs object.";
+      }
+    ];
 
   };
 }
