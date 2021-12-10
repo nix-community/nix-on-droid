@@ -21,9 +21,11 @@ let
 
       . $HOME/.nix-profile/etc/profile.d/nix.sh
 
+      # workaround for nix 2.4, see https://github.com/NixOS/nixpkgs/issues/149791
+      export NIX_PATH=$HOME/.nix-defexpr/channels''${NIX_PATH:+:}$NIX_PATH
+
       ${optionalString (config.home-manager.config != null) ''
         if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-          export NIX_PATH=$HOME/.nix-defexpr/channels''${NIX_PATH:+:}$NIX_PATH
           set +u
           . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
           set -u
