@@ -18,6 +18,7 @@ let
       {
         _module.args.home-manager = home-manager;
         _module.args.pkgs = mkDefault pkgs;
+        _module.args.isFlake = isFlake;
       }
       configModule
     ] ++ import ./module-list.nix { inherit pkgs isFlake; };

@@ -14,8 +14,9 @@
   ./environment/path.nix
   ./environment/session-init.nix
   ./home-manager.nix
+  ./nixpkgs/options.nix
   ./time.nix
   ./user.nix
   ./version.nix
   (pkgs.path + "/nixos/modules/misc/assertions.nix")
-] ++ pkgs.lib.optionals (!isFlake) [ ./nixpkgs.nix ]
+] ++ pkgs.lib.optionals (!isFlake) [ ./nixpkgs/config.nix ]
