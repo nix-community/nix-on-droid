@@ -3,23 +3,20 @@
 { arch, nixOnDroidChannelURL ? null, nixpkgsChannelURL ? null }:
 
 let
-  loadNixpkgs = import lib/load-nixpkgs.nix;
-
   nixDirectory = callPackage ./nix-directory.nix { };
   packageInfo = import "${nixDirectory}/nix-support/package-info.nix";
 
-  nixpkgs = loadNixpkgs { };
+  nixpkgs = import lib/load-nixpkgs.nix { };
 
   modules = import ../modules {
     pkgs = nixpkgs;
 
+    extraModules = [ ../modules/build/initial-build.nix ];
+    extraSpecialArgs = { inherit customPkgs; };
+
     config = {
       # Fix invoking bash after initial build.
       user.shell = "${packageInfo.bash}/bin/bash";
-
-      imports = [ ../modules/build/initial-build.nix ];
-
-      _module.args = { inherit customPkgs; };
 
       build = {
         inherit arch;
@@ -39,7 +36,7 @@ let
     }
   );
 
-  customPkgs = rec {
+  customPkgs = {
     inherit nixDirectory packageInfo;
     bootstrap = callPackage ./bootstrap.nix { };
     bootstrapZip = callPackage ./bootstrap-zip.nix { };
