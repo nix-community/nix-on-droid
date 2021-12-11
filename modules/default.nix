@@ -1,6 +1,12 @@
 # Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ pkgs ? import <nixpkgs> { }, home-manager-path ? <home-manager>, config ? null, isFlake ? false }:
+{ config ? null
+, extraModules ? [ ]
+, extraSpecialArgs ? { }
+, pkgs ? import <nixpkgs> { }
+, home-manager-path ? <home-manager>
+, isFlake ? false
+}:
 
 with pkgs.lib;
 
@@ -16,12 +22,17 @@ let
   rawModule = evalModules {
     modules = [
       {
-        _module.args.home-manager-path = home-manager-path;
-        _module.args.pkgs = mkDefault pkgs;
-        _module.args.isFlake = isFlake;
+        _module.args =
+          {
+            inherit home-manager-path isFlake;
+            pkgs = mkDefault pkgs;
+          }
+          // extraSpecialArgs;
       }
       configModule
-    ] ++ import ./module-list.nix { inherit pkgs isFlake; };
+    ]
+    ++ extraModules
+    ++ import ./module-list.nix { inherit pkgs isFlake; };
   };
 
   failedAssertions = map (x: x.message) (filter (x: !x.assertion) rawModule.config.assertions);
