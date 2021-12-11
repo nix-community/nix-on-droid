@@ -10,7 +10,7 @@ set -o pipefail
 PROFILE_DIRECTORY="/nix/var/nix/profiles/nix-on-droid"
 
 function errorEcho() {
-    >&2 echo $@
+    >&2 echo "$@"
 }
 
 function setupPasstroughOpts() {
@@ -190,7 +190,7 @@ case $COMMAND in
         ;;
     rollback)
         if [[ $(readlink $PROFILE_DIRECTORY) =~ ^nix-on-droid-([0-9]+)-link$ ]]; then
-            doSwitchGeneration $((${BASH_REMATCH[1]} - 1))
+            doSwitchGeneration $((BASH_REMATCH[1] - 1))
         else
             errorEcho "nix-on-droid profile link is broken, please run nix-on-droid switch to fix it."
             exit 1
@@ -201,7 +201,7 @@ case $COMMAND in
         ;;
     switch-generation)
         if [[ ${#COMMAND_ARGS[@]} -eq 1 ]]; then
-            doSwitchGeneration ${COMMAND_ARGS[0]}
+            doSwitchGeneration "${COMMAND_ARGS[0]}"
         else
             errorEcho "switch-generation expects one argument, got ${#COMMAND_ARGS[@]}."
             exit 1
