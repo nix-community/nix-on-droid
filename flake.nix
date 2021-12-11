@@ -9,25 +9,39 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, flake-utils }: let
-    supportedSystems = [ "aarch64-linux" "i686-linux" ];
-  in flake-utils.lib.eachSystem supportedSystems (system: let
-    defaultPkgs = import nixpkgs {
-      inherit system;
-      overlays = [ self.overlay ];
-    };
-    defaultHm = home-manager.outPath;
-  in rec {
-    lib.nix-on-droid = { pkgs ? defaultPkgs, home-manager-path ? defaultHm, config }: import ./modules {
-      inherit pkgs home-manager-path config;
-      isFlake = true;
-    };
+  outputs = { self, nixpkgs, flake-utils, home-manager }:
+    let
+      overlay = nixpkgs.lib.composeManyExtensions (import ./overlays);
 
-    apps.nix-on-droid = flake-utils.lib.mkApp {
-      drv = (defaultPkgs.callPackage ./nix-on-droid { });
-    };
-    defaultApp = apps.nix-on-droid;
-  }) // {
-    overlay = nixpkgs.lib.composeManyExtensions (import ./overlays);
-  };
+      pkgsPerSystem = system: import nixpkgs {
+        inherit system;
+        overlays = [ overlay ];
+      };
+
+      appPerSystem = system: flake-utils.lib.mkApp {
+        drv = (pkgsPerSystem system).callPackage ./nix-on-droid { };
+      };
+    in
+    {
+      inherit overlay;
+
+      lib.nixOnDroidConfiguration =
+        { config
+        , system
+        , extraModules ? [ ]
+        , extraSpecialArgs ? { }
+        , pkgs ? pkgsPerSystem system
+        , home-manager-path ? home-manager.outPath
+        }:
+        import ./modules {
+          inherit config extraModules extraSpecialArgs home-manager-path pkgs;
+          isFlake = true;
+        };
+    }
+    // flake-utils.lib.eachSystem
+      [ "aarch64-linux" "i686-linux" ]
+      (system: {
+        apps.nix-on-droid = appPerSystem system;
+        defaultApp = appPerSystem system;
+      });
 }
