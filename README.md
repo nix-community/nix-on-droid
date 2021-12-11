@@ -159,12 +159,12 @@ you shouldn't need a binary cache for that.
 
 ## Nix flakes
 
-Note that nix flake support is experimental at the moment.
-Still, there's some minimal usage example.
-You can build an activation package by procuring flake-powered nix
-(`nix run nixpkgs.nixFlakes`,
- `echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf`)
-writing a `flake.nix`:
+**Note:** Nix flake support is still experimental at the moment and subject to change.
+
+Do not run `nix profile` because this will render your environment incompatible with `nix-on-droid` as it relies on
+`nix-env`.
+
+### Minimal example
 
 ```nix
 {
@@ -172,20 +172,63 @@ writing a `flake.nix`:
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-21.11";
-    nix-on-droid.url = "github:t184256/nix-on-droid/master";
+    nix-on-droid.url = "github:t184256/nix-on-droid";
     nix-on-droid.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { nix-on-droid, ... }: {
-    nix-on-droid = (nix-on-droid.lib.aarch64-linux.nix-on-droid {
-      config = ./.config/nixpkgs/nix-on-droid.nix;
-    }).activationPackage;
+    nixOnDroidConfigurations = {
+      device = nix-on-droid.lib.nixOnDroidConfiguration {
+        config = ./nix-on-droid.nix;
+        system = "aarch64-linux";
+      };
+    };
   };
 }
 ```
 
-building it with `nix build .#nix-on-droid --impure`
-and activating it with `result/activate`.
+### Advanced example
+
+```nix
+{
+  description = "nix-on-droid configuration";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/release-21.11";
+    home-manager.url = "github:nix-community/home-manager/release-21.11";
+    nix-on-droid.url = "github:t184256/nix-on-droid";
+    nix-on-droid.inputs.nixpkgs.follows = "nixpkgs";
+    nix-on-droid.inputs.home-manager.follows = "home-manager";
+  };
+
+  outputs = { nix-on-droid, ... }: {
+    nixOnDroidConfigurations = {
+      device = nix-on-droid.lib.nixOnDroidConfiguration {
+        config = ./nix-on-droid.nix;
+        system = "aarch64-linux";
+        extraModules = [
+          # import source out-of-tree modules like:
+          # flake.nixOnDroidModules.module
+        ];
+        extraSpecialArgs = {
+          # arguments to be available in every nix-on-droid module
+        };
+        # your own pkgs instance (see nix-on-droid.overlay for useful additions)
+        # pkgs = ...;
+      };
+    };
+  };
+}
+```
+
+### Usage with `nix-on-droid`
+
+Use `nix-on-droid switch --flake .#device` to build and activate your configuration (`.#device` will expand to
+`.#nixOnDroidConfigurations.device`).
+
+**Note:** Currently, nix-on-droid can not be built with an pure flake build because of hardcoded store paths for proot.
+*Therefore, every evaluation of a flake configuration will be executed with `--impure` flag. (This behaviour will be
+*dropped as soon as the default setup does not require it anymore.)
 
 ## Tips
 
