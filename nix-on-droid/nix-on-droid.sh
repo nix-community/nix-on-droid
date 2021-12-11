@@ -23,13 +23,24 @@ function setupPasstroughOpts() {
     fi
 }
 
+function nixActivationPackage() {
+    local command="$1"
+    local extraArgs=("${@:2}" "${PASSTHROUGH_OPTS[@]}")
+    local nix=nix
+    if [[ -n "${FLAKE_CONFIG_URI}" ]]; then
+        nix=@nix24@/bin/nix
+        extraArgs+=(--impure "${FLAKE_CONFIG_URI}.activationPackage")
+    else
+        extraArgs+=(--file "<nix-on-droid/modules>" activationPackage)
+    fi
+
+    $nix "${command}" "${extraArgs[@]}"
+}
+
 
 function doBuild() {
     echo "Building activation package..."
-    nix build \
-        --file "<nix-on-droid/modules>" \
-        ${PASSTHROUGH_OPTS[*]} \
-        activationPackage
+    nixActivationPackage build
 }
 
 function doGenerations() {
@@ -41,10 +52,11 @@ function doHelp() {
     echo
     echo "Options"
     echo
-    echo "  -h|--help       Print this help"
-    echo "  -n|--dry-run    Do a dry run, only prints what actions would be taken"
-    echo "  -v|--verbose    Verbose output"
-    echo "  -f|--file FILE  Path to config file"
+    echo "  -h|--help         Print this help"
+    echo "  -n|--dry-run      Do a dry run, only prints what actions would be taken"
+    echo "  -v|--verbose      Verbose output"
+    echo "  -f|--file FILE    Path to config file"
+    echo "  -F|--flake FLAKE  Path to flake and device name (e.g. path/to/flake#device)"
     echo
     echo "Options passed on to nix build"
     echo
@@ -82,18 +94,10 @@ function doOnDeviceTest() {
 
 function doSwitch() {
     echo "Building activation package..."
-    nix build \
-        --no-link \
-        --file "<nix-on-droid/modules>" \
-        ${PASSTHROUGH_OPTS[*]} \
-        activationPackage
+    nixActivationPackage build --no-link
 
     echo "Executing activation script..."
-    generationDir="$(nix path-info \
-        --file "<nix-on-droid/modules>" \
-        ${PASSTHROUGH_OPTS[*]} \
-        activationPackage \
-    )"
+    generationDir="$(nixActivationPackage path-info)"
 
     "${generationDir}/activate"
 }
@@ -115,6 +119,7 @@ function doSwitchGeneration() {
 COMMAND_ARGS=()
 COMMAND=
 CONFIG_FILE=
+FLAKE_CONFIG_URI=
 PASSTHROUGH_OPTS=()
 
 while [[ $# -gt 0 ]]; do
@@ -126,6 +131,13 @@ while [[ $# -gt 0 ]]; do
             ;;
         -f|--file)
             CONFIG_FILE="$1"
+            shift
+            ;;
+        -F|--flake)
+            PASSTHROUGH_OPTS+=(--extra-experimental-features flakes --extra-experimental-features nix-command)
+            # add "nixOnDroidConfigurations." as prefix in attribute name, e.g.
+            # /path/to/flake#device -> /path/to/flake#nixOnDroidConfigurations.device
+            FLAKE_CONFIG_URI="${1%#*}#nixOnDroidConfigurations.${1#*#}"
             shift
             ;;
         -h|--help)
