@@ -1,0 +1,34 @@
+name: 'run on-device-tests with fakedroid'
+on:
+  pull_request:
+  push:
+jobs:
+  fakedroid-odt:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v2.4.0
+
+    - uses: cachix/install-nix-action@v15
+      with:
+        nix_path: nixpkgs=channel:nixos-21.11
+        extra_nix_config: "experimental-features = nix-command"
+
+    - uses: cachix/cachix-action@v10
+      with:
+        name: nix-on-droid
+        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+
+    - name: init
+      run: tests/fakedroid.sh echo INIT
+
+    - name: test
+      run: |
+        tests/fakedroid.sh mkdir -p .cache/nix-on-droid-self-test
+        tests/fakedroid.sh touch .cache/nix-on-droid-self-test/confirmation-granted
+        tests/fakedroid.sh nix-on-droid on-device-test
+
+    - name: upload
+      if: always()
+      run: tests/fakedroid.sh nix-shell -p cachix --run 'nix path-info --all | cachix push nix-on-droid'
