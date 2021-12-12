@@ -11,11 +11,14 @@ setup() {
       fi
     done < <(nix-channel --list)
     echo "parsing detected channel url: $CHANNEL_URL"
-    [[ "$CHANNEL_URL" =~ https://github.com/(.+)/(.+)/archive/(.+)\.tar\.gz ]]
-    REPO_USER=${BASH_REMATCH[1]}
-    REPO_NAME=${BASH_REMATCH[2]}
-    REPO_BRANCH=${BASH_REMATCH[3]}
-    FLAKE_URL=github:$REPO_USER/$REPO_NAME/$REPO_BRANCH
+    if [[ "$CHANNEL_URL" =~ https://github.com/(.+)/(.+)/archive/(.+)\.tar\.gz ]]; then
+      REPO_USER=${BASH_REMATCH[1]}
+      REPO_NAME=${BASH_REMATCH[2]}
+      REPO_BRANCH=${BASH_REMATCH[3]}
+      FLAKE_URL=github:$REPO_USER/$REPO_NAME/$REPO_BRANCH
+    elif [[ "$CHANNEL_URL" == file:///n-o-d/archive.tar.gz ]]; then
+      FLAKE_URL=/n-o-d/unpacked
+    fi
     echo "autodetected flake url: $FLAKE_URL"
 
     ON_DEVICE_TESTS_SETUP=1
