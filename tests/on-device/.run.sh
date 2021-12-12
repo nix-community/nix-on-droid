@@ -28,12 +28,19 @@ if [[ ! -e "$DEFAULT_ACTIVATE_SCRIPT" ]]; then
     ln -sn "$(readlink -f "$PROFILE_DIRECTORY/activate")" "$DEFAULT_ACTIVATE_SCRIPT"
 fi
 
-if [[ ! -d ~/.config.bak ]]; then
-    mv ~/.config ~/.config.bak
-    cp -r ~/.config.bak ~/.config
+_cleanup() {
+    rm -rf ~/.config/nixpkgs
+    mv ~/.config/nixpkgs.bak ~/.config/nixpkgs
+}
+
+trap _cleanup SIGINT SIGTERM SIGKILL
+
+if [[ ! -d ~/.config/nixpkgs.bak ]]; then
+    mv ~/.config/nixpkgs ~/.config/nixpkgs.bak
 fi
+
+mkdir -p ~/.config/nixpkgs
 
 bats "${SCRIPT_DIR}" --verbose-run --timing --pretty
 
-rm -rf ~/.config
-mv ~/.config.bak ~/.config
+_cleanup
