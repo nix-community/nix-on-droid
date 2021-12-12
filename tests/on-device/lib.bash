@@ -1,6 +1,7 @@
 # Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-setup() {
+# call _setup when defining a setup function in your test
+_setup() {
   if [[ -z "$ON_DEVICE_TESTS_SETUP" ]]; then
     CHANNEL_DIR="$(nix-instantiate --eval --expr '<nix-on-droid>')"
     ON_DEVICE_TESTS_DIR="$CHANNEL_DIR/tests/on-device"
@@ -31,6 +32,10 @@ setup() {
 
   # build and activate the version of nix-on-droid that is subject to test
   switch_to_default_config
+}
+
+setup() {
+  _setup
 }
 
 assert_command() {
