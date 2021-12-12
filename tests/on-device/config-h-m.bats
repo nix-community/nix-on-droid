@@ -2,7 +2,15 @@
 
 load lib
 
+setup() {
+  _setup
+  cp ~/.nix-channels ~/.nix-channels.bak
+}
+
 teardown() {
+  nix-channel --remove home-manager
+  mv ~/.nix-channels.bak ~/.nix-channels
+
   rm -f ~/.config/example
 }
 
