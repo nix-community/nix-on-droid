@@ -26,6 +26,9 @@ setup() {
 
   # restore to pre-testing generation before the start of each test
   $DEFAULT_ACTIVATE_SCRIPT
+
+  # build and activate the version of nix-on-droid that is subject to test
+  switch_to_default_config
 }
 
 assert_command() {
@@ -47,7 +50,4 @@ switch_to_default_config() {
   cat "$CHANNEL_DIR/modules/environment/login/nix-on-droid.nix.default" \
     > ~/.config/nixpkgs/nix-on-droid.nix
   nix-on-droid switch
-
-  assert_command nix-on-droid nix-shell bash vi find
-  assert_no_command dash xonsh zsh
 }

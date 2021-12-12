@@ -2,13 +2,17 @@
 
 load lib
 
+teardown() {
+  rm -f ~/.config/example
+}
+
 @test 'using home-manager works' {
-  # start from a known baseline
-  switch_to_default_config
+  # assertions to verify initial state is as expected
   assert_command vi
   assert_no_command dash
-  ! [[ -e ~/.config/example ]]
+  [[ ! -e ~/.config/example ]]
 
+  # set up / build / activate the configuration
   nix-channel --add https://github.com/rycee/home-manager/archive/release-21.11.tar.gz home-manager
   nix-channel --update
   cp "$ON_DEVICE_TESTS_DIR/config-h-m.nix" ~/.config/nixpkgs/nix-on-droid.nix
@@ -30,5 +34,11 @@ load lib
   [[ "$output" == success ]]
   [[ "$status" == 42 ]]
 
+  # check that reverting works too
   switch_to_default_config
+  assert_command vi
+  assert_no_command unzip
+
+  # file will be still present because home-manager needs to be set up to remove old links
+  [[ -e ~/.config/example ]]
 }
