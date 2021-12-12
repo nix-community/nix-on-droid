@@ -12,7 +12,10 @@ let
     pkgs = nixpkgs;
 
     extraModules = [ ../modules/build/initial-build.nix ];
-    extraSpecialArgs = { inherit customPkgs; };
+    extraSpecialArgs = {
+      inherit customPkgs;
+      pkgs = nixpkgs.lib.mkForce nixpkgs; # to override ./modules/nixpkgs/config.nix
+    };
 
     config = {
       # Fix invoking bash after initial build.
