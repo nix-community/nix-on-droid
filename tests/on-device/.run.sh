@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bats
+#! nix-shell -i bash -p bats ncurses
 
 # Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
@@ -26,7 +26,7 @@ if [[ ! -d ~/.config.bak ]]; then
     cp -r ~/.config.bak ~/.config
 fi
 
-bats "${SCRIPT_DIR}" --verbose-run --timing
+bats "${SCRIPT_DIR}" --verbose-run --timing --pretty
 
 rm -rf ~/.config
 mv ~/.config.bak ~/.config
