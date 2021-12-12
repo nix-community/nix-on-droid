@@ -51,3 +51,9 @@ switch_to_default_config() {
     > ~/.config/nixpkgs/nix-on-droid.nix
   nix-on-droid switch
 }
+
+_sed() {
+  local storePath
+  storePath="$(nix-build "<nixpkgs>" --no-out-link --attr gnused)"
+  "${storePath}/bin/sed" "$@"
+}

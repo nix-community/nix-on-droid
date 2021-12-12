@@ -10,10 +10,9 @@ load lib
   # set up / build / activate the configuration
   cat "$ON_DEVICE_TESTS_DIR/config-flake-h-m.cfg.nix" \
     > ~/.config/nixpkgs/nix-on-droid.nix
-  nix-shell -p gnused --run \
-    "sed 's|<<FLAKE_URL>>|$FLAKE_URL|g' \
-         < '$ON_DEVICE_TESTS_DIR/config-flake-h-m.flake.nix' \
-         > ~/.config/nixpkgs/flake.nix"
+  _sed "s|<<FLAKE_URL>>|$FLAKE_URL|g" \
+    "$ON_DEVICE_TESTS_DIR/config-flake-h-m.flake.nix" \
+    > ~/.config/nixpkgs/flake.nix
   pushd ~/.config/nixpkgs
     nix-shell -p nixFlakes --run \
       'nix build \

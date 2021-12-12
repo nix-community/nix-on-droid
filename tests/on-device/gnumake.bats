@@ -4,7 +4,9 @@
   TEMPDIR=/tmp/.tmp-gnumake.$$
   mkdir -p "$TEMPDIR"
   echo -e 'x:\n\techo desired output > x' > "$TEMPDIR/Makefile"
-  nix-shell -p gnumake --run "make -C $TEMPDIR x"
+
+  "$(nix-build "<nixpkgs>" --no-out-link --attr gnumake)/bin/make" -C "$TEMPDIR" x
+
   [[ -e "$TEMPDIR/x" ]]
   [[ "$(cat "$TEMPDIR/x")" == 'desired output' ]]
 }
