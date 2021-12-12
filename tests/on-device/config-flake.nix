@@ -8,8 +8,11 @@
   };
 
   outputs = { nix-on-droid, ... }: {
-    nix-on-droid = (nix-on-droid.lib.aarch64-linux.nix-on-droid {
-      config = /data/data/com.termux.nix/files/home/.config/nixpkgs/nix-on-droid.nix;
-    }).activationPackage;
+    nixOnDroidConfigurations = {
+      device = nix-on-droid.lib.nixOnDroidConfiguration {
+        config = ./nix-on-droid.nix;
+        system = "aarch64-linux";
+      };
+    };
   };
 }

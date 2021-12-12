@@ -18,13 +18,7 @@ load lib
     "$ON_DEVICE_TESTS_DIR/config-flake.nix" \
     > ~/.config/nixpkgs/flake.nix
 
-  # this is more cumbersome than options,
-  # but this is what we recommend to users, so taking the hard way
-  echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
-  pushd ~/.config/nixpkgs
-    nix-shell -p nixFlakes --run 'nix build .#nix-on-droid --impure'
-    result/activate
-  popd
+  nix-on-droid switch --flake ~/.config/nixpkgs#device
 
   # test presence of several crucial commands
   assert_command nix-on-droid nix-shell bash
