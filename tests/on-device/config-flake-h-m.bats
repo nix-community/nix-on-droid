@@ -3,8 +3,7 @@
 load lib
 
 @test 'flake + h-m + #134 overlays case work' {
-  # start from a known baseline
-  switch_to_default_config
+  # assertions to verify initial state is as expected
   assert_command vi
   assert_no_command dash zsh
 

@@ -3,11 +3,11 @@
 load lib
 
 @test 'flake example works' {
-  # start from a known baseline
-  switch_to_default_config
+  # assertions to verify initial state is as expected
   assert_command vi
-  assert_no_command dash unzip
+  assert_no_command unzip
 
+  # set up / build / activate the configuration
   nix-shell -p gnused --run \
     "sed \
          -e s/vim/nano/ \
@@ -39,5 +39,5 @@ load lib
   rm -f ~/.config/nix/nix.conf ~/.config/nixpkgs/flake.nix
   switch_to_default_config
   assert_command vi
-  assert_no_command dash unzip
+  assert_no_command unzip
 }
