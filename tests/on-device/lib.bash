@@ -5,18 +5,19 @@ setup() {
     CHANNEL_DIR="$(nix-instantiate --eval --expr '<nix-on-droid>')"
     ON_DEVICE_TESTS_DIR="$CHANNEL_DIR/tests/on-device"
 
+    local channelUrl
     while read -r channel_line; do
       if [[ "$channel_line" =~ nix-on-droid[[:space:]]+(.*) ]]; then
-        CHANNEL_URL=${BASH_REMATCH[1]}
+        channelUrl=${BASH_REMATCH[1]}
       fi
     done < <(nix-channel --list)
-    echo "parsing detected channel url: $CHANNEL_URL"
-    if [[ "$CHANNEL_URL" =~ https://github.com/(.+)/(.+)/archive/(.+)\.tar\.gz ]]; then
-      REPO_USER=${BASH_REMATCH[1]}
-      REPO_NAME=${BASH_REMATCH[2]}
-      REPO_BRANCH=${BASH_REMATCH[3]}
-      FLAKE_URL=github:$REPO_USER/$REPO_NAME/$REPO_BRANCH
-    elif [[ "$CHANNEL_URL" == file:///n-o-d/archive.tar.gz ]]; then
+    echo "parsing detected channel url: $channelUrl"
+    if [[ "$channelUrl" =~ https://github.com/(.+)/(.+)/archive/(.+)\.tar\.gz ]]; then
+      local repoUser=${BASH_REMATCH[1]}
+      local repoName=${BASH_REMATCH[2]}
+      local repoBranch=${BASH_REMATCH[3]}
+      FLAKE_URL=github:$repoUser/$repoName/$repoBranch
+    elif [[ "$channelUrl" == file:///n-o-d/archive.tar.gz ]]; then
       FLAKE_URL=/n-o-d/unpacked
     fi
     echo "autodetected flake url: $FLAKE_URL"
