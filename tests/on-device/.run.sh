@@ -6,8 +6,11 @@
 set -ueo pipefail
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+PROFILE_DIRECTORY="/nix/var/nix/profiles/nix-on-droid"
+
 SELF_TEST_DIR="$HOME/.cache/nix-on-droid-self-test"
 CONFIRMATION_FILE="$SELF_TEST_DIR/confirmation-granted"
+DEFAULT_ACTIVATE_SCRIPT="$SELF_TEST_DIR/default-activate"
 mkdir -p "$SELF_TEST_DIR"
 
 if [[ ! -e "$CONFIRMATION_FILE" ]]; then
@@ -19,6 +22,10 @@ if [[ ! -e "$CONFIRMATION_FILE" ]]; then
     read -r CONFIRMATION
     if [[ "$CONFIRMATION" != 'I do' ]]; then echo 'Cool, aborting.'; exit 7; fi
     touch "$CONFIRMATION_FILE"
+fi
+
+if [[ ! -e "$DEFAULT_ACTIVATE_SCRIPT" ]]; then
+    ln -sn "$(readlink -f "$PROFILE_DIRECTORY/activate")" "$DEFAULT_ACTIVATE_SCRIPT"
 fi
 
 if [[ ! -d ~/.config.bak ]]; then

@@ -23,6 +23,9 @@ setup() {
 
     ON_DEVICE_TESTS_SETUP=1
   fi
+
+  # restore to pre-testing generation before the start of each test
+  $DEFAULT_ACTIVATE_SCRIPT
 }
 
 assert_command() {
