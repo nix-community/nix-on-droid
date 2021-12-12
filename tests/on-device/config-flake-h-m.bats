@@ -13,14 +13,8 @@ load lib
   _sed "s|<<FLAKE_URL>>|$FLAKE_URL|g" \
     "$ON_DEVICE_TESTS_DIR/config-flake-h-m.flake.nix" \
     > ~/.config/nixpkgs/flake.nix
-  pushd ~/.config/nixpkgs
-    nix-shell -p nixFlakes --run \
-      'nix build \
-        --extra-experimental-features nix-command \
-        --extra-experimental-features flakes \
-        --impure .#nix-on-droid'
-    result/activate
-  popd
+
+  nix-on-droid switch --flake ~/.config/nixpkgs#device
 
   # test presence of several crucial commands
   assert_command nix-on-droid nix-shell bash
