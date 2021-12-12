@@ -24,7 +24,6 @@ load lib
   assert_no_command vi
 
   # check that reverting works too
-  rm -f ~/.config/nix/nix.conf ~/.config/nixpkgs/flake.nix
   switch_to_default_config
   assert_command vi
   assert_no_command dash zsh
