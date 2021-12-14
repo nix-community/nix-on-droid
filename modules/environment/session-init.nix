@@ -25,7 +25,7 @@ let
       [ -n "$__NOD_SESS_INIT_SOURCED" ] && return
       export __NOD_SESS_INIT_SOURCED=1
 
-      . $HOME/.nix-profile/etc/profile.d/nix.sh
+      . "${config.user.home}/.nix-profile/etc/profile.d/nix.sh"
 
       # workaround for nix 2.4, see https://github.com/NixOS/nixpkgs/issues/149791
       ${addToNixPath "${config.user.home}/.nix-defexpr/channels"}
@@ -33,8 +33,8 @@ let
       ${addToNixPath "nixpkgs=${config.user.home}/.nix-defexpr/channels/nixpkgs/"}
 
       ${optionalString (config.home-manager.config != null) ''
-        if [ -e "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-          . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+        if [ -e "${config.user.home}/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+          . "${config.user.home}/.nix-profile/etc/profile.d/hm-session-vars.sh"
         fi
       ''}
 
