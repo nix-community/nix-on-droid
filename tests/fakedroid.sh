@@ -52,7 +52,7 @@ PROOT_ARGS+=' --link2symlink'
 [[ -e .fakedroid/inj/qemu-aarch64 ]] || wget $QEMU_URL -O $QEMU
 chmod +x $QEMU
 
-PROOT=$(nix-build tests/proot-test.nix)/bin/proot
+PROOT=$(nix-build --no-out-link tests/proot-test.nix)/bin/proot
 
 
 # Do the first install if not installed yet:
