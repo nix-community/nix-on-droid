@@ -133,8 +133,6 @@ Put the zip file from `result` on some HTTP server
 and specify the parent directory URL during the installation.
 To re-trigger the installation, you can use
 'clear data' on the Android app (after backing stuff up, obviously).
-Now that we have an upgrade path for everything,
-this should not be needed anymore.
 
 If you want to change the nix-on-droid channel to your custom one,
 you can do that either with `nix-channel` after the installation,
@@ -155,6 +153,7 @@ To minimize the hassle with this scenario, proot derivation is also bundled
 with the bootstrap zipball. This way you only need your own binary cache
 if you are planning to maintain a long-term fork that users can update from.
 In case you only care about updates through wiping the data,
+or are forking to submit a one-off pull request,
 you shouldn't need a binary cache for that.
 
 ## Nix flakes
@@ -193,6 +192,8 @@ and activating it with `result/activate`.
   (reachable from Android settings).
 * If the terminal freezes, use 'Acquire wakelock' button in the notification
   and/or tone down your device's aggressive power saving measures.
+* We have a [wiki](https://github.com/t184256/nix-on-droid/wiki)
+  with tips and success stories, you're encouraged to add yours as well.
 
 
 ## Technical overview
@@ -201,11 +202,10 @@ OK, real brief.
 
 Developer's device:
 
-0. Required tools are compiled or downloaded in pre-compiled form
 1. `proot` for the target platform is cross-compiled against `bionic`,
    (to fake file paths like `/nix/store`; think 'userspace `chroot`')
 2. Target `nix` is taken from the original release tarball
-3. Target `nix` database is initialized (using host `proot`)
+3. Target `nix` database is initialized
 4. Support scripts and config files are built with `nix` and the Nix-on-Droid
    module system
 5. From these, a bootstrap zipball is built and published on an HTTP server
@@ -226,7 +226,7 @@ for a more extensive overview of the subject.
 ## Licensing and credits
 
 Licensed under MIT License, see LICENSE.
-Copyright (c) 2019-2020 Alexander Sosedkin and other contributors, see AUTHORS.
+Copyright (c) 2019-2021 Alexander Sosedkin and other contributors, see AUTHORS.
 
 Two rewrites ago it was based off the official Nix install script
 (https://nixos.org/nix/install),
