@@ -46,6 +46,29 @@ let
     ${mkActivationCmds cfg.activation}
     ${mkActivationCmds cfg.activationAfter}
   '';
+
+  activationOptionDescriptionSuffix = ''
+    </para><para>
+
+    Any script should respect the <varname>DRY_RUN</varname>
+    variable, if it is set then no actual action should be taken.
+    The variable <varname>DRY_RUN_CMD</varname> is set to
+    <code>echo</code> if dry run is enabled. Thus, many cases you
+    can use the idiom <code>$DRY_RUN_CMD rm -rf /</code>.
+
+    </para><para>
+
+    Any script block should also respect the
+    <varname>VERBOSE</varname> variable, and if set print
+    information on standard out that may be useful for debugging
+    any issue that may arise. The variable
+    <varname>VERBOSE_ARG</varname> is set to
+    <option>--verbose</option> if verbose output is enabled.
+    The variable <varname>VERBOSE_ECHO</varname> is set to
+    <code>echo</code> if verbose output is enabled, otherwise
+    falling back to <code>true</code>. So it can be used like
+    <code>$VERBOSE_ECHO "any message"</code>.
+  '';
 in
 
 {
@@ -60,13 +83,7 @@ in
         type = types.attrs;
         description = ''
           Activation scripts for the nix-on-droid environment.
-          </para><para>
-          Any script should respect the <varname>DRY_RUN</varname>
-          variable, if it is set then no actual action should be taken.
-          The variable <varname>DRY_RUN_CMD</varname> is set to
-          <code>echo</code> if dry run is enabled. Thus, many cases you
-          can use the idiom <code>$DRY_RUN_CMD rm -rf /</code>.
-        '';
+        '' + activationOptionDescriptionSuffix;
       };
 
       activationBefore = mkOption {
@@ -75,13 +92,7 @@ in
         description = ''
           Activation scripts for the nix-on-droid environment that
           need to be run first.
-          </para><para>
-          Any script should respect the <varname>DRY_RUN</varname>
-          variable, if it is set then no actual action should be taken.
-          The variable <varname>DRY_RUN_CMD</varname> is set to
-          <code>echo</code> if dry run is enabled. Thus, many cases you
-          can use the idiom <code>$DRY_RUN_CMD rm -rf /</code>.
-        '';
+        '' + activationOptionDescriptionSuffix;
       };
 
       activationAfter = mkOption {
@@ -90,13 +101,7 @@ in
         description = ''
           Activation scripts for the nix-on-droid environment that
           need to be run last.
-          </para><para>
-          Any script should respect the <varname>DRY_RUN</varname>
-          variable, if it is set then no actual action should be taken.
-          The variable <varname>DRY_RUN_CMD</varname> is set to
-          <code>echo</code> if dry run is enabled. Thus, many cases you
-          can use the idiom <code>$DRY_RUN_CMD rm -rf /</code>.
-        '';
+        '' + activationOptionDescriptionSuffix;
       };
 
       activationPackage = mkOption {
