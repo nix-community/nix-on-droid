@@ -13,6 +13,7 @@
   ./environment/nix.nix
   ./environment/path.nix
   ./environment/session-init.nix
+  ./environment/shell.nix
   ./home-manager.nix
   ./nixpkgs/options.nix
   ./time.nix
