@@ -10,7 +10,7 @@ let
   extendedLib = import (home-manager-path + "/modules/lib/stdlib-extended.nix") pkgs.lib;
 
   hmModule = types.submoduleWith {
-    specialArgs = { lib = extendedLib; };
+    specialArgs = { lib = extendedLib; } // cfg.extraSpecialArgs;
     modules = [
       ({ name, ... }: {
         imports = import (home-manager-path + "/modules/modules.nix") {
@@ -27,7 +27,7 @@ let
           home.homeDirectory = config.user.home;
         };
       })
-    ];
+    ] ++ cfg.sharedModules;
   };
 in
 
@@ -52,6 +52,32 @@ in
         type = types.nullOr hmModule;
         default = null;
         description = "Home Manager configuration.";
+      };
+
+      extraSpecialArgs = mkOption {
+        type = types.attrs;
+        default = { };
+        example = literalExpression "{ inherit emacs-overlay; }";
+        description = ''
+          Extra <literal>specialArgs</literal> passed to Home Manager. This
+          option can be used to pass additional arguments to all modules.
+        '';
+      };
+
+      sharedModules = mkOption {
+        type = with types;
+        # TODO: use types.raw once this PR is merged: https://github.com/NixOS/nixpkgs/pull/132448
+          listOf (mkOptionType {
+            name = "submodule";
+            inherit (submodule { }) check;
+            merge = lib.options.mergeOneOption;
+            description = "Home Manager modules";
+          });
+        default = [ ];
+        example = literalExpression "[ { home.packages = [ nixpkgs-fmt ]; } ]";
+        description = ''
+          Extra modules.
+        '';
       };
 
       useGlobalPkgs = mkEnableOption ''
