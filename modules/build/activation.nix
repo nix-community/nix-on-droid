@@ -118,9 +118,12 @@ in
       };
 
       sessionInit = mkOption {
-        type = types.path;
+        type = types.package;
         internal = true;
-        description = "File containing session init commands like exposing environment variables.";
+        description = ''
+          Package containing the session-init script in
+          <code>/etc/profile.d/nix-on-droid-session-init.sh</code>.
+        '';
       };
     };
 
