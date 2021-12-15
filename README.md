@@ -226,8 +226,8 @@ Use `nix-on-droid switch --flake .#device` to build and activate your configurat
 `.#nixOnDroidConfigurations.device`).
 
 **Note:** Currently, nix-on-droid can not be built with an pure flake build because of hardcoded store paths for proot.
-*Therefore, every evaluation of a flake configuration will be executed with `--impure` flag. (This behaviour will be
-*dropped as soon as the default setup does not require it anymore.)
+Therefore, every evaluation of a flake configuration will be executed with `--impure` flag. (This behaviour will be
+dropped as soon as the default setup does not require it anymore.)
 
 ## Tips
 
