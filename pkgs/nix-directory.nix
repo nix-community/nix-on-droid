@@ -28,7 +28,6 @@ stdenv.mkDerivation {
       let
         archShas = {
          aarch64 = "1hl6pd02nssscn32mrndif2fxfssxiarrpjvqyjicwnz6yn9mhpq";
-         i686 = "0249sbmgmi7cah099wywlqx3ygwpjgl6vcyivqix9rwpnpap417x";
         };
       in
         "${archShas.${config.build.arch}}";

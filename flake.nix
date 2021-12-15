@@ -39,7 +39,7 @@
         };
     }
     // flake-utils.lib.eachSystem
-      [ "aarch64-linux" "i686-linux" ]
+      [ "aarch64-linux" ]
       (system: {
         apps.nix-on-droid = appPerSystem system;
         defaultApp = appPerSystem system;

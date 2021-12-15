@@ -86,7 +86,6 @@ in
         let
           crossCompiledPaths = {
            aarch64 = "/nix/store/dapbgzbpl426jrhz4a2sdl096a8l98ad-proot-termux-aarch64-unknown-linux-android-unstable-2021-11-21";
-           i686 = "/nix/store/6nnjhrh8pgyxjnya72irahxpkbnxai1w-proot-termux-i686-unknown-linux-android-unstable-2021-11-21";
           };
         in
           "${crossCompiledPaths.${config.build.arch}}";

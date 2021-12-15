@@ -26,17 +26,18 @@ This repository contains:
    on the device.
 
 It is only tested with aarch64 (64-bit ARM devices).
-It may also support x86 devices, but the developers don't own one
-and nobody has reported whether it actually works or not.
-
+It also used to compile for i686 devices, but the developers don't own any
+and nobody has reported whether it actually worked or not,
+so it's no longer built unless a user shows up.
 Sorry, it would not work on 32-bit ARM devices
 and it's not an easy feat to pull off.
 
 
 ## Try it out
 
-Prebuilt stuff resides at https://nix-on-droid.unboiled.info
-Install the APK, launch the app, press OK.
+[Install it from F-Droid](https://f-droid.org/packages/com.termux.nix),
+launch the app, press OK,
+expect many hundreds megabytes of downloads to happen.
 
 
 ## `nix-on-droid` and the module system
@@ -123,10 +124,9 @@ is probably not interesting for you, just download and use a prebuilt one.
 If you really want to rebuild it, you can just use Android Studio for that.
 
 The zipball generation is probably what you are after.
-Get an x86_64 computer with Nix. Run one of the following:
+Get an x86_64 computer with Nix. Run
 ```
 nix build -f ./pkgs --argstr arch aarch64 bootstrapZip
-nix build -f ./pkgs --argstr arch i686 bootstrapZip
 ```
 
 Put the zip file from `result` on some HTTP server
