@@ -8,7 +8,7 @@ let
   pkgs = import ./pkgs;
 
   attrs = genAttrs
-    [ "aarch64" "i686" ]
+    [ "aarch64" ]
     (arch: (pkgs { inherit arch; }) // { recurseForDerivations = true; });
 
   isCacheable = p: !(p.preferLocalBuild or false);

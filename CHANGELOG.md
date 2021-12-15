@@ -11,6 +11,7 @@
 ## Removed Options
 
 * The `system.workaround.make-posix-spawn.enable` has been removed.
+* i686 support has been removed.
 
 ## Release 21.05
 

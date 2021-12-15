@@ -68,8 +68,7 @@
 
 set -e
 
-arches=${arches:-aarch64 i686}
-# If you only care about aarch64, run as `arches=aarch64 ./build.sh`.
+arches=${arches:-aarch64}  # whitespace-separated list of architectures to build
 
 # Create/clear the output directory.
 mkdir -p out

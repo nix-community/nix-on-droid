@@ -12,8 +12,8 @@ with lib;
 
     build = {
       arch = mkOption {
-        type = types.enum [ "aarch64" "i686" ];
-        default = if pkgs.stdenv.isAarch64 then "aarch64" else "i686";
+        type = types.enum [ "aarch64" ];
+        default = "aarch64";
         internal = true;
         description = "Destination arch.";
       };
