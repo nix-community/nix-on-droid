@@ -1,6 +1,6 @@
 # Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ arch, nixOnDroidChannelURL ? null, nixpkgsChannelURL ? null }:
+{ arch ? "aarch64", nixOnDroidChannelURL ? null, nixpkgsChannelURL ? null }:
 
 let
   nixDirectory = callPackage ./nix-directory.nix { };

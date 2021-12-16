@@ -5,12 +5,7 @@ with import <nixpkgs> { };
 with lib;
 
 let
-  pkgs = import ./pkgs;
-
-  attrs = genAttrs
-    [ "aarch64" ]
-    (arch: (pkgs { inherit arch; }) // { recurseForDerivations = true; });
-
+  pkgs = (import ./pkgs {}) // { recurseForDerivations = true; };
   isCacheable = p: !(p.preferLocalBuild or false);
   shouldRecurseForDerivations = p: isAttrs p && p.recurseForDerivations or false;
 
@@ -23,7 +18,7 @@ let
     in
       concatMap f (attrValues s);
 
-  cachePkgs = filter isCacheable (flattenPkgs attrs);
+  cachePkgs = filter isCacheable (flattenPkgs pkgs);
 
   outputsOf = p: map (o: p.${o}) p.outputs;
 in
