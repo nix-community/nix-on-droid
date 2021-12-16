@@ -27,16 +27,19 @@
 
       lib.nixOnDroidConfiguration =
         { config
-        , system ? "aarch64-linux"  # unused
+        , system ? "aarch64-linux"  # unused, only supported variant
         , extraModules ? [ ]
         , extraSpecialArgs ? { }
         , pkgs ? pkgs'
         , home-manager-path ? home-manager.outPath
         }:
-        import ./modules {
-          inherit config extraModules extraSpecialArgs home-manager-path pkgs;
-          isFlake = true;
-        };
+        if system != "aarch64-linux" then
+          throw "aarch64-linux is the only currently supported system type"
+        else
+          import ./modules {
+            inherit config extraModules extraSpecialArgs home-manager-path pkgs;
+            isFlake = true;
+          };
       apps.nix-on-droid.aarch64-linux = app;
       defaultApp.aarch64-linux = app;
     };
