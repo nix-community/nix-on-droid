@@ -13,13 +13,13 @@
     let
       overlay = nixpkgs.lib.composeManyExtensions (import ./overlays);
 
-      pkgsPerSystem = system: import nixpkgs {
-        inherit system;
+      pkgs' = import nixpkgs {
+        system = "aarch64-linux";
         overlays = [ overlay ];
       };
 
-      appPerSystem = system: flake-utils.lib.mkApp {
-        drv = (pkgsPerSystem system).callPackage ./nix-on-droid { };
+      app = flake-utils.lib.mkApp {
+        drv = pkgs'.callPackage ./nix-on-droid { };
       };
     in
     {
@@ -27,21 +27,17 @@
 
       lib.nixOnDroidConfiguration =
         { config
-        , system
+        , system ? "aarch64-linux"  # unused
         , extraModules ? [ ]
         , extraSpecialArgs ? { }
-        , pkgs ? pkgsPerSystem system
+        , pkgs ? pkgs'
         , home-manager-path ? home-manager.outPath
         }:
         import ./modules {
           inherit config extraModules extraSpecialArgs home-manager-path pkgs;
           isFlake = true;
         };
-    }
-    // flake-utils.lib.eachSystem
-      [ "aarch64-linux" ]
-      (system: {
-        apps.nix-on-droid = appPerSystem system;
-        defaultApp = appPerSystem system;
-      });
+      apps.nix-on-droid.aarch64-linux = app;
+      defaultApp.aarch64-linux = app;
+    };
 }
