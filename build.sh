@@ -86,10 +86,11 @@ for arch in $arches; do
     # or changed something regarding proot compilation,
     # and now the hashes have changed and we have to update them.
     echo $arch: patching proot path in modules/environment/login/default.nix...
-    grep "$arch = \"/nix/store/" modules/environment/login/default.nix
-    sed -i "s|$arch = \"/nix/store/.*\";|$arch = \"$proot\";|" \
+    # used to be different per architecture, aarch64-only now under prootStatic
+    grep "prootStatic = \"/nix/store/" modules/environment/login/default.nix
+    sed -i "s|prootStatic = \"/nix/store/.*\";|prootStatic = \"$proot\";|" \
         modules/environment/login/default.nix
-    grep "$arch = \"/nix/store/" modules/environment/login/default.nix
+    grep "prootStatic = \"/nix/store/" modules/environment/login/default.nix
     # Since proot has to be cross-compiled and cannot be built on device,
     # it's also a good idea to push it to cachix, or existing installations
     # wouldn't be able to pick up the changes.
