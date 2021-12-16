@@ -24,13 +24,7 @@ stdenv.mkDerivation {
 
   src = builtins.fetchurl {
     url = "https://nixos.org/releases/nix/nix-2.3.13/nix-2.3.13-${config.build.arch}-linux.tar.xz";
-    sha256 =
-      let
-        archShas = {
-         aarch64 = "1hl6pd02nssscn32mrndif2fxfssxiarrpjvqyjicwnz6yn9mhpq";
-        };
-      in
-        "${archShas.${config.build.arch}}";
+    sha256 = "1hl6pd02nssscn32mrndif2fxfssxiarrpjvqyjicwnz6yn9mhpq";
   };
 
   PROOT_NO_SECCOMP = 1;  # see https://github.com/proot-me/PRoot/issues/106
