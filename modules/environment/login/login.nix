@@ -37,6 +37,7 @@ writeScript "login" ''
     -b ${installationDir}/dev/shm:/dev/shm \
     -b /:/android \
     --link2symlink \
+    --sysvipc \
     ${builtins.concatStringsSep " " extraProotOptions} \
     ${installationDir}/bin/sh ${installationDir}/usr/lib/login-inner "$@"
 ''
