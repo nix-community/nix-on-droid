@@ -17,6 +17,7 @@
   ./home-manager.nix
   ./nixpkgs/options.nix
   ./time.nix
+  ./upgrade.nix
   ./user.nix
   ./version.nix
   (pkgs.path + "/nixos/modules/misc/assertions.nix")
