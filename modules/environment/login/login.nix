@@ -1,9 +1,12 @@
 # Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, writeScript }:
+{ config, writeScript, writeText }:
 
 let
   inherit (config.build) installationDir extraProotOptions;
+  fakeProcStat = writeText "fakeProcStat" ''
+    btime 0
+  '';
 in
 
 writeScript "login" ''
@@ -28,6 +31,12 @@ writeScript "login" ''
     fi
   fi
 
+  if [ -r /proc/stat ]; then
+    BIND_PROC_STAT=""
+  else
+    BIND_PROC_STAT="-b ${installationDir}${fakeProcStat}:/proc/stat"
+  fi
+
   exec ${installationDir}/bin/proot-static \
     -b ${installationDir}/nix:/nix \
     -b ${installationDir}/bin:/bin \
@@ -35,6 +44,7 @@ writeScript "login" ''
     -b ${installationDir}/tmp:/tmp \
     -b ${installationDir}/usr:/usr \
     -b ${installationDir}/dev/shm:/dev/shm \
+    $BIND_PROC_STAT \
     -b /:/android \
     --link2symlink \
     --sysvipc \
