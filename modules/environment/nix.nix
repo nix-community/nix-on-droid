@@ -6,9 +6,16 @@ with lib;
 
 let
   cfg = config.nix;
+  renameNixOpt = old: new:
+    (mkRenamedOptionModule [ "nix" old ] [ "nix" new ]);
 in
 
 {
+  # Backward-compatibility with the NixOS options.
+  imports = [
+    (renameNixOpt "binaryCaches" "substituters")
+    (renameNixOpt "binaryCachePublicKeys" "trustedPublicKeys")
+  ];
 
   ###### interface
 
