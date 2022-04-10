@@ -1,4 +1,9 @@
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+
+# Based on
+# https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/misc/nix-daemon.nix
+# (Copyright (c) 2003-2022 Eelco Dolstra and the Nixpkgs/NixOS contributors,
+# licensed under MIT License as well)
 
 { config, lib, pkgs, ... }:
 
@@ -28,6 +33,16 @@ in
         defaultText = "pkgs.nix";
         description = ''
           This option specifies the Nix package instance to use throughout the system.
+        '';
+      };
+
+      nixPath = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        description = ''
+          The default Nix expression search path, used by the Nix
+          evaluator to look up paths enclosed in angle brackets
+          (e.g. <literal>&lt;nixpkgs&gt;</literal>).
         '';
       };
 
@@ -62,28 +77,32 @@ in
 
   ###### implementation
 
-  config = {
+  config = mkMerge [
+    {
+      environment.etc = {
+        "nix/nix.conf".text = ''
+          sandbox = false
+          substituters = ${concatStringsSep " " cfg.substituters}
+          trusted-public-keys = ${concatStringsSep " " cfg.trustedPublicKeys}
+          ${cfg.extraConfig}
+        '';
+      };
 
-    environment.etc = {
-      "nix/nix.conf".text = ''
-        sandbox = false
-        substituters = ${concatStringsSep " " cfg.substituters}
-        trusted-public-keys = ${concatStringsSep " " cfg.trustedPublicKeys}
-        ${cfg.extraConfig}
-      '';
-    };
+      nix = {
+        substituters = [
+          "https://cache.nixos.org"
+          "https://nix-on-droid.cachix.org"
+        ];
+        trustedPublicKeys = [
+          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+          "nix-on-droid.cachix.org-1:56snoMJTXmDRC1Ei24CmKoUqvHJ9XCp+nidK7qkMQrU="
+        ];
+      };
+    }
 
-    nix = {
-      substituters = [
-        "https://cache.nixos.org"
-        "https://nix-on-droid.cachix.org"
-      ];
-      trustedPublicKeys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "nix-on-droid.cachix.org-1:56snoMJTXmDRC1Ei24CmKoUqvHJ9XCp+nidK7qkMQrU="
-      ];
-    };
-
-  };
+    (mkIf (cfg.nixPath != []) {
+      environment.sessionVariables.NIX_PATH = cfg.nixPath;
+    })
+  ];
 
 }
