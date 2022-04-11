@@ -20,6 +20,7 @@ in
   imports = [
     (renameNixOpt "binaryCaches" "substituters")
     (renameNixOpt "binaryCachePublicKeys" "trustedPublicKeys")
+    (renameNixOpt "extraConfig" "extraOptions")
   ];
 
   ###### interface
@@ -124,7 +125,7 @@ in
         '';
       };
 
-      extraConfig = mkOption {
+      extraOptions = mkOption {
         type = types.lines;
         default = "";
         description = "Extra config to be appended to /etc/nix/nix.conf.";
@@ -143,7 +144,7 @@ in
           sandbox = false
           substituters = ${concatStringsSep " " cfg.substituters}
           trusted-public-keys = ${concatStringsSep " " cfg.trustedPublicKeys}
-          ${cfg.extraConfig}
+          ${cfg.extraOptions}
         '';
 
         "nix/registry.json".text = builtins.toJSON {
