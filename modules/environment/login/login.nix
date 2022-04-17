@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, writeScript, writeText }:
 
@@ -31,10 +31,10 @@ writeScript "login" ''
     fi
   fi
 
-  if [ -r /proc/stat ]; then
-    BIND_PROC_STAT=""
-  else
+  if [ ! -r /proc/stat ] && [ -e ${fakeProcStat} ]; then
     BIND_PROC_STAT="-b ${installationDir}${fakeProcStat}:/proc/stat"
+  else
+    BIND_PROC_STAT=""
   fi
 
   exec ${installationDir}/bin/proot-static \
