@@ -31,7 +31,7 @@ writeScript "login" ''
     fi
   fi
 
-  if [ ! -r /proc/stat ] && [ -e ${fakeProcStat} ]; then
+  if [ ! -r /proc/stat ] && [ -e ${installationDir}${fakeProcStat} ]; then
     BIND_PROC_STAT="-b ${installationDir}${fakeProcStat}:/proc/stat"
   else
     BIND_PROC_STAT=""

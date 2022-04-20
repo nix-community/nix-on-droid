@@ -25,7 +25,9 @@ function setupPasstroughOpts() {
 
 function nixActivationPackage() {
     local command="$1"
-    local extraArgs=("${@:2}" "${PASSTHROUGH_OPTS[@]}")
+    local extraArgs=("${@:2}"
+                     --extra-experimental-features nix-command
+                     "${PASSTHROUGH_OPTS[@]}")
     local nix=nix
     if [[ -n "${FLAKE_CONFIG_URI}" ]]; then
         nix=@nix24@/bin/nix
@@ -134,7 +136,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         -F|--flake)
-            PASSTHROUGH_OPTS+=(--extra-experimental-features flakes --extra-experimental-features nix-command)
+            PASSTHROUGH_OPTS+=(--extra-experimental-features flakes)
             # add "nixOnDroidConfigurations." as prefix in attribute name, e.g.
             # /path/to/flake#device -> /path/to/flake#nixOnDroidConfigurations.device
             FLAKE_CONFIG_URI="${1%#*}#nixOnDroidConfigurations.${1#*#}"

@@ -44,7 +44,8 @@ writeText "login-inner" ''
       ${coreutils}/bin/chmod u+w $HOME/.config/nixpkgs/nix-on-droid.nix
 
       echo "Installing first nix-on-droid generation..."
-      ${nix}/bin/nix build --no-link --file "<nix-on-droid>" nix-on-droid
+      ${nix}/bin/nix build --extra-experimental-features nix-command \
+        --no-link --file "<nix-on-droid>" nix-on-droid
       $(${nix}/bin/nix path-info --file "<nix-on-droid>" nix-on-droid)/bin/nix-on-droid switch
 
       echo
