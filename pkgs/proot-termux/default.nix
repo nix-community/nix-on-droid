@@ -10,20 +10,33 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     repo = "proot";
     owner = "termux";
-    rev = "7d6bdd9f6cf31144e11ce65648dab2a1e495a7de";
-    sha256 = "sha256-sbueMoqhOw0eChgp6KOZbhwRnSmDZhHq+jm06mGqxC4=";
+    #rev = "7d6bdd9f6cf31144e11ce65648dab2a1e495a7de";
+    #sha256 = "sha256-sbueMoqhOw0eChgp6KOZbhwRnSmDZhHq+jm06mGqxC4=";
 
     # 1 step behind 6f12fbee "Implement shmat", use if ashmem.h is missing
-    #rev = "ffd811ee726c62094477ed335de89fc107cadf17";
-    #sha256 = "1zjblclsybvsrjmq2i0z6prhka268f0609w08dh9vdrbrng117f8";
+    rev = "ffd811ee726c62094477ed335de89fc107cadf17";
+    sha256 = "1zjblclsybvsrjmq2i0z6prhka268f0609w08dh9vdrbrng117f8";
   };
 
-  buildInputs = [ talloc ];
+  LDFLAGS = [
+    "-static"
+    "${talloc}/lib/libtalloc.a"
+    #"-ltalloc"
+    #"-shared"
+    "-Wl,-Bdynamic"
+  ];
+  #LDFLAGS = [ "-static" "-ltalloc" "-shared" ];
+  #buildInputs = [ talloc ];
+  CFLAGS = [ "-I${talloc}/include" "-O3" ];
+  #LDFLAGS = [ "${talloc}/lib/libtalloc.a" ];
 
   patches = [ ./detranslate-empty.patch ];
 
   makeFlags = [ "-Csrc" "V=1" ];
-  CFLAGS = [ "-O3" ];
+
+  postPatch = ''
+    substituteInPlace src/GNUmakefile --replace '-ltalloc' ""
+  '';
 
   installPhase = ''
     install -D -m 0755 src/proot $out/bin/${outputBinaryName}

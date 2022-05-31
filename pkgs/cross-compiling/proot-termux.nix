@@ -5,7 +5,8 @@
 let
   pkgsCross = callPackage ./cross-pkgs.nix { };
 
-  stdenv = pkgsCross.pkgsStatic.stdenvAdapters.makeStaticBinaries pkgsCross.stdenv;
+  #stdenv = pkgsCross.pkgsStatic.stdenvAdapters.makeStaticBinaries pkgsCross.stdenv;
+  stdenv = pkgsCross.stdenv;
 
 in
   callPackage ../proot-termux {

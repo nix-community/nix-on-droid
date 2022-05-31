@@ -11,14 +11,14 @@ let
 
     # that one is cool because it could make its way on-device one day,
     # but it currently isn't static-friendly:
-    #   sdkVer = "30";
-    #   libc = "bionic";
-    #   useAndroidPrebuilt = false;
-    #   useLLVM = true;
+    sdkVer = "30";
+    libc = "bionic";
+    useAndroidPrebuilt = false;
+    useLLVM = true;
 
     # use that one instead
-    sdkVer = "29";
-    useAndroidPrebuilt = true;
+    #sdkVer = "29";
+    #useAndroidPrebuilt = true;
   };
 in
 
