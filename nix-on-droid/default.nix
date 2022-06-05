@@ -1,6 +1,6 @@
 # Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ bash, coreutils, nix, nix_2_4, runCommand }:
+{ bash, coreutils, lib, nix, nix_2_4, runCommand }:
 
 runCommand
   "nix-on-droid"
@@ -15,5 +15,5 @@ runCommand
       --subst-var-by bash "${bash}" \
       --subst-var-by coreutils "${coreutils}" \
       --subst-var-by nix "${nix}" \
-      --subst-var-by nix24 "${nix_2_4}"
+      --subst-var-by nixge24 "${if lib.versionAtLeast nix.version "2.4pre" then nix else nix_2_4}"
   ''
