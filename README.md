@@ -53,7 +53,7 @@ for example:
 
 {
   environment.packages = [ pkgs.vim ];
-  system.stateVersion = "21.11";
+  system.stateVersion = "22.05";
 }
 ```
 
@@ -67,7 +67,7 @@ An alternative location is `~/.config/nixpkgs/config.nix` with the key
 
     {
       environment.packages = [ pkgs.vim ];
-      system.stateVersion = "21.11";
+      system.stateVersion = "22.05";
     };
 }
 ```
@@ -81,7 +81,7 @@ To enable `home-manager` you simply need to follow the instructions already prov
 
 1.  Add `home-manager` channel:
     ```
-    nix-channel --add https://github.com/rycee/home-manager/archive/release-21.11.tar.gz home-manager
+    nix-channel --add https://github.com/rycee/home-manager/archive/release-22.05.tar.gz home-manager
     nix-channel --update
     ```
 2.  Configure `home-manager`:
@@ -90,7 +90,7 @@ To enable `home-manager` you simply need to follow the instructions already prov
 
     {
       # Read nix-on-droid changelog before changing this value
-      system.stateVersion = "21.11";
+      system.stateVersion = "22.05";
 
       # insert nix-on-droid config
 
@@ -98,7 +98,7 @@ To enable `home-manager` you simply need to follow the instructions already prov
         { pkgs, ... }:
         {
           # Read home-manager changelog before changing this value
-          home.stateVersion = "21.11";
+          home.stateVersion = "22.05";
 
           # insert home-manager config
         };
@@ -170,7 +170,7 @@ Do not run `nix profile` because this will render your environment incompatible 
   description = "nix-on-droid configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-21.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-22.05";
     nix-on-droid.url = "github:t184256/nix-on-droid";
     nix-on-droid.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -193,8 +193,8 @@ Do not run `nix profile` because this will render your environment incompatible 
   description = "nix-on-droid configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-21.11";
-    home-manager.url = "github:nix-community/home-manager/release-21.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-22.05";
+    home-manager.url = "github:nix-community/home-manager/release-22.05";
     nix-on-droid.url = "github:t184256/nix-on-droid";
     nix-on-droid.inputs.nixpkgs.follows = "nixpkgs";
     nix-on-droid.inputs.home-manager.follows = "home-manager";
