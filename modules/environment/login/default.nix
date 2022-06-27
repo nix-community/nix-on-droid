@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, customPkgs, ... }:
 
@@ -82,7 +82,7 @@ in
     environment.files = {
       inherit login loginInner;
 
-      prootStatic = "/nix/store/dapbgzbpl426jrhz4a2sdl096a8l98ad-proot-termux-aarch64-unknown-linux-android-unstable-2021-11-21";
+      prootStatic = "/nix/store/w0p62nphry9saxvr2ngd2r0sm4y7vd1j-proot-termux-aarch64-unknown-linux-android-unstable-2021-11-21";
     };
 
   };
