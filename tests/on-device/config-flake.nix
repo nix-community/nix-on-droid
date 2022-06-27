@@ -2,7 +2,7 @@
   description = "nix-on-droid configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-21.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-22.05";
     nix-on-droid.url = "<<FLAKE_URL>>";
     nix-on-droid.inputs.nixpkgs.follows = "nixpkgs";
   };
