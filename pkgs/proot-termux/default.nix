@@ -1,17 +1,17 @@
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { pkgs, stdenv, callPackage, fetchFromGitHub,
   talloc, outputBinaryName ? "proot-static" }:
 
 stdenv.mkDerivation {
   pname = "proot-termux";
-  version = "unstable-2021-11-21";
+  version = "unstable-2022-05-03";
 
   src = fetchFromGitHub {
     repo = "proot";
     owner = "termux";
-    rev = "7d6bdd9f6cf31144e11ce65648dab2a1e495a7de";
-    sha256 = "sha256-sbueMoqhOw0eChgp6KOZbhwRnSmDZhHq+jm06mGqxC4=";
+    rev = "5c462a6ecfddd629b1439f38fbb61216d6fcb359";
+    sha256 = "sha256-XS4js80NsAN2C4jMuISSqMm/DwYpH/stbABaxzoqZcE=";
 
     # 1 step behind 6f12fbee "Implement shmat", use if ashmem.h is missing
     #rev = "ffd811ee726c62094477ed335de89fc107cadf17";
