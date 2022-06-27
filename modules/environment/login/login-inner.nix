@@ -44,8 +44,10 @@ writeText "login-inner" ''
       ${coreutils}/bin/chmod u+w $HOME/.config/nixpkgs/nix-on-droid.nix
 
       echo "Installing first nix-on-droid generation..."
-      ${nix}/bin/nix build --no-link --file "<nix-on-droid>" nix-on-droid
-      $(${nix}/bin/nix path-info --file "<nix-on-droid>" nix-on-droid)/bin/nix-on-droid switch
+      ${nix}/bin/nix --extra-experimental-features nix-command \
+        build --no-link --file "<nix-on-droid>" nix-on-droid
+      $(${nix}/bin/nix --extra-experimental-features nix-command \
+        path-info --file "<nix-on-droid>" nix-on-droid)/bin/nix-on-droid switch
 
       echo
       echo "Congratulations! Now you have Nix installed with some default packages like bashInteractive, \
