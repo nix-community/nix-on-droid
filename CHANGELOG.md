@@ -2,6 +2,12 @@
 
 ## Release 22.05 (unreleased)
 
+### Compatibility considerations
+
+* `/proc/stat` is now faked with a stub that allows unpatched `htop` to work.
+* `--sysvipc` `proot` extension has been enabled
+  to facilitate shared memory interprocess communication.
+
 ## Release 21.11
 
 ### New Options
