@@ -1,33 +1,38 @@
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ callPackage, python3, wafHook }:
+{ callPackage
+, fetchurl
+, python3
+, pkg-config
+, wafHook
+}:
 
 let
   pkgsCross = callPackage ./cross-pkgs.nix { };
 in
 
-pkgsCross.talloc.overrideAttrs (_: rec {
-  pname = "talloc-static";
-  version = "2.3.2";
-  name = "${pname}-${version}";
+pkgsCross.stdenv.mkDerivation rec {
+  pname = "talloc";
+  version = "2.3.4";
 
-  nativeBuildInputs = [ python3 wafHook ];
+  src = fetchurl {
+    url = "mirror://samba/talloc/${pname}-${version}.tar.gz";
+    sha256 = "sha256-F5+eviZeZ+SrLCbK0rfeS2p3xsIS+WaQM4KGnwa+ZQU=";
+  };
+
+  nativeBuildInputs = [ pkg-config python3 wafHook ];
   buildInputs = [];
 
   wafPath = "./buildtools/bin/waf";
   wafConfigureFlags = [
-      "--disable-rpath"
-      "--disable-python"
-      "--cross-compile"
-      "--cross-answers=cross-answers.txt"
+    "--disable-rpath"
+    "--disable-python"
+    "--cross-compile"
+    "--cross-answers=cross-answers.txt"
   ];
 
-  postInstall = ''
-    ${pkgsCross.stdenv.cc.targetPrefix}ar q $out/lib/libtalloc.a bin/default/talloc.c.[0-9]*.o
-    rm -f $out/lib/libtalloc.so*
-  '';
-
   preConfigure = ''
+    export PYTHONHASHSEED=1
     cat <<EOF > cross-answers.txt
     Checking uname sysname type: "Linux"
     Checking uname machine type: "dontcare"
@@ -56,4 +61,13 @@ pkgsCross.talloc.overrideAttrs (_: rec {
     Checking getconf large file support flags work: OK
     EOF
   '';
-})
+
+  # can't link unneeded .so, we'll link a static one by hand
+  buildPhase = "python ./buildtools/bin/waf build || true";
+  installPhase = ''
+    mkdir -p $out/lib $out/include
+    ${pkgsCross.stdenv.cc.targetPrefix}ar q $out/lib/libtalloc.a \
+        bin/default/talloc.c.[0-9]*.o
+    cp talloc.h $out/include/
+  '';
+}
