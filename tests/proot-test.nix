@@ -1,9 +1,9 @@
 # Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ pkgs ? (import ../pkgs/lib/load-nixpkgs.nix {}) }:
+{ pkgs ? (import ../lib/nixpkgs-pinned.nix { }) }:
 
-pkgs.callPackage ../pkgs/proot-termux {
-  stdenv = pkgs.stdenv;
+import ../pkgs/proot-termux {
+  inherit pkgs;
+  cross = false;
   static = false;
-  outputBinaryName = "proot";
 }

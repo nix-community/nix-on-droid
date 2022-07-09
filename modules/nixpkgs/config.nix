@@ -14,9 +14,15 @@ with lib;
 
   config = {
 
-    _module.args.pkgs = import <nixpkgs> (
-      filterAttrs (n: v: v != null) config.nixpkgs
-    );
+    _module.args.pkgs =
+      let
+        result = builtins.tryEval <nixpkgs>;
+      in
+      mkIf result.success (
+        import result.value (
+          filterAttrs (n: v: v != null) config.nixpkgs
+        )
+      );
 
     nixpkgs.overlays = import ../../overlays;
 

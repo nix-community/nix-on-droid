@@ -1,13 +1,31 @@
 # Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ stdenv, fetchFromGitHub, talloc,
-  static ? true, outputBinaryName ? "proot-static" }:
+{ pkgs ? null, cross ? true, static ? true }:
+
+let
+  pkgsCross = import ../../lib/nixpkgs-cross.nix { };
+
+  pkgs' =
+    if pkgs == null
+    then pkgsCross
+    else pkgs;
+
+  stdenv =
+    if cross
+    then pkgsCross.stdenvAdapters.makeStaticBinaries pkgsCross.stdenv
+    else pkgs'.stdenv;
+
+  talloc =
+    if static
+    then pkgs'.callPackage ./talloc-static.nix { inherit pkgsCross; }
+    else pkgs'.talloc;
+in
 
 stdenv.mkDerivation {
   pname = "proot-termux";
   version = "unstable-2022-05-03";
 
-  src = fetchFromGitHub {
+  src = pkgsCross.fetchFromGitHub {
     repo = "proot";
     owner = "termux";
     rev = "5c462a6ecfddd629b1439f38fbb61216d6fcb359";
@@ -30,8 +48,8 @@ stdenv.mkDerivation {
   patches = [ ./detranslate-empty.patch ];
   makeFlags = [ "-Csrc" "V=1" ];
   CFLAGS = [ "-O3" "-I../fake-ashmem" ] ++
-           (if static then [ "-static" ] else []);
-  LDFLAGS = if static then [ "-static" ] else [];
+    (if static then [ "-static" ] else [ ]);
+  LDFLAGS = if static then [ "-static" ] else [ ];
   preInstall = "${stdenv.cc.targetPrefix}strip src/proot";
-  installPhase = "install -D -m 0755 src/proot $out/bin/${outputBinaryName}";
+  installPhase = "install -D -m 0755 src/proot $out/bin/proot${if static then "-static" else ""}";
 }

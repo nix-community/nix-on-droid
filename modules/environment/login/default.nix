@@ -82,13 +82,7 @@ in
     environment.files = {
       inherit login loginInner;
 
-      prootStatic =
-        let
-          nixpkgs = import ../../../pkgs/cross-compiling/cross-pkgs.nix { };
-          tallocStatic = nixpkgs.callPackage ../../../pkgs/cross-compiling/talloc-static.nix { };
-          prootTermux = nixpkgs.callPackage ../../../pkgs/cross-compiling/proot-termux.nix { inherit tallocStatic; };
-        in
-          prootTermux;
+      prootStatic = import ../../../pkgs/proot-termux { };
     };
 
   };

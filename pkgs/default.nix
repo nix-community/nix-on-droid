@@ -43,8 +43,7 @@ let
     inherit nixDirectory packageInfo;
     bootstrap = callPackage ./bootstrap.nix { };
     bootstrapZip = callPackage ./bootstrap-zip.nix { };
-    prootTermux = callPackage ./cross-compiling/proot-termux.nix { };
-    tallocStatic = callPackage ./cross-compiling/talloc-static.nix { };
+    prootTermux = callPackage ./proot-termux { pkgs = nixpkgs; };
   };
 in
 

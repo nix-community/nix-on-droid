@@ -1,15 +1,11 @@
 # Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ callPackage
-, fetchurl
+{ fetchurl
 , python3
 , pkg-config
 , wafHook
+, pkgsCross
 }:
-
-let
-  pkgsCross = callPackage ../../lib/nixpkgs-cross.nix { };
-in
 
 pkgsCross.stdenv.mkDerivation rec {
   pname = "talloc";
@@ -21,7 +17,7 @@ pkgsCross.stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [ pkg-config python3 wafHook ];
-  buildInputs = [];
+  buildInputs = [ ];
 
   wafPath = "./buildtools/bin/waf";
   wafConfigureFlags = [
