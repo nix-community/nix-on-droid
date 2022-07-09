@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 # If you want to change something in this repo and now you're wondering
 # how to recompile Nix-on-Droid with your changes and put it to your device,
@@ -10,7 +10,7 @@
 # * fork it to github.com/YOUR_USERNAME/nix-on-droid
 # * change something, commit your changes to some BRANCH
 # * push it
-# * nix build --show-trace -f pkgs --argstr arch aarch64 \
+# * nix build --show-trace -f pkgs \
 #       --argstr nixOnDroidChannelURL \
 #       https://github.com/YOUR_USERNAME/nix-on-droid/archive/BRANCH.tar.gz \
 #       bootstrapZip -o out/nix-on-droid-aarch64
@@ -18,11 +18,10 @@
 # * install the app and, on first startup, enter the URL of the directory
 #   containing the resulting zip file, start the installation
 
-# The zipfile will be used to provide proot and kickstart the installation,
+# The zipfile will be used to kickstart the installation,
 # it will build what's available from nixOnDroidChannelURL you've specified,
 # (i.e., what you've pushed to BRANCH), and the resulting system will be
 # subscribed to the updates that you push to the specified BRANCH of your fork.
-# But note: this way proot is not updatable without reinstalling, see below.
 
 # If you just want to change something and test it, this should be enough.
 # This probably doesn't warrant a script, you can just run the command above
@@ -32,7 +31,6 @@
 # But, in some cases, you need to be concerned with more things than that.
 # Maybe you don't want to use GitHub.
 # Maybe you don't want to bother with forking or pushing.
-# Maybe you need to maintain a long-term fork and ship updates to proot.
 # Maybe you want to automate and streamline the whole process.
 # If that's the case, read more to find out what to do and how to do it.
 
@@ -52,15 +50,6 @@
 #    The initial location is baked into the installer tarball,
 #    it's later reconfigurable with 'nix-channel'.
 #    This is how most updates are shipped.
-# 3. Proot binaries. Unfortunately, they can't be built natively and still work
-#    (and nobody knows why), so the mess above is not enough.
-#    Installer zipball can be used to deliver the initial proot binary,
-#    but if you want to deliver updates, you need some third option.
-#    The official builds address that by having all the installations trust
-#    `nix-on-droid.cachix.org` and pushing binaries there.
-#    If you want to maintain a long-term fork, you should create your own
-#    and do the same, or the only way of updating proot
-#    would be through reinstallation.
 
 # That's a lot of stuff, and the developers have come up with workflows
 # progressively more rich and twisted than `nix build ... && rsync ...`.
@@ -75,26 +64,6 @@ mkdir -p out
 rm -f out/*
 
 for arch in $arches; do
-
-    # Build proot for the target architecture.
-    # We don't really need to compile it separately...
-    echo $arch: building proot...
-    nix build --show-trace -f pkgs --argstr arch $arch prootTermux -o out/proot-$arch
-    proot=$(realpath out/proot-$arch)
-
-    # ... except for the rare case you've advanced pinned nixpkgs
-    # or changed something regarding proot compilation,
-    # and now the hashes have changed and we have to update them.
-    echo $arch: patching proot path in modules/environment/login/default.nix...
-    # used to be different per architecture, aarch64-only now under prootStatic
-    grep "prootStatic = \"/nix/store/" modules/environment/login/default.nix
-    sed -i "s|prootStatic = \"/nix/store/.*\";|prootStatic = \"$proot\";|" \
-        modules/environment/login/default.nix
-    grep "prootStatic = \"/nix/store/" modules/environment/login/default.nix
-    # Since proot has to be cross-compiled and cannot be built on device,
-    # it's also a good idea to push it to cachix, or existing installations
-    # wouldn't be able to pick up the changes.
-
     if [[ -z $channel_url ]]; then
         # It is enough to push your changes to GitHub to
         # you have nix-on-droid sources downloadable from there.
