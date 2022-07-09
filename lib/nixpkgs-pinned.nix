@@ -14,4 +14,4 @@ let
   };
 in
 
-args: import pinnedPkgsSrc (args // defaultNixpkgsArgs)
+args: import pinnedPkgsSrc (defaultNixpkgsArgs // args)

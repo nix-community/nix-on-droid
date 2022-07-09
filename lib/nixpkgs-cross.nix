@@ -1,13 +1,9 @@
 # Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-#{ config }:
-{ }:
+{}:
 
-let
-  loadNixpkgs = import ../lib/load-nixpkgs.nix;
-
+import ./nixpkgs-pinned.nix {
   crossSystem = {
-    #config = "${config.build.arch}-unknown-linux-android";
     config = "aarch64-unknown-linux-android";
     sdkVer = "32";
     libc = "bionic";
@@ -15,7 +11,4 @@ let
     useLLVM = true;
     isStatic = true;
   };
-
-in
-
-loadNixpkgs { inherit crossSystem; }
+}

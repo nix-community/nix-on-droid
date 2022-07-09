@@ -3,7 +3,7 @@
 self: super:
 
 let
-  nixpkgs = import ./lib/nixpkgs.nix { inherit super; };
+  nixpkgs = import ../lib/nixpkgs-pinned.nix { inherit (super) config system; };
 in
 
 {

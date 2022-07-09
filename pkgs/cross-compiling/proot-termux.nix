@@ -3,7 +3,7 @@
 { callPackage, tallocStatic }:
 
 let
-  pkgsCross = callPackage ./cross-pkgs.nix { };
+  pkgsCross = callPackage ../../lib/nixpkgs-cross.nix { };
   stdenv = pkgsCross.stdenvAdapters.makeStaticBinaries pkgsCross.stdenv;
 
 in
