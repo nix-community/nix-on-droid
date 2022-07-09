@@ -11,10 +11,12 @@
 
   outputs = { self, nixpkgs, flake-utils, home-manager }:
     let
+      systemDefault = "aarch64-linux";
+
       overlay = nixpkgs.lib.composeManyExtensions (import ./overlays);
 
       pkgs' = import nixpkgs {
-        system = "aarch64-linux";
+        system = systemDefault;
         overlays = [ overlay ];
       };
 
@@ -23,24 +25,27 @@
       };
     in
     {
-      inherit overlay;
+      overlays.default = overlay;
 
       lib.nixOnDroidConfiguration =
         { config
-        , system ? "aarch64-linux"  # unused, only supported variant
+        , system ? systemDefault  # unused, only supported variant
         , extraModules ? [ ]
         , extraSpecialArgs ? { }
         , pkgs ? pkgs'
         , home-manager-path ? home-manager.outPath
         }:
-        if system != "aarch64-linux" then
-          throw "aarch64-linux is the only currently supported system type"
+        if system != systemDefault then
+          throw "${systemDefault} is the only currently supported system type"
         else
           import ./modules {
             inherit config extraModules extraSpecialArgs home-manager-path pkgs;
             isFlake = true;
           };
-      apps.nix-on-droid.aarch64-linux = app;
-      defaultApp.aarch64-linux = app;
+
+      apps.${systemDefault} = {
+        default = app;
+        nix-on-droid = app;
+      };
     };
 }
