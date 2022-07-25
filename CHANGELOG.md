@@ -1,6 +1,8 @@
 # Changelog
 
-## Release 22.05 (unreleased)
+## Release 22.11 (unreleased)
+
+## Release 22.05
 
 ### Compatibility considerations
 
