@@ -1,0 +1,23 @@
+name: Run lints
+on:
+  pull_request:
+  push:
+jobs:
+  cachix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v17
+        with:
+          nix_path: nixpkgs=channel:nixos-22.05
+          extra_nix_config: "experimental-features = nix-command flakes"
+
+      - name: Run formatter
+        run: nix fmt -- --check .
+
+      - name: Run statix
+        run: nix run nixpkgs#statix -- check
