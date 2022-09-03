@@ -23,7 +23,7 @@
       };
     in
     {
-      inherit overlay;
+      overlays.default = overlay;
 
       lib.nixOnDroidConfiguration =
         { config
@@ -40,7 +40,10 @@
             inherit config extraModules extraSpecialArgs home-manager-path pkgs;
             isFlake = true;
           };
-      apps.nix-on-droid.aarch64-linux = app;
-      defaultApp.aarch64-linux = app;
+
+      apps.aarch64-linux = {
+        default = app;
+        nix-on-droid = app;
+      };
     };
 }
