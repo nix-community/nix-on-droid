@@ -12,9 +12,7 @@ in
 
   ###### interface
 
-  options = {
-
-  };
+  options = { };
 
 
   ###### implementation

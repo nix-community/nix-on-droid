@@ -39,7 +39,7 @@ in
 
       nixPath = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         description = ''
           The default Nix expression search path, used by the Nix
           evaluator to look up paths enclosed in angle brackets
@@ -108,7 +108,7 @@ in
 
       substituters = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         description = ''
           A list of URLs of substituters.  The official NixOS and nix-on-droid
           substituters are added by default.
@@ -117,7 +117,7 @@ in
 
       trustedPublicKeys = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
         description = ''
           A list of public keys.  When paths are copied from another Nix store (such as a
           binary cache), they must be signed with one of these keys.  The official NixOS
@@ -165,7 +165,7 @@ in
       };
     }
 
-    (mkIf (cfg.nixPath != []) {
+    (mkIf (cfg.nixPath != [ ]) {
       environment.sessionVariables.NIX_PATH = concatStringsSep ":" cfg.nixPath;
     })
   ];

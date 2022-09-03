@@ -50,7 +50,7 @@ in
   options = {
 
     environment.sessionVariables = mkOption {
-      default = {};
+      default = { };
       type = types.attrs;
       example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
       description = ''

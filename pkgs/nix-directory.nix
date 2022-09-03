@@ -27,7 +27,7 @@ stdenv.mkDerivation {
     sha256 = "179jjf9hy1860d7bsravykg15jqxdfm51fy14aihkjbc1q6knyyx";
   };
 
-  PROOT_NO_SECCOMP = 1;  # see https://github.com/proot-me/PRoot/issues/106
+  PROOT_NO_SECCOMP = 1; # see https://github.com/proot-me/PRoot/issues/106
 
   buildPhase = ''
     mkdir --parents ${buildRootDirectory}/nix

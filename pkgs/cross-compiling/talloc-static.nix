@@ -21,7 +21,7 @@ pkgsCross.stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [ pkg-config python3 wafHook ];
-  buildInputs = [];
+  buildInputs = [ ];
 
   wafPath = "./buildtools/bin/waf";
   wafConfigureFlags = [

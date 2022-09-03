@@ -66,7 +66,7 @@ in
 
       sharedModules = mkOption {
         type = with types;
-        # TODO: use types.raw once this PR is merged: https://github.com/NixOS/nixpkgs/pull/132448
+          # TODO: use types.raw once this PR is merged: https://github.com/NixOS/nixpkgs/pull/132448
           listOf (mkOptionType {
             name = "submodule";
             inherit (submodule { }) check;

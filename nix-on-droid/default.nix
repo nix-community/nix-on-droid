@@ -4,10 +4,10 @@
 
 runCommand
   "nix-on-droid"
-  {
-    preferLocalBuild = true;
-    allowSubstitutes = false;
-  }
+{
+  preferLocalBuild = true;
+  allowSubstitutes = false;
+}
   ''
     install -D -m755  ${./nix-on-droid.sh} $out/bin/nix-on-droid
 
