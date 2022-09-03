@@ -3,7 +3,7 @@
 { pkgs ? (import ../pkgs/lib/load-nixpkgs.nix { }) }:
 
 pkgs.callPackage ../pkgs/proot-termux {
-  stdenv = pkgs.stdenv;
+  inherit (pkgs) stdenv;
   static = false;
   outputBinaryName = "proot";
 }

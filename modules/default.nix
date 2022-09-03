@@ -16,8 +16,7 @@ let
   configModule =
     if config != null then config
     else if builtins.pathExists defaultConfigFile then defaultConfigFile
-    else if pkgs.config ? nix-on-droid then pkgs.config.nix-on-droid
-    else throw "No config file found! Create one in ~/.config/nixpkgs/nix-on-droid.nix";
+    else pkgs.config.nix-on-droid or (throw "No config file found! Create one in ~/.config/nixpkgs/nix-on-droid.nix");
 
   rawModule = evalModules {
     modules = [

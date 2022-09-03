@@ -128,7 +128,7 @@ in
     # Fortunately, it's not that hard to us to workaround with just a symlink.
     environment.etc = mkIf cfg.useUserPackages {
       "profiles/per-user/${config.user.userName}".source =
-        builtins.toPath "${config.user.home}/.nix-profile";
+        /. + "${config.user.home}/.nix-profile";
     };
 
   };
