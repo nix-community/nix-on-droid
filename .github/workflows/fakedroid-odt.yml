@@ -1,4 +1,4 @@
-name: 'run on-device-tests with fakedroid'
+name: Run on-device-tests with fakedroid
 on:
   pull_request:
   push:
@@ -7,28 +7,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - uses: actions/checkout@v2.4.0
+      - name: Install nix
+        uses: cachix/install-nix-action@v17
+        with:
+          nix_path: nixpkgs=channel:nixos-22.05
+          extra_nix_config: "experimental-features = nix-command"
 
-    - uses: cachix/install-nix-action@v15
-      with:
-        nix_path: nixpkgs=channel:nixos-22.05
-        extra_nix_config: "experimental-features = nix-command"
+      - name: Setup cachix
+        uses: cachix/cachix-action@v10
+        with:
+          name: nix-on-droid
+          signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
 
-    - uses: cachix/cachix-action@v10
-      with:
-        name: nix-on-droid
-        signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+      - name: Initialize fakedroid
+        run: tests/fakedroid.sh echo INIT
 
-    - name: init
-      run: tests/fakedroid.sh echo INIT
+      - name: Run tests
+        run: |
+          tests/fakedroid.sh mkdir -p .cache/nix-on-droid-self-test
+          tests/fakedroid.sh touch .cache/nix-on-droid-self-test/confirmation-granted
+          tests/fakedroid.sh nix-on-droid on-device-test
 
-    - name: test
-      run: |
-        tests/fakedroid.sh mkdir -p .cache/nix-on-droid-self-test
-        tests/fakedroid.sh touch .cache/nix-on-droid-self-test/confirmation-granted
-        tests/fakedroid.sh nix-on-droid on-device-test
-
-    - name: upload
-      if: always() && github.event_name != 'pull_request'
-      run: tests/fakedroid.sh nix-shell -p cachix --run 'nix --extra-experimental-features nix-command path-info --all | cachix push nix-on-droid'
+      - name: Push to cachix
+        if: always() && github.event_name != 'pull_request'
+        run: tests/fakedroid.sh nix-shell -p cachix --run 'nix --extra-experimental-features nix-command path-info --all | cachix push nix-on-droid'
