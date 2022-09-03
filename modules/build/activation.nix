@@ -18,15 +18,17 @@ let
     pkgs.findutils
     pkgs.gnugrep
     pkgs.gnused
-    pkgs.ncurses          # For `tput`.
+    pkgs.ncurses # For `tput`.
     config.nix.package
   ];
 
   mkActivationCmds = activation: concatStringsSep "\n" (
-    mapAttrsToList (name: value: ''
-      noteEcho "Activating ${name}"
-      ${value}
-    '') activation
+    mapAttrsToList
+      (name: value: ''
+        noteEcho "Activating ${name}"
+        ${value}
+      '')
+      activation
   );
 
   activationScript = pkgs.writeScript "activation-script" ''
@@ -79,7 +81,7 @@ in
 
     build = {
       activation = mkOption {
-        default = {};
+        default = { };
         type = types.attrs;
         description = ''
           Activation scripts for the nix-on-droid environment.
@@ -87,7 +89,7 @@ in
       };
 
       activationBefore = mkOption {
-        default = {};
+        default = { };
         type = types.attrs;
         description = ''
           Activation scripts for the nix-on-droid environment that
@@ -96,7 +98,7 @@ in
       };
 
       activationAfter = mkOption {
-        default = {};
+        default = { };
         type = types.attrs;
         description = ''
           Activation scripts for the nix-on-droid environment that

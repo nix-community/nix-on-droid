@@ -8,9 +8,7 @@ with lib;
 
   ###### interface
 
-  options = {
-
-  };
+  options = { };
 
 
   ###### implementation

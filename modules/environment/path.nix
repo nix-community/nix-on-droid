@@ -17,7 +17,7 @@ in
     environment = {
       packages = mkOption {
         type = types.listOf types.package;
-        default = [];
+        default = [ ];
         description = "List of packages to be installed as user packages.";
       };
 
@@ -46,7 +46,7 @@ in
         pkgs.bashInteractive
         pkgs.cacert
         pkgs.coreutils
-        pkgs.less  # since nix tools really want a pager available, #27
+        pkgs.less # since nix tools really want a pager available, #27
         config.nix.package
       ];
 

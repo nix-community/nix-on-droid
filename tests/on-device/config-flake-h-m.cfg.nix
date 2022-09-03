@@ -14,5 +14,5 @@
       nixpkgs.overlays = config.nixpkgs.overlays;
       home.packages = with pkgs; [ dash ];
     };
-  nixpkgs.overlays = [];
+  nixpkgs.overlays = [ ];
 }

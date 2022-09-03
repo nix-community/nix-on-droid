@@ -28,23 +28,25 @@ let
     optionalAttrs (lhs ? packageOverrides) {
       packageOverrides = pkgs:
         optCall lhs.packageOverrides pkgs //
-        optCall (attrByPath ["packageOverrides"] ({}) rhs) pkgs;
+        optCall (attrByPath [ "packageOverrides" ] ({ }) rhs) pkgs;
     } //
     optionalAttrs (lhs ? perlPackageOverrides) {
       perlPackageOverrides = pkgs:
         optCall lhs.perlPackageOverrides pkgs //
-        optCall (attrByPath ["perlPackageOverrides"] ({}) rhs) pkgs;
+        optCall (attrByPath [ "perlPackageOverrides" ] ({ }) rhs) pkgs;
     };
 
   configType = mkOptionType {
     name = "nixpkgs-config";
     description = "nixpkgs config";
     check = x:
-      let traceXIfNot = c:
-            if c x then true
-            else lib.traceSeqN 1 x false;
-      in traceXIfNot isConfig;
-    merge = args: fold (def: mergeConfig def.value) {};
+      let
+        traceXIfNot = c:
+          if c x then true
+          else lib.traceSeqN 1 x false;
+      in
+      traceXIfNot isConfig;
+    merge = args: fold (def: mergeConfig def.value) { };
   };
 
   overlayType = mkOptionType {
@@ -161,7 +163,7 @@ in
 
     assertions = [
       {
-        assertion = isFlake -> config.nixpkgs.config == null && (config.nixpkgs.overlays == null || config.nixpkgs.overlays == []);
+        assertion = isFlake -> config.nixpkgs.config == null && (config.nixpkgs.overlays == null || config.nixpkgs.overlays == [ ]);
         message = "In a flake setup, the options nixpkgs.* should not be used. Instead, rely on the provided flake "
           + "outputs and pass in the necessary nixpkgs object.";
       }

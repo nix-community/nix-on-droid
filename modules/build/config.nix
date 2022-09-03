@@ -38,7 +38,7 @@ with lib;
 
       extraProotOptions = mkOption {
         type = types.listOf types.string;
-        default = [];
+        default = [ ];
         description = "Extra options passed to proot, e.g., extra bind mounts.";
       };
     };

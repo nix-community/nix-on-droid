@@ -19,7 +19,7 @@ let
     targets = map (x: x.target) etc';
   };
 
- fileType = types.submodule (
+  fileType = types.submodule (
     { name, config, ... }:
     {
       options = {
@@ -58,7 +58,8 @@ let
         target = mkDefault name;
         source = mkIf (config.text != null) (
           let name' = "etc-" + baseNameOf name;
-          in mkDefault (pkgs.writeText name' config.text));
+          in mkDefault (pkgs.writeText name' config.text)
+        );
       };
 
     }
@@ -74,7 +75,7 @@ in
     environment = {
       etc = mkOption {
         type = types.loaOf fileType;
-        default = {};
+        default = { };
         example = literalExample ''
           {
             example-configuration-file = {

@@ -5,7 +5,7 @@ with import <nixpkgs> { };
 with lib;
 
 let
-  pkgs = (import ./pkgs {}) // { recurseForDerivations = true; };
+  pkgs = (import ./pkgs { }) // { recurseForDerivations = true; };
   isCacheable = p: !(p.preferLocalBuild or false);
   shouldRecurseForDerivations = p: isAttrs p && p.recurseForDerivations or false;
 
@@ -16,7 +16,7 @@ let
         else if isDerivation p then [ p ]
         else [ ];
     in
-      concatMap f (attrValues s);
+    concatMap f (attrValues s);
 
   cachePkgs = filter isCacheable (flattenPkgs pkgs);
 

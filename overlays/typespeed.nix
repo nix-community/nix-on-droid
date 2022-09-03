@@ -9,7 +9,7 @@ in
 {
   typespeed = nixpkgs.typespeed.overrideAttrs (old: {
     patches = nixpkgs.typespeed.patches ++ [
-        ./typespeed-no-drop-priv.patch
+      ./typespeed-no-drop-priv.patch
     ];
   });
 }
