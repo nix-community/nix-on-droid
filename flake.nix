@@ -45,5 +45,8 @@
         default = app;
         nix-on-droid = app;
       };
-    };
+    }
+    // flake-utils.lib.eachDefaultSystem (system: {
+      formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
+    });
 }
