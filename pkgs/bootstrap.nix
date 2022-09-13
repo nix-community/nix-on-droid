@@ -14,7 +14,6 @@ runCommand "bootstrap" { } ''
   chmod --recursive u+w $out/nix
 
   ln --symbolic ${packageInfo.bash}/bin/sh $out/bin/sh
-  ln --symbolic ${packageInfo.coreutils}/bin/env $out/usr/bin/env
 
   install -D -m 0755 ${prootTermux}/bin/proot-static $out/bin/proot-static
 

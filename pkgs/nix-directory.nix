@@ -36,8 +36,6 @@ stdenv.mkDerivation {
     CACERT=$(find ${buildRootDirectory}/nix/store -path '*-nss-cacert-*/ca-bundle.crt' | sed 's,^${buildRootDirectory},,')
     PKG_BASH=$(find ${buildRootDirectory}/nix/store -path '*/bin/bash' | sed 's,^${buildRootDirectory},,')
     PKG_BASH=''${PKG_BASH%/bin/bash}
-    PKG_COREUTILS=$(find ${buildRootDirectory}/nix/store -path '*/bin/env' | sed 's,^${buildRootDirectory},,')
-    PKG_COREUTILS=''${PKG_COREUTILS%/bin/env}
     PKG_NIX=$(find ${buildRootDirectory}/nix/store -path '*/bin/nix' | sed 's,^${buildRootDirectory},,')
     PKG_NIX=''${PKG_NIX%/bin/nix}
 
@@ -53,7 +51,6 @@ stdenv.mkDerivation {
     {
       bash = "$PKG_BASH";
       cacert = "$CACERT";
-      coreutils = "$PKG_COREUTILS";
       nix = "$PKG_NIX";
     }
     EOF

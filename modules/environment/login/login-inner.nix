@@ -3,7 +3,7 @@
 { config, lib, customPkgs, writeText }:
 
 let
-  inherit (customPkgs.packageInfo) cacert coreutils nix;
+  inherit (customPkgs.packageInfo) cacert nix;
 in
 
 writeText "login-inner" ''
@@ -38,16 +38,20 @@ writeText "login-inner" ''
       ${nix}/bin/nix-channel --add ${config.build.channel.nix-on-droid} nix-on-droid
       ${nix}/bin/nix-channel --update nix-on-droid
 
-      echo "Copying default nix-on-droid config..."
-      ${coreutils}/bin/mkdir --parents $HOME/.config/nixpkgs
-      ${coreutils}/bin/cp $(${nix}/bin/nix-instantiate --eval --expr "<nix-on-droid/modules/environment/login/nix-on-droid.nix.default>") $HOME/.config/nixpkgs/nix-on-droid.nix
-      ${coreutils}/bin/chmod u+w $HOME/.config/nixpkgs/nix-on-droid.nix
+      DEFAULT_CONFIG=$(${nix}/bin/nix-instantiate --eval --expr "<nix-on-droid/modules/environment/login/nix-on-droid.nix.default>")
 
       echo "Installing first nix-on-droid generation..."
       ${nix}/bin/nix --extra-experimental-features nix-command \
         build --no-link --file "<nix-on-droid>" nix-on-droid
       $(${nix}/bin/nix --extra-experimental-features nix-command \
-        path-info --file "<nix-on-droid>" nix-on-droid)/bin/nix-on-droid switch
+        path-info --file "<nix-on-droid>" nix-on-droid)/bin/nix-on-droid switch -f $DEFAULT_CONFIG
+
+      . "${config.user.home}/.nix-profile/etc/profile.d/nix-on-droid-session-init.sh"
+
+      echo "Copying default nix-on-droid config..."
+      mkdir --parents $HOME/.config/nixpkgs
+      cp $DEFAULT_CONFIG $HOME/.config/nixpkgs/nix-on-droid.nix
+      chmod u+w $HOME/.config/nixpkgs/nix-on-droid.nix
 
       echo
       echo "Congratulations! Now you have Nix installed with some default packages like bashInteractive, \
