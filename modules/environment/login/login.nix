@@ -7,6 +7,9 @@ let
   fakeProcStat = writeText "fakeProcStat" ''
     btime 0
   '';
+  fakeProcUptime = writeText "fakeProcUptime" ''
+    0.00 0.00
+  '';
 in
 
 writeScript "login" ''
@@ -37,6 +40,12 @@ writeScript "login" ''
     BIND_PROC_STAT=""
   fi
 
+  if [ ! -r /proc/uptime ] && [ -e ${installationDir}${fakeProcUptime} ]; then
+    BIND_PROC_UPTIME="-b ${installationDir}${fakeProcUptime}:/proc/uptime"
+  else
+    BIND_PROC_UPTIME=""
+  fi
+
   exec ${installationDir}/bin/proot-static \
     -b ${installationDir}/nix:/nix \
     -b ${installationDir}/bin:/bin \
@@ -45,6 +54,7 @@ writeScript "login" ''
     -b ${installationDir}/usr:/usr \
     -b ${installationDir}/dev/shm:/dev/shm \
     $BIND_PROC_STAT \
+    $BIND_PROC_UPTIME \
     -b /:/android \
     --link2symlink \
     --sysvipc \
