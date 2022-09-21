@@ -175,7 +175,12 @@ in {
     environment.packages = [ supervisorctl ];
 
     build.activationAfter.reloadSupervisord = ''
-      ${cfg.package}/bin/supervisorctl -c /etc/supervisord.conf update
+      if [ ! -e "${config.supervisord.socketPath}" ]; then
+        echo "Starting supervisord..."
+        ${cfg.package}/bin/supervisord -c /etc/supervisord.conf
+      else
+        ${cfg.package}/bin/supervisorctl -c /etc/supervisord.conf update
+      fi
     '';
   };
 }
