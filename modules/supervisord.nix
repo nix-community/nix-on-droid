@@ -1,3 +1,5 @@
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+
 { pkgs, lib, config, ... }:
 let
   inherit (lib) types;
