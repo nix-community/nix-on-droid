@@ -38,6 +38,10 @@ let
       autoRestart = lib.mkOption {
         description = lib.mdDoc ''
           Whether to automatically restart the process if it exits.
+
+          If `unexpected`, the process will be restarted if it exits
+          with an exit code not listed in the programs's `exitcodes`
+          configuration.
         '';
         type = types.either types.bool (types.enum [ "false" "true" "unexpected" ]);
         default = "unexpected";
@@ -154,6 +158,8 @@ in {
       programs = lib.mkOption {
         description = lib.mdDoc ''
           Definition of supervisord programs.
+
+          Upstream documentations are available at <http://supervisord.org/configuration.html#program-x-section-settings>.
         '';
         type = types.attrsOf programType;
         default = {};
