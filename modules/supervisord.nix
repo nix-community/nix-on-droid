@@ -9,42 +9,42 @@ let
   programType = types.submodule ({ name, config, ... }: {
     options = {
       enable = lib.mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Whether to enable this program.
         '';
         type = types.bool;
         default = true;
       };
       command = lib.mkOption {
-        description = ''
+        description = lib.mdDoc ''
           The command that will be run as the service's main process.
         '';
         type = types.str;
         default = toString (pkgs.writeShellScript "${name}-script.sh" config.script);
       };
       script = lib.mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Shell commands executed as the service's main process.
         '';
         type = types.lines;
         default = "";
       };
       path = lib.mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Packages added to the service's PATH environment variable.
         '';
         type = types.listOf (types.either types.package types.str);
         default = [];
       };
       autoRestart = lib.mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Whether to automatically restart the process if it exits.
         '';
         type = types.either types.bool (types.enum [ "false" "true" "unexpected" ]);
         default = "unexpected";
       };
       environment = lib.mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Environment variables passed to the service's process.
         '';
         type = types.attrsOf types.str;
@@ -53,7 +53,7 @@ let
         };
       };
       extraConfig = lib.mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Extra structured configurations to add to the [program:x] section.
         '';
         type = types.attrsOf types.str;
@@ -111,7 +111,7 @@ in {
   options = {
     supervisord = {
       enable = lib.mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Whether to enable the supervisord process control system.
 
           This allows you to define long-running services in Nix-on-Droid.
@@ -120,7 +120,7 @@ in {
         default = numPrograms != 0;
       };
       package = lib.mkOption {
-        description = ''
+        description = lib.mdDoc ''
           The supervisord package to use.
         '';
         type = types.package;
@@ -128,14 +128,14 @@ in {
         defaultText = lib.literalExpression "pkgs.python3Packages.supervisor";
       };
       socketPath = lib.mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Path to the UNIX domain socket on which supervisord will listen on.
         '';
         type = types.path;
         default = "/tmp/supervisor.sock";
       };
       pidPath = lib.mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Path to the file in which supervisord saves its PID.
         '';
         type = types.path;
@@ -149,7 +149,7 @@ in {
         default = "/tmp/supervisor.log";
       };
       programs = lib.mkOption {
-        description = ''
+        description = lib.mdDoc ''
           Definition of supervisord programs.
         '';
         type = types.attrsOf programType;
