@@ -5,24 +5,19 @@
 
 { pkgs, lib, config, ... }:
 let
-  inherit (lib)
-    types
-    flip
-    concatStringsSep
-    concatMapStrings
-    optionalString;
+  inherit (lib) types;
 
   cfg = config.services.openssh;
 
   uncheckedConf = ''
-    ${concatMapStrings (port: ''
+    ${lib.concatMapStrings (port: ''
       Port ${toString port}
     '') cfg.ports}
     PasswordAuthentication no
-    ${flip concatMapStrings cfg.hostKeys (k: ''
+    ${lib.flip lib.concatMapStrings cfg.hostKeys (k: ''
       HostKey ${k.path}
     '')}
-    ${optionalString cfg.allowSFTP ''
+    ${lib.optionalString cfg.allowSFTP ''
       Subsystem sftp ${cfg.package}/libexec/sftp-server
     ''}
     SetEnv PATH=${config.user.home}/.nix-profile/bin:/usr/bin:/bin
@@ -108,7 +103,7 @@ in {
       path = [ cfg.package ];
       autoRestart = true;
       script = ''
-        ${flip concatMapStrings cfg.hostKeys (k: ''
+        ${lib.flip lib.concatMapStrings cfg.hostKeys (k: ''
           if ! [ -s "${k.path}" ]; then
               if ! [ -h "${k.path}" ]; then
                   rm -f "${k.path}"
