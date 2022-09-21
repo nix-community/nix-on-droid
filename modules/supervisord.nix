@@ -51,9 +51,7 @@ let
           Environment variables passed to the service's process.
         '';
         type = types.attrsOf types.str;
-        default = {
-          PATH = lib.makeBinPath config.path;
-        };
+        default = {};
       };
       extraConfig = lib.mkOption {
         description = lib.mdDoc ''
@@ -66,6 +64,8 @@ let
     config = {
       command = lib.mkIf (config.script != "")
         (toString (pkgs.writeShellScript "${name}-script.sh" config.script));
+
+      environment.PATH = lib.mkDefault (lib.makeBinPath config.path);
     };
   });
 
