@@ -181,6 +181,7 @@ in {
         echo "Starting supervisord..."
         ${cfg.package}/bin/supervisord -c /etc/supervisord.conf
       else
+        echo "Reloading supervisord..."
         ${cfg.package}/bin/supervisorctl -c /etc/supervisord.conf update
       fi
     '';
