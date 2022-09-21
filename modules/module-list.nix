@@ -16,6 +16,7 @@
   ./environment/shell.nix
   ./home-manager.nix
   ./nixpkgs/options.nix
+  ./services/openssh.nix
   ./supervisord.nix
   ./terminal.nix
   ./time.nix
