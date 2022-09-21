@@ -16,7 +16,7 @@ let
     ${concatMapStrings (port: ''
       Port ${toString port}
     '') cfg.ports}
-    PasswordAuthentication ${if cfg.passwordAuthentication then "yes" else "no"}
+    PasswordAuthentication no
     ${flip concatMapStrings cfg.hostKeys (k: ''
       HostKey ${k.path}
     '')}
@@ -62,13 +62,6 @@ in {
         '';
         type = types.listOf types.port;
         default = [ 8022 ];
-      };
-      passwordAuthentication = lib.mkOption {
-        description = lib.mdDoc ''
-          Whether password authentication is allowed.
-        '';
-        type = types.bool;
-        default = true;
       };
       allowSFTP = lib.mkOption {
         description = lib.mdDoc ''
