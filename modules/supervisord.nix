@@ -20,7 +20,6 @@ let
           The command that will be run as the service's main process.
         '';
         type = types.str;
-        default = toString (pkgs.writeShellScript "${name}-script.sh" config.script);
       };
       script = lib.mkOption {
         description = lib.mdDoc ''
@@ -59,6 +58,10 @@ let
         type = types.attrsOf types.str;
         default = {};
       };
+    };
+    config = {
+      command = lib.mkIf (config.script != "")
+        (toString (pkgs.writeShellScript "${name}-script.sh" config.script));
     };
   });
 
