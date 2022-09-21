@@ -1,3 +1,5 @@
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+
 # Parts from nixpkgs/nixos/modules/services/networking/ssh/sshd.nix
 # MIT Licensed. Copyright (c) 2003-2022 Eelco Dolstra and the Nixpkgs/NixOS contributors
 
