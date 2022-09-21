@@ -155,17 +155,12 @@ in {
         type = types.attrsOf programType;
         default = {};
       };
-      configFile = lib.mkOption {
-        type = types.package;
-        internal = true;
-        default = configFile;
-      };
     };
   };
 
   config = lib.mkIf cfg.enable {
     environment.etc."supervisord.conf" = {
-      source = cfg.configFile;
+      source = configFile;
     };
 
     environment.packages = [ supervisorctl ];
