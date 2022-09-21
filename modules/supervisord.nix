@@ -85,7 +85,7 @@ let
     } // program.extraConfig;
   in lib.mapAttrs (_: v: renderAtom v) section;
 
-  numPrograms = builtins.length (builtins.attrNames cfg.programs);
+  numPrograms = builtins.length (builtins.attrNames enabledPrograms);
   enabledPrograms = lib.filterAttrs (_: program: program.enable) cfg.programs;
 
   structuredConfig = {
