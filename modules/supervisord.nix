@@ -179,10 +179,10 @@ in {
     build.activationAfter.reloadSupervisord = ''
       if [ ! -e "${config.supervisord.socketPath}" ]; then
         echo "Starting supervisord..."
-        ${cfg.package}/bin/supervisord -c /etc/supervisord.conf
+        $DRY_RUN_CMD ${cfg.package}/bin/supervisord -c /etc/supervisord.conf
       else
         echo "Reloading supervisord..."
-        ${cfg.package}/bin/supervisorctl -c /etc/supervisord.conf update
+        $DRY_RUN_CMD ${cfg.package}/bin/supervisorctl -c /etc/supervisord.conf update
       fi
     '';
   };
