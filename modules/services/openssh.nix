@@ -103,6 +103,9 @@ in {
       path = [ cfg.package ];
       autoRestart = true;
       script = ''
+        # don't write to stdout
+        exec >&2
+
         ${lib.flip lib.concatMapStrings cfg.hostKeys (k: ''
           if ! [ -s "${k.path}" ]; then
               if ! [ -h "${k.path}" ]; then
