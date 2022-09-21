@@ -16,6 +16,7 @@
   ./environment/shell.nix
   ./home-manager.nix
   ./nixpkgs/options.nix
+  ./supervisord.nix
   ./terminal.nix
   ./time.nix
   ./upgrade.nix
