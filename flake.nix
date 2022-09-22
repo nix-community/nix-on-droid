@@ -2,14 +2,15 @@
   description = "Nix-enabled environment for your Android device";
 
   inputs = {
-    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:NixOS/nixpkgs";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils, home-manager }:
+  outputs = { self, nixpkgs, home-manager, flake-utils }:
     let
       overlay = nixpkgs.lib.composeManyExtensions (import ./overlays);
 
