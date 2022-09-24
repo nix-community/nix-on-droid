@@ -1,9 +1,9 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, lib, customPkgs, writeText }:
+{ config, lib, initialPackageInfo, writeText }:
 
 let
-  inherit (customPkgs.packageInfo) cacert nix;
+  inherit (initialPackageInfo) cacert nix;
 in
 
 writeText "login-inner" ''

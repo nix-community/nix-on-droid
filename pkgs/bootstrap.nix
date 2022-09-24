@@ -1,10 +1,6 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ runCommand, nixDirectory, prootTermux, bash, pkgs, config }:
-
-let
-  packageInfo = import "${nixDirectory}/nix-support/package-info.nix";
-in
+{ runCommand, nixDirectory, prootTermux, bash, pkgs, config, initialPackageInfo }:
 
 runCommand "bootstrap" { } ''
   mkdir --parents $out/{.l2s,bin,dev/shm,etc,nix,root,tmp,usr/{bin,lib}}
@@ -13,7 +9,7 @@ runCommand "bootstrap" { } ''
   cp --recursive ${nixDirectory}/var $out/nix/var
   chmod --recursive u+w $out/nix
 
-  ln --symbolic ${packageInfo.bash}/bin/sh $out/bin/sh
+  ln --symbolic ${initialPackageInfo.bash}/bin/sh $out/bin/sh
 
   install -D -m 0755 ${prootTermux}/bin/proot-static $out/bin/proot-static
 
