@@ -111,7 +111,7 @@ in {
 
     supervisord.programs.sshd = {
       inherit (cfg) autostart;
-      path = [ cfg.package ];
+      path = [ cfg.package pkgs.coreutils ];
       autoRestart = true;
       script = ''
         # don't write to stdout
