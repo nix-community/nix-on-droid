@@ -55,7 +55,7 @@ let
           with an exit code not listed in the programs's `exitcodes`
           configuration.
         '';
-        type = types.either types.bool (types.enum [ "false" "true" "unexpected" ]);
+        type = types.either types.bool (types.enum [ "unexpected" ]);
         default = "unexpected";
       };
       environment = lib.mkOption {
