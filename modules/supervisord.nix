@@ -94,7 +94,9 @@ let
       autorestart = program.autoRestart;
       environment = let
         # FIXME: Make more robust
-        escape = builtins.replaceStrings [ "%" ] [ "%%" ];
+        escape = s:
+          assert lib.assertMsg (!(lib.hasInfix "\"" s)) "supervisord.programs.<name>.environment: Values cannot have double quotes at the moment (${s})";
+          builtins.replaceStrings [ "%" ] [ "%%" ] s;
         envs = lib.mapAttrsToList (k: v: "${k}=\"${escape v}\"") program.environment;
       in builtins.concatStringsSep "," envs;
     } // program.extraConfig;
