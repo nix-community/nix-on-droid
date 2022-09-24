@@ -45,6 +45,16 @@ in {
         type = types.bool;
         default = false;
       };
+      autostart = lib.mkOption {
+        description = ''
+          Whether to automatically start the OpenSSH daemon.
+
+          If false, the server has to be manually started using
+          `supervisorctl`.
+        '';
+        type = types.bool;
+        default = true;
+      };
       package = lib.mkOption {
         description = ''
           The package to use for OpenSSH.
@@ -100,6 +110,7 @@ in {
     };
 
     supervisord.programs.sshd = {
+      inherit (cfg) autostart;
       path = [ cfg.package ];
       autoRestart = true;
       script = ''
