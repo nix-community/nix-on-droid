@@ -7,6 +7,9 @@
   An in-app `Styling` option will no longer work.
   Previously present file will be backed up to `~/.termux/font.ttf.bak`.
 * `/proc/uptime` is now faked with a stub that allows unpatched `ps` to work.
+* Refactored project for flakes usage (still supporting non-flake setups on
+  device, but bootstrap zip ball creation and running tests via fakedroid
+  requires flake setup)
 
 ## Release 22.05
 
