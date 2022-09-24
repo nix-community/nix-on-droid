@@ -37,6 +37,16 @@ let
         type = types.listOf (types.either types.package types.str);
         default = [];
       };
+      autostart = lib.mkOption {
+        description = lib.mdDoc ''
+          Whether to automatically start the process.
+
+          If false, the process has to be manually started using
+          `supervisorctl`.
+        '';
+        type = types.bool;
+        default = true;
+      };
       autoRestart = lib.mkOption {
         description = lib.mdDoc ''
           Whether to automatically restart the process if it exits.
@@ -77,7 +87,7 @@ let
 
   renderProgram = program: let
     section = {
-      inherit (program) command;
+      inherit (program) command autostart;
       autorestart = program.autoRestart;
       environment = let
         # FIXME: Make more robust
