@@ -1,4 +1,4 @@
-name: Build ci.nix and push to cachix
+name: Build bootstrap packages and push to cachix
 on:
   pull_request:
   push:
@@ -21,5 +21,11 @@ jobs:
           name: nix-on-droid
           signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
 
-      - name: Build ci.nix
-        run: nix-build ci.nix
+      - name: Build bootstrap zip
+        run: |
+          nix \
+            --log-format bar-with-logs \
+            --option keep-going true \
+            --show-trace \
+            build .#bootstrapZip \
+            --impure
