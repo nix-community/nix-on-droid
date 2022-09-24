@@ -1,21 +1,28 @@
 # Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ arch ? "aarch64", nixOnDroidChannelURL ? null, nixpkgsChannelURL ? null }:
+{ nixpkgs
+, system
+, arch ? "aarch64"
+, nixOnDroidChannelURL ? null
+, nixpkgsChannelURL ? null
+}:
 
 let
   nixDirectory = callPackage ./nix-directory.nix { };
   initialPackageInfo = import "${nixDirectory}/nix-support/package-info.nix";
 
-  nixpkgs = import lib/load-nixpkgs.nix { };
+  pkgs = import nixpkgs { inherit system; };
 
   modules = import ../modules {
-    pkgs = nixpkgs;
+    inherit pkgs;
 
     extraModules = [ ../modules/build/initial-build.nix ];
     extraSpecialArgs = {
       inherit initialPackageInfo;
-      pkgs = nixpkgs.lib.mkForce nixpkgs; # to override ./modules/nixpkgs/config.nix
+      pkgs = pkgs.lib.mkForce pkgs; # to override ./modules/nixpkgs/config.nix
     };
+
+    isFlake = true;
 
     config = {
       # Fix invoking bash after initial build.
@@ -24,7 +31,7 @@ let
       build = {
         inherit arch;
 
-        channel = with nixpkgs.lib; {
+        channel = with pkgs.lib; {
           nixpkgs = mkIf (nixpkgsChannelURL != null) nixpkgsChannelURL;
           nix-on-droid = mkIf (nixOnDroidChannelURL != null) nixOnDroidChannelURL;
         };
@@ -32,8 +39,8 @@ let
     };
   };
 
-  callPackage = nixpkgs.lib.callPackageWith (
-    nixpkgs // customPkgs // {
+  callPackage = pkgs.lib.callPackageWith (
+    pkgs // customPkgs // {
       inherit (modules) config;
       inherit callPackage nixpkgs nixDirectory initialPackageInfo;
     }
