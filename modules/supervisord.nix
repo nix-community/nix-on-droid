@@ -75,7 +75,10 @@ let
     };
     config = {
       command = lib.mkIf (config.script != "")
-        (toString (pkgs.writeShellScript "${name}-script.sh" config.script));
+        (toString (pkgs.writeShellScript "${name}-script.sh" ''
+          set -e
+          ${config.script}
+        ''));
 
       environment.PATH = lib.mkDefault (lib.makeBinPath config.path);
     };
