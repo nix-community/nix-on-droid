@@ -8,15 +8,17 @@
 
 set -ueo pipefail
 
-REPO_DIR="$(dirname "$(dirname "$(readlink -f "$0")")")"
+# this allows to run this script from every place in this git repo
+REPO_DIR="$(git rev-parse --show-toplevel)"
+
 INJ_DIR="$REPO_DIR/.fakedroid/inj"
 ENV_DIR="$REPO_DIR/.fakedroid/env"
 
 QEMU_URL="https://github.com/multiarch/qemu-user-static/releases/download/v6.1.0-8/qemu-aarch64-static"
 QEMU="$INJ_DIR/qemu-aarch64"
 
-INSTALLATION_DIR="/data/data/com.termux.nix/files/usr"
-TARGET_HOME="/data/data/com.termux.nix/files/home"
+INSTALLATION_DIR="@installationDir@"
+TARGET_HOME="@homeDir@"
 
 mkdir -p "$INJ_DIR"
 mkdir -p "$ENV_DIR/"{"$INSTALLATION_DIR","$TARGET_HOME",n-o-d}
@@ -57,7 +59,7 @@ PROOT_ARGS=(
 [[ -e "$QEMU" ]] || wget "$QEMU_URL" -O "$QEMU"
 chmod +x "$QEMU"
 
-PROOT="$(nix-build --no-out-link tests/proot-test.nix)/bin/proot"
+PROOT="@prootTest@/bin/proot"
 
 
 # Do the first install if not installed yet:
@@ -65,11 +67,7 @@ PROOT="$(nix-build --no-out-link tests/proot-test.nix)/bin/proot"
 if [[ ! -e "$ENV_DIR/$INSTALLATION_DIR/etc" ||
         -e "$ENV_DIR/$INSTALLATION_DIR/etc/UNINITIALIZED" ]]; then
     # Build a zipball:
-    nix build --show-trace -f pkgs \
-        --argstr arch aarch64 \
-        --argstr nixOnDroidChannelURL file:///n-o-d/archive.tar.gz \
-        bootstrapZip -o "$INJ_DIR/nix-on-droid-aarch64"
-    ZIPBALL="$(realpath "$INJ_DIR/nix-on-droid-aarch64/bootstrap-aarch64.zip")"
+    ZIPBALL="@bootstrapZip@/bootstrap-aarch64.zip"
     # Unpack the zipball the way the Android app does it:
     pushd "$ENV_DIR/$INSTALLATION_DIR"
         unzip "$ZIPBALL"

@@ -57,9 +57,16 @@
     // flake-utils.lib.eachSystem [ "aarch64-linux" "i686-linux" "x86_64-darwin" "x86_64-linux" ] (system: {
       formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
 
-      packages = import ./pkgs {
-        inherit system;
-        nixpkgs = nixpkgs-for-bootstrap;
-      };
+      packages =
+        (import ./pkgs {
+          inherit system;
+          nixpkgs = nixpkgs-for-bootstrap;
+        }).customPkgs
+        // {
+          fakedroid = import ./tests {
+            inherit system;
+            nixpkgs = nixpkgs-for-bootstrap;
+          };
+        };
     });
 }
