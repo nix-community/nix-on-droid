@@ -69,7 +69,7 @@ let
         description = lib.mdDoc ''
           Extra structured configurations to add to the [program:x] section.
         '';
-        type = types.attrsOf types.str;
+        type = types.attrsOf (types.either types.str types.bool);
         default = {};
       };
     };
