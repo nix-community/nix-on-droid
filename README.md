@@ -124,9 +124,10 @@ is probably not interesting for you, just download and use a prebuilt one.
 If you really want to rebuild it, you can just use Android Studio for that.
 
 The zipball generation is probably what you are after.
-Get an x86_64 computer with Nix. Run
+Get an x86_64 computer with flake-enabled Nix. Run
+
 ```
-nix build -f ./pkgs --argstr arch aarch64 bootstrapZip
+nix build .#bootstrapZip --impure
 ```
 
 Put the zip file from `result` on some HTTP server
