@@ -21,15 +21,25 @@ jobs:
           name: nix-on-droid
           signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
 
+      - name: Build fakedroid script
+        run: |
+          nix \
+            --log-format bar-with-logs \
+            --option keep-going true \
+            --show-trace \
+            build .#fakedroid \
+            --impure \
+            --out-link fakedroid
+
       - name: Initialize fakedroid
-        run: tests/fakedroid.sh echo INIT
+        run: ./fakedroid echo INIT
 
       - name: Run tests
         run: |
-          tests/fakedroid.sh mkdir -p .cache/nix-on-droid-self-test
-          tests/fakedroid.sh touch .cache/nix-on-droid-self-test/confirmation-granted
-          tests/fakedroid.sh nix-on-droid on-device-test
+          ./fakedroid mkdir -p .cache/nix-on-droid-self-test
+          ./fakedroid touch .cache/nix-on-droid-self-test/confirmation-granted
+          ./fakedroid nix-on-droid on-device-test
 
       - name: Push to cachix
         if: always() && github.event_name != 'pull_request'
-        run: tests/fakedroid.sh nix-shell -p cachix --run 'nix --extra-experimental-features nix-command path-info --all | cachix push nix-on-droid'
+        run: ./fakedroid nix-shell -p cachix --run 'nix --extra-experimental-features nix-command path-info --all | cachix push nix-on-droid'

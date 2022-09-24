@@ -51,7 +51,15 @@ let
     bootstrapZip = callPackage ./bootstrap-zip.nix { };
     prootTermux = callPackage ./cross-compiling/proot-termux.nix { };
     tallocStatic = callPackage ./cross-compiling/talloc-static.nix { };
+    prootTermuxTest = callPackage ./proot-termux {
+      inherit (pkgs) stdenv;
+      static = false;
+      outputBinaryName = "proot";
+    };
   };
 in
 
-customPkgs
+{
+  inherit (modules) config;
+  inherit customPkgs;
+}
