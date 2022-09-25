@@ -80,7 +80,7 @@ look inside the `./modules` directory for all modules.
 To enable `home-manager` you simply need to follow the instructions already provided in the example `nix-on-droid.nix`:
 
 1.  Add `home-manager` channel:
-    ```
+    ```sh
     nix-channel --add https://github.com/rycee/home-manager/archive/release-22.05.tar.gz home-manager
     nix-channel --update
     ```
@@ -104,7 +104,7 @@ To enable `home-manager` you simply need to follow the instructions already prov
         };
 
       # or if you have a separate home.nix already present:
-      home-manager.config = import ./home.nix;
+      home-manager.config = ./home.nix;
     }
     ```
 
@@ -126,7 +126,7 @@ If you really want to rebuild it, you can just use Android Studio for that.
 The zipball generation is probably what you are after.
 Get an x86_64 computer with flake-enabled Nix. Run
 
-```
+```sh
 nix build .#bootstrapZip --impure
 ```
 
@@ -164,61 +164,38 @@ you shouldn't need a binary cache for that.
 Do not run `nix profile` because this will render your environment incompatible with `nix-on-droid` as it relies on
 `nix-env`.
 
-### Minimal example
+### Examples / templates
+
+A minimal example could look like the following:
 
 ```nix
 {
-  description = "nix-on-droid configuration";
+  description = "Minimal example of nix-on-droid system config.";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-22.05";
-    nix-on-droid.url = "github:t184256/nix-on-droid";
-    nix-on-droid.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+
+    nix-on-droid = {
+      url = "github:t184256/nix-on-droid/release-22.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nix-on-droid, ... }: {
-    nixOnDroidConfigurations = {
-      device = nix-on-droid.lib.nixOnDroidConfiguration {
-        config = ./nix-on-droid.nix;
-        system = "aarch64-linux";
-      };
+  outputs = { self, nixpkgs, nix-on-droid }: {
+
+    nixOnDroidConfigurations.deviceName = nix-on-droid.lib.nixOnDroidConfiguration {
+      system = "aarch64-linux";
+      config = ./nix-on-droid.nix;
     };
+
   };
 }
 ```
 
-### Advanced example
+For more examples and nix flake templates, see [`templates`](./templates) directory or explore with:
 
-```nix
-{
-  description = "nix-on-droid configuration";
-
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-22.05";
-    home-manager.url = "github:nix-community/home-manager/release-22.05";
-    nix-on-droid.url = "github:t184256/nix-on-droid";
-    nix-on-droid.inputs.nixpkgs.follows = "nixpkgs";
-    nix-on-droid.inputs.home-manager.follows = "home-manager";
-  };
-
-  outputs = { nix-on-droid, ... }: {
-    nixOnDroidConfigurations = {
-      device = nix-on-droid.lib.nixOnDroidConfiguration {
-        config = ./nix-on-droid.nix;
-        system = "aarch64-linux";
-        extraModules = [
-          # import source out-of-tree modules like:
-          # flake.nixOnDroidModules.module
-        ];
-        extraSpecialArgs = {
-          # arguments to be available in every nix-on-droid module
-        };
-        # your own pkgs instance (see nix-on-droid.overlay for useful additions)
-        # pkgs = ...;
-      };
-    };
-  };
-}
+```sh
+nix flake init --template github:t184256/nix-on-droid#advanced
 ```
 
 ### Usage with `nix-on-droid`
