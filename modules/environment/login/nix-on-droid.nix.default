@@ -1,10 +1,10 @@
-{ pkgs, config, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   # Simply install just the packages
   environment.packages = with pkgs; [
     # User-facing stuff that you really really want to have
-    vim  # or some other editor, e.g. nano or neovim
+    vim # or some other editor, e.g. nano or neovim
 
     # Some common stuff that people expect to have
     #diffutils
@@ -30,23 +30,30 @@
   # Read the changelog before changing this value
   system.stateVersion = "22.05";
 
+  # Set up nix for flakes
+  #nix.extraOptions = ''
+  #  experimental-features = nix-command flakes
+  #'';
+
+  # Set your time zone
+  #time.timeZone = "Europe/Berlin";
+
   # After installing home-manager channel like
   #   nix-channel --add https://github.com/rycee/home-manager/archive/release-22.05.tar.gz home-manager
   #   nix-channel --update
   # you can configure home-manager in here like
-  #home-manager.config =
-  #  { pkgs, lib, ... }:
-  #  {
-  #    # Read the changelog before changing this value
-  #    home.stateVersion = "22.05";
+  #home-manager = {
+  #  useGlobalPkgs = true;
   #
-  #    # Use the same overlays as the system packages
-  #    nixpkgs = { inherit (config.nixpkgs) overlays; };
+  #  config =
+  #    { config, lib, pkgs, ... }:
+  #    {
+  #      # Read the changelog before changing this value
+  #      home.stateVersion = "22.05";
   #
-  #    # insert home-manager config
-  #  };
-  # If you want the same pkgs instance to be used for nix-on-droid and home-manager
-  #home-manager.useGlobalPkgs = true;
+  #      # insert home-manager config
+  #    };
+  #};
 }
 
 # vim: ft=nix
