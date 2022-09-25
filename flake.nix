@@ -53,6 +53,25 @@
         default = app;
         nix-on-droid = app;
       };
+
+      templates = {
+        default = self.templates.minimal;
+
+        minimal = {
+          path = ./templates/minimal;
+          description = "Minimal example of nix-on-droid system config.";
+        };
+
+        home-manager = {
+          path = ./templates/home-manager;
+          description = "Minimal example of nix-on-droid system config with home-manager.";
+        };
+
+        advanced = {
+          path = ./templates/advanced;
+          description = "Advanced example of nix-on-droid system config with home-manager.";
+        };
+      };
     }
     // flake-utils.lib.eachSystem [ "aarch64-linux" "i686-linux" "x86_64-darwin" "x86_64-linux" ] (system: {
       formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
