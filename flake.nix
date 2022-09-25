@@ -86,6 +86,8 @@
             inherit system;
             nixpkgs = nixpkgs-for-bootstrap;
           };
+
+          nix-on-droid = nixpkgs.legacyPackages.${system}.callPackage ./nix-on-droid { };
         };
     });
 }
