@@ -35,7 +35,7 @@ let
     set -eu
     set -o pipefail
 
-    export PATH="${activationBinPaths}"
+    export PATH="${activationBinPaths}:''${PATH:+:''${PATH}}"
     _NOD_GENERATION_DIR="$(realpath "$(dirname "$0")")"
     cd "$HOME"
 
