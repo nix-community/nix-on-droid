@@ -17,9 +17,9 @@ writeText "login-inner" ''
   fi
 
   ${lib.optionalString config.supervisord.enable ''
-    if [ ! -e "${config.supervisord.socketPath}" ]; then
+    (if [ ! -e "${config.supervisord.socketPath}" ]; then
       ${config.supervisord.package}/bin/supervisord -c /etc/supervisord.conf || echo "Warning: supervisord failed to start"
-    fi
+    fi&)
   ''}
 
   ${lib.optionalString config.build.initialBuild ''
