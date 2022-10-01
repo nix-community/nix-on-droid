@@ -38,7 +38,7 @@ in {
   options = {
     services.openssh = {
       enable = lib.mkOption {
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable the OpenSSH secure shell daemon, which
           allows secure remote logins.
         '';
@@ -64,14 +64,14 @@ in {
         defaultText = lib.literalExpression "pkgs.openssh";
       };
       ports = lib.mkOption {
-        description = lib.mdDoc ''
+        description = ''
           Specifies on which ports the SSH daemon listens.
         '';
         type = types.listOf types.port;
         default = [ 8022 ];
       };
       allowSFTP = lib.mkOption {
-        description = lib.mdDoc ''
+        description = ''
           Whether to enable the SFTP subsystem in the SSH daemon.  This
           enables the use of commands such as {command}`sftp` and
           {command}`sshfs`.
@@ -80,7 +80,7 @@ in {
         default = true;
       };
       hostKeys = lib.mkOption {
-        description = lib.mdDoc ''
+        description = ''
           Nix-on-Droid can automatically generate SSH host keys.  This option
           specifies the path, type and size of each key.  See
           {manpage}`ssh-keygen(1)` for supported types
@@ -97,7 +97,7 @@ in {
           ];
       };
       extraConfig = lib.mkOption {
-        description = lib.mdDoc "Verbatim contents of {file}`sshd_config`.";
+        description = "Verbatim contents of {file}`sshd_config`.";
         type = types.lines;
         default = "";
       };
