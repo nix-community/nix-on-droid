@@ -94,9 +94,7 @@ let
       autorestart = program.autoRestart;
       environment = let
         # FIXME: Make more robust
-        escape = s:
-          assert lib.assertMsg (!(lib.hasInfix "\"" s)) "supervisord.programs.<name>.environment: Values cannot have double quotes at the moment (${s})";
-          builtins.replaceStrings [ "%" ] [ "%%" ] s;
+        escape = s: builtins.replaceStrings [ "%" ] [ "%%" ] s;
         envs = lib.mapAttrsToList (k: v: "${k}=\"${escape v}\"") program.environment;
       in builtins.concatStringsSep "," envs;
     } // program.extraConfig;
@@ -185,6 +183,13 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = lib.flatten (lib.mapAttrsToList (name: program: let
+      envAsserts = lib.mapAttrsToList (k: v: {
+        assertion = !(lib.hasInfix "\"" v);
+        message = "supervisord.programs.${name}.environment.${k}: Value cannot have double quotes at the moment (${v})";
+      }) program.environment;
+    in envAsserts) cfg.programs);
+
     environment.etc."supervisord.conf" = {
       source = configFile;
     };
