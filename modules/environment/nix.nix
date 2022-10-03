@@ -166,7 +166,7 @@ in
     }
 
     (mkIf (cfg.nixPath != []) {
-      environment.sessionVariables.NIX_PATH = cfg.nixPath;
+      environment.sessionVariables.NIX_PATH = concatStringsSep ":" cfg.nixPath;
     })
   ];
 
