@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
 jobs:
-  fakedroid-odt:
+  fakedroid-odt-channel:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,7 @@ jobs:
             --impure \
             --out-link fakedroid
 
-      - name: Initialize fakedroid
+      - name: Initialize fakedroid for channel setup
         run: ./fakedroid echo INIT
 
       - name: Run tests
@@ -39,6 +39,40 @@ jobs:
           ./fakedroid mkdir -p .cache/nix-on-droid-self-test
           ./fakedroid touch .cache/nix-on-droid-self-test/confirmation-granted
           ./fakedroid nix-on-droid on-device-test
+
+      - name: Push to cachix
+        if: always() && github.event_name != 'pull_request'
+        run: ./fakedroid nix-shell -p cachix --run 'nix --extra-experimental-features nix-command path-info --all | cachix push nix-on-droid'
+
+
+  fakedroid-flakes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v18
+
+      - name: Setup cachix
+        uses: cachix/cachix-action@v12
+        with:
+          name: nix-on-droid
+          signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
+
+      - name: Build fakedroid script
+        run: |
+          nix \
+            --log-format bar-with-logs \
+            --option keep-going true \
+            --show-trace \
+            build .#fakedroid \
+            --impure \
+            --out-link fakedroid
+
+      - name: Initialize fakedroid for flake setup
+        run: USE_FLAKE=1 ./fakedroid echo INIT
 
       - name: Push to cachix
         if: always() && github.event_name != 'pull_request'

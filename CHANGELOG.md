@@ -11,6 +11,8 @@
   device, but bootstrap zip ball creation and running tests via fakedroid
   requires flake setup)
 * Add support for `nix profile` managed profiles
+* Add possibilty to bootstrap Nix-on-Droid with flakes via prompt on initial
+  boot
 
 ## Release 22.05
 
