@@ -8,11 +8,17 @@
 
 set -ueo pipefail
 
+USE_FLAKE="${USE_FLAKE:-0}"
+if [[ ! "$USE_FLAKE" =~ ^[01]$ ]]; then
+    echo "USE_FLAKE environment variable needs to be either 0 or 1, got '$USE_FLAKE'."
+    exit 1
+fi
+
 # this allows to run this script from every place in this git repo
 REPO_DIR="$(git rev-parse --show-toplevel)"
 
 INJ_DIR="$REPO_DIR/.fakedroid/inj"
-ENV_DIR="$REPO_DIR/.fakedroid/env"
+ENV_DIR="$REPO_DIR/.fakedroid/env/$USE_FLAKE"
 
 QEMU_URL="https://github.com/multiarch/qemu-user-static/releases/download/v6.1.0-8/qemu-aarch64-static"
 QEMU="$INJ_DIR/qemu-aarch64"
@@ -33,6 +39,7 @@ PASSTHROUGH_VARS=(
     "TERM=$TERM"
     "HOME=$TARGET_HOME"
     "USER=$USER"
+    "USE_FLAKE=$USE_FLAKE"
 )
 
 [[ -n "${CACHIX_SIGNING_KEY:-}" ]] && \
