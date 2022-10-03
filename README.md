@@ -161,9 +161,6 @@ you shouldn't need a binary cache for that.
 
 **Note:** Nix flake support is still experimental at the moment and subject to change.
 
-Do not run `nix profile` because this will render your environment incompatible with `nix-on-droid` as it relies on
-`nix-env`.
-
 ### Examples / templates
 
 A minimal example could look like the following:
