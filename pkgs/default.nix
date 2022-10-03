@@ -5,6 +5,7 @@
 , arch ? "aarch64"
 , nixOnDroidChannelURL ? null
 , nixpkgsChannelURL ? null
+, nixOnDroidFlakeURL ? null
 }:
 
 let
@@ -28,13 +29,15 @@ let
       # Fix invoking bash after initial build.
       user.shell = "${initialPackageInfo.bash}/bin/bash";
 
-      build = {
+      build = with pkgs.lib; {
         inherit arch;
 
-        channel = with pkgs.lib; {
+        channel = {
           nixpkgs = mkIf (nixpkgsChannelURL != null) nixpkgsChannelURL;
           nix-on-droid = mkIf (nixOnDroidChannelURL != null) nixOnDroidChannelURL;
         };
+
+        flake.nix-on-droid = mkIf (nixOnDroidFlakeURL != null) nixOnDroidFlakeURL;
       };
     };
   };

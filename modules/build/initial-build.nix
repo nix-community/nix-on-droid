@@ -10,17 +10,27 @@ with lib;
 
   options = {
 
-    build.channel = {
-      nixpkgs = mkOption {
-        type = types.str;
-        default = "https://nixos.org/channels/nixos-22.05";
-        description = "Channel URL for nixpkgs.";
+    build = {
+      channel = {
+        nixpkgs = mkOption {
+          type = types.str;
+          default = "https://nixos.org/channels/nixos-22.05";
+          description = "Channel URL for nixpkgs.";
+        };
+
+        nix-on-droid = mkOption {
+          type = types.str;
+          default = "https://github.com/t184256/nix-on-droid/archive/release-22.05.tar.gz";
+          description = "Channel URL for nix-on-droid.";
+        };
       };
 
-      nix-on-droid = mkOption {
-        type = types.str;
-        default = "https://github.com/t184256/nix-on-droid/archive/release-22.05.tar.gz";
-        description = "Channel URL for nix-on-droid.";
+      flake = {
+        nix-on-droid = mkOption {
+          type = types.str;
+          default = "github:t184256/nix-on-droid/release-22.05";
+          description = "Flake URL for nix-on-droid.";
+        };
       };
     };
 

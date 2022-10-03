@@ -6,6 +6,7 @@ let
   bootstrap = import ../pkgs {
     inherit nixpkgs system;
     nixOnDroidChannelURL = "file:///n-o-d/archive.tar.gz";
+    nixOnDroidFlakeURL = "/n-o-d/unpacked";
   };
 in
 
