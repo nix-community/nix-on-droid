@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
@@ -37,7 +37,11 @@ in
   config = {
 
     build.activation.installPackages = ''
-      $DRY_RUN_CMD nix-env --install ${cfg.path}
+      if [[ -e "${config.user.home}/.nix-profile/manifest.json" ]]; then
+        $DRY_RUN_CMD nix profile install ${cfg.path}
+      else
+        $DRY_RUN_CMD nix-env --install ${cfg.path}
+      fi
     '';
 
     environment = {
