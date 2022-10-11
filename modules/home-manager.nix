@@ -127,8 +127,7 @@ in
     # https://github.com/nix-community/home-manager/blob/0006da1381b87844c944fe8b925ec864ccf19348/modules/home-environment.nix#L414
     # Fortunately, it's not that hard to us to workaround with just a symlink.
     environment.etc = mkIf cfg.useUserPackages {
-      "profiles/per-user/${config.user.userName}".source =
-        /. + "${config.user.home}/.nix-profile";
+      "profiles/per-user/${config.user.userName}".source = "${config.user.home}/.nix-profile";
     };
 
   };
