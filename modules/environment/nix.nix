@@ -149,7 +149,7 @@ in
 
         "nix/registry.json".text = builtins.toJSON {
           version = 2;
-          flakes = mapAttrsToList (n: v: { inherit (v) from to exact; }) cfg.registry;
+          flakes = mapAttrsToList (_n: v: { inherit (v) from to exact; }) cfg.registry;
         };
       };
 

@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 # Inspired by
 # https://github.com/rycee/home-manager/blob/master/modules/misc/nixpkgs.nix
@@ -46,7 +46,7 @@ let
           else lib.traceSeqN 1 x false;
       in
       traceXIfNot isConfig;
-    merge = args: fold (def: mergeConfig def.value) { };
+    merge = _args: fold (def: mergeConfig def.value) { };
   };
 
   overlayType = mkOptionType {

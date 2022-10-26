@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 # Inspired by
 # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/config/locale.nix
@@ -10,8 +10,6 @@
 with lib;
 
 let
-  cfg = config.time;
-
   tzdir = "${pkgs.tzdata}/share/zoneinfo";
   nospace = str: filter (c: c == " ") (stringToCharacters str) == [ ];
   timezoneType = types.nullOr (types.addCheck types.str nospace)
