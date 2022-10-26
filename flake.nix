@@ -13,9 +13,14 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-formatter-pack = {
+      url = "github:Gerschtli/nix-formatter-pack";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-for-bootstrap, home-manager }:
+  outputs = { self, nixpkgs, nixpkgs-for-bootstrap, home-manager, nix-formatter-pack }:
     let
       forEachSystem = nixpkgs.lib.genAttrs [ "aarch64-linux" "x86_64-linux" ];
 
@@ -30,6 +35,20 @@
         type = "app";
         program = "${pkgs'.callPackage ./nix-on-droid { }}/bin/nix-on-droid";
       };
+
+      formatterPackArgsFor = forEachSystem (system: {
+        inherit nixpkgs system;
+        checkFiles = [ ./. ];
+
+        config.tools = {
+          deadnix = {
+            enable = true;
+            noLambdaPatternNames = true;
+          };
+          nixpkgs-fmt.enable = true;
+          statix.enable = true;
+        };
+      });
     in
     {
       apps.aarch64-linux = {
@@ -37,7 +56,11 @@
         nix-on-droid = app;
       };
 
-      formatter = forEachSystem (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
+      checks = forEachSystem (system: {
+        nix-formatter-pack-check = nix-formatter-pack.lib.mkCheck formatterPackArgsFor.${system};
+      });
+
+      formatter = forEachSystem (system: nix-formatter-pack.lib.mkFormatter formatterPackArgsFor.${system});
 
       lib.nixOnDroidConfiguration =
         { config
