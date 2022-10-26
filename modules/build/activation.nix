@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
@@ -84,7 +84,7 @@ in
         default = { };
         type = types.attrs;
         description = ''
-          Activation scripts for the nix-on-droid environment.
+          Activation scripts for the Nix-on-Droid environment.
         '' + activationOptionDescriptionSuffix;
       };
 
@@ -92,7 +92,7 @@ in
         default = { };
         type = types.attrs;
         description = ''
-          Activation scripts for the nix-on-droid environment that
+          Activation scripts for the Nix-on-Droid environment that
           need to be run first.
         '' + activationOptionDescriptionSuffix;
       };
@@ -101,7 +101,7 @@ in
         default = { };
         type = types.attrs;
         description = ''
-          Activation scripts for the nix-on-droid environment that
+          Activation scripts for the Nix-on-Droid environment that
           need to be run last.
         '' + activationOptionDescriptionSuffix;
       };

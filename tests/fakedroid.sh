@@ -94,7 +94,7 @@ if [[ ! -e "$ENV_DIR/$INSTALLATION_DIR/etc" ||
 fi
 
 
-# Inject nix-on-droid version under test into the environment.
+# Inject Nix-on-Droid version under test into the environment.
 # Uncommitted chages won't be picked up, just HEAD.
 # /n-o-d/archive.tar.gz is used as a channel, /n-o-d/unpacked --- as a flake.
 

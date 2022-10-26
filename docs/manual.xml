@@ -19,7 +19,7 @@
  </preface>
 
  <appendix xml:id="ch-options">
-  <title>Nix-on-Droid configuration options</title>
+  <title>nix-on-droid configuration options</title>
   <section xml:id="sec-usage">
    <title>Usage</title>
 

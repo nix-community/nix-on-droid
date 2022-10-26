@@ -120,7 +120,7 @@ function doSwitchGeneration() {
         "${PROFILE_DIRECTORY}-${generationNum}-link/activate"
     else
         errorEcho "Activation was not successful, generation is either broken or already garbage collected."
-        errorEcho "See nix-on-droid generations for available generations."
+        errorEcho "See 'nix-on-droid generations' for available generations."
         exit 1
     fi
 }
@@ -219,7 +219,7 @@ case $COMMAND in
         if [[ $(readlink $PROFILE_DIRECTORY) =~ ^nix-on-droid-([0-9]+)-link$ ]]; then
             doSwitchGeneration $((BASH_REMATCH[1] - 1))
         else
-            errorEcho "nix-on-droid profile link is broken, please run nix-on-droid switch to fix it."
+            errorEcho "Nix-on-Droid profile link is broken, please run 'nix-on-droid switch' to fix it."
             exit 1
         fi
         ;;

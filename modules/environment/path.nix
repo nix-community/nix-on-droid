@@ -60,7 +60,7 @@ in
         paths = cfg.packages;
 
         meta = {
-          description = "Environment of packages installed through nix-on-droid.";
+          description = "Environment of packages installed through Nix-on-Droid.";
         };
       };
     };

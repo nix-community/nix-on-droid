@@ -1,5 +1,5 @@
 {
-  description = "Basic example of nix-on-droid system config.";
+  description = "Basic example of Nix-on-Droid system config.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";

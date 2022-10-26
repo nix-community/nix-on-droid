@@ -108,7 +108,7 @@ in
         type = types.listOf types.str;
         default = [ ];
         description = ''
-          A list of URLs of substituters.  The official NixOS and nix-on-droid
+          A list of URLs of substituters.  The official NixOS and Nix-on-Droid
           substituters are added by default.
         '';
       };
@@ -119,7 +119,7 @@ in
         description = ''
           A list of public keys.  When paths are copied from another Nix store (such as a
           binary cache), they must be signed with one of these keys.  The official NixOS
-          and nix-on-droid public keys are added by default.
+          and Nix-on-Droid public keys are added by default.
         '';
       };
 

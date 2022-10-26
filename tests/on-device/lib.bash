@@ -32,7 +32,7 @@ _setup() {
   $DEFAULT_ACTIVATE_SCRIPT
   rm -rf ~/.config/nixpkgs/*
 
-  # build and activate the version of nix-on-droid that is subject to test
+  # build and activate the version of Nix-on-Droid that is subject to test
   switch_to_default_config
 }
 

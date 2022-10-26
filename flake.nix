@@ -140,17 +140,17 @@
 
         minimal = {
           path = ./templates/minimal;
-          description = "Minimal example of nix-on-droid system config.";
+          description = "Minimal example of Nix-on-Droid system config.";
         };
 
         home-manager = {
           path = ./templates/home-manager;
-          description = "Minimal example of nix-on-droid system config with home-manager.";
+          description = "Minimal example of Nix-on-Droid system config with home-manager.";
         };
 
         advanced = {
           path = ./templates/advanced;
-          description = "Advanced example of nix-on-droid system config with home-manager.";
+          description = "Advanced example of Nix-on-Droid system config with home-manager.";
         };
       };
     };
