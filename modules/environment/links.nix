@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
@@ -18,13 +18,13 @@ in
       binSh = mkOption {
         type = types.str;
         readOnly = true;
-        description = "Path to /bin/sh executable.";
+        description = "Path to <filename>/bin/sh</filename> executable.";
       };
 
       usrBinEnv = mkOption {
         type = types.str;
         readOnly = true;
-        description = "Path to /usr/bin/env executable.";
+        description = "Path to <filename>/usr/bin/env</filename> executable.";
       };
     };
 

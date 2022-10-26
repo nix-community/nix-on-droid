@@ -91,24 +91,24 @@ in
           you need to include something like
 
           <programlisting language="nix">
-            { pkgs, config, ...}:
+          { pkgs, config, ...}:
 
-            {
-              # for Nix-on-Droid
-              nixpkgs.config = import ./nixpkgs-config.nix;
+          {
+            # for Nix-on-Droid
+            nixpkgs.config = import ./nixpkgs-config.nix;
 
-              # for Home Manager
-              home-manager.config.nixpkgs.config = import ./nixpkgs-config.nix;
-              # -or-
-              home-manager.config =
-                { pkgs, ... }:
-                {
-                  # for Home Manager
-                  nixpkgs.config = import ./nixpkgs-config.nix;
-                  # for commands like nix-env
-                  xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs-config.nix;
-                };
-            }
+            # for Home Manager
+            home-manager.config.nixpkgs.config = import ./nixpkgs-config.nix;
+            # -or-
+            home-manager.config =
+              { pkgs, ... }:
+              {
+                # for Home Manager
+                nixpkgs.config = import ./nixpkgs-config.nix;
+                # for commands like nix-env
+                xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs-config.nix;
+              };
+          }
           </programlisting>
 
           in your Nix-on-Droid configuration.
@@ -117,17 +117,16 @@ in
 
       overlays = mkOption {
         default = null;
-        example = literalExpression
-          ''
-            [ (self: super: {
-                openssh = super.openssh.override {
-                  hpnSupport = true;
-                  withKerberos = true;
-                  kerberos = self.libkrb5;
-                };
+        example = literalExpression ''
+          [ (self: super: {
+              openssh = super.openssh.override {
+                hpnSupport = true;
+                withKerberos = true;
+                kerberos = self.libkrb5;
               };
-            ) ]
-          '';
+            };
+          ) ]
+        '';
         type = types.nullOr (types.listOf overlayType);
         description = ''
           List of overlays to use with the Nix Packages collection. (For

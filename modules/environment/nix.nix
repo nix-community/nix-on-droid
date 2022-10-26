@@ -31,7 +31,7 @@ in
       package = mkOption {
         type = types.package;
         default = pkgs.nix;
-        defaultText = "pkgs.nix";
+        defaultText = literalExpression "pkgs.nix";
         description = ''
           This option specifies the Nix package instance to use throughout the system.
         '';
@@ -101,9 +101,7 @@ in
           }
         ));
         default = { };
-        description = ''
-          A system-wide flake registry.
-        '';
+        description = "A system-wide flake registry.";
       };
 
       substituters = mkOption {
@@ -128,7 +126,7 @@ in
       extraOptions = mkOption {
         type = types.lines;
         default = "";
-        description = "Extra config to be appended to /etc/nix/nix.conf.";
+        description = "Extra config to be appended to <filename>/etc/nix/nix.conf</filename>.";
       };
     };
 

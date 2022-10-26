@@ -28,8 +28,8 @@ let
           type = types.bool;
           default = true;
           description = ''
-            Whether this /etc file should be generated.  This
-            option allows specific /etc files to be disabled.
+            Whether this <filename>/etc</filename> file should be generated.  This
+            option allows specific <filename>/etc</filename> files to be disabled.
           '';
         };
 

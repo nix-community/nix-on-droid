@@ -37,7 +37,7 @@ in
         type = types.package;
         readOnly = true;
         internal = true;
-        description = "proot-static package.";
+        description = "<literal>proot-static</literal> package.";
       };
     };
 
