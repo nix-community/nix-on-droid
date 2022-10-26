@@ -1,5 +1,5 @@
 {
-  description = "nix-on-droid configuration";
+  description = "Nix-on-Droid configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-22.05";

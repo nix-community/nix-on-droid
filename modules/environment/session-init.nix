@@ -57,7 +57,7 @@ in
         '';
         type = types.nullOr types.lines;
         description = ''
-          Text to show on every new shell created by nix-on-droid.
+          Text to show on every new shell created by Nix-on-Droid.
         '';
       };
 

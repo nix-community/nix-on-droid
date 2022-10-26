@@ -14,7 +14,7 @@ with lib;
       type = types.enum [ "19.09" "20.03" "20.09" "21.05" "21.11" "22.05" ];
       default = "19.09";
       description = ''
-        It is occasionally necessary for nix-on-droid to change
+        It is occasionally necessary for Nix-on-Droid to change
         configuration defaults in a way that is incompatible with
         stateful data. This could, for example, include switching the
         default data format or location of a file.

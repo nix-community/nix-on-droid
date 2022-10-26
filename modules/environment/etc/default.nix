@@ -97,7 +97,7 @@ in
           Backup file extension.
           </para><para>
           If a file in <filename>/etc</filename> already exists and is not managed
-          by nix-on-droid, the activation fails because we do not overwrite unknown
+          by Nix-on-Droid, the activation fails because we do not overwrite unknown
           files. When an extension is provided through this option, the original
           file will be moved in respect of the backup extension and the activation
           executes successfully.

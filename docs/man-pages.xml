@@ -13,7 +13,7 @@
   <refmeta>
    <refentrytitle><filename>nix-on-droid-options</filename></refentrytitle>
    <manvolnum>5</manvolnum>
-   <refmiscinfo class="source">Nix-on-Droid</refmiscinfo>
+   <refmiscinfo class="source">nix-on-droid</refmiscinfo>
   </refmeta>
   <refnamediv>
    <refname><filename>nix-on-droid-options</filename>

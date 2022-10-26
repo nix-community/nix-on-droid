@@ -32,7 +32,7 @@ in
         nix-on-droid = mkOption {
           type = types.str;
           default = defaultNixOnDroidChannel;
-          description = "Channel URL for nix-on-droid.";
+          description = "Channel URL for Nix-on-Droid.";
         };
       };
 
@@ -46,7 +46,7 @@ in
         nix-on-droid = mkOption {
           type = types.str;
           default = defaultNixOnDroidFlake;
-          description = "Flake URL for nix-on-droid.";
+          description = "Flake URL for Nix-on-Droid.";
         };
 
         inputOverrides = mkEnableOption "" // {

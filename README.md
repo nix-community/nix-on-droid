@@ -40,7 +40,7 @@ launch the app, press OK,
 expect many hundreds megabytes of downloads to happen.
 
 
-## `nix-on-droid` and the module system
+## Nix-on-Droid and the module system
 
 ### Config file
 
@@ -88,10 +88,10 @@ To enable `home-manager` you simply need to follow the instructions already prov
     { pkgs, ... }:
 
     {
-      # Read nix-on-droid changelog before changing this value
+      # Read Nix-on-Droid changelog before changing this value
       system.stateVersion = "22.05";
 
-      # insert nix-on-droid config
+      # insert Nix-on-Droid config
 
       home-manager.config =
         { pkgs, ... }:
@@ -116,7 +116,7 @@ Use `nix-on-droid switch` to activate the current configuration and
 For more information, please run `nix-on-droid help`.
 
 
-## Build `nix-on-droid` on your own
+## Build Nix-on-Droid on your own
 
 The [terminal emulator part](https://github.com/t184256/nix-on-droid-app)
 is probably not interesting for you, just download and use a prebuilt one.
@@ -144,7 +144,7 @@ and specify the parent directory URL during the installation.
 To re-trigger the installation, you can use
 'clear data' on the Android app (after backing stuff up, obviously).
 
-If you want to change the nix-on-droid channel to your custom one,
+If you want to change the Nix-on-Droid channel to your custom one,
 you can do that either with `nix-channel` after the installation,
 or by setting the environment variable `NIX_ON_DROID_CHANNEL_URL`.
 Other environment variables are `NIXPKGS_CHANNEL_URL` an
@@ -178,7 +178,7 @@ A minimal example could look like the following:
 
 ```nix
 {
-  description = "Minimal example of nix-on-droid system config.";
+  description = "Minimal example of Nix-on-Droid system config.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
@@ -211,11 +211,11 @@ Use `nix-on-droid switch --flake path/to/flake#device` to build and activate you
 will expand to `.#nixOnDroidConfigurations.device`). If you run `nix-on-droid switch --flake path/to/flake`, the
 `default` configuration will be used.
 
-**Note:** Currently, nix-on-droid can not be built with an pure flake build because of hardcoded store paths for proot.
+**Note:** Currently, Nix-on-Droid can not be built with an pure flake build because of hardcoded store paths for proot.
 Therefore, every evaluation of a flake configuration will be executed with `--impure` flag. (This behaviour will be
 dropped as soon as the default setup does not require it anymore.)
 
-## Emulate `nix-on-droid`-like environment with `fakedroid`
+## Emulate Nix-on-Droid-like environment with `fakedroid`
 
 For easier debugging and testing, there is a so-called `fakedroid` environment which
 emulates the on-device environment including proot as good as possible.
@@ -226,7 +226,7 @@ You can enter this emulated environment with
 nix run --impure ".#fakedroid"
 ```
 
-This will install nix-on-droid with initial channel setup and save the state of
+This will install Nix-on-Droid with initial channel setup and save the state of
 this session in the `.fakedroid` directory in the project directory. To enter this
 environment with initial flake setup, set `USE_FLAKE=1` as environment variable.
 Channel and flake setups can co-exist in the `.fakedroid` state directory. To

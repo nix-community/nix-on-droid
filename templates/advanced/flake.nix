@@ -1,5 +1,5 @@
 {
-  description = "Advanced example of nix-on-droid system config with home-manager.";
+  description = "Advanced example of Nix-on-Droid system config with home-manager.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
@@ -22,7 +22,7 @@
       modules = [
         ./nix-on-droid.nix
 
-        # list of extra modules for nix-on-droid system
+        # list of extra modules for Nix-on-Droid system
         # { nix.registry.nixpkgs.flake = nixpkgs; }
         # ./path/to/module.nix
 
@@ -30,12 +30,12 @@
         # flake.nixOnDroidModules.module
       ];
 
-      # list of extra special args for nix-on-droid modules
+      # list of extra special args for Nix-on-Droid modules
       extraSpecialArgs = {
         # rootPath = ./.;
       };
 
-      # set nixpkgs instance, it is recommended to apply nix-on-droid.overlays.default
+      # set nixpkgs instance, it is recommended to apply `nix-on-droid.overlays.default`
       pkgs = import nixpkgs {
         system = "aarch64-linux";
 

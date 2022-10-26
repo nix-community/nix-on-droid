@@ -1,5 +1,5 @@
 {
-  description = "Minimal example of nix-on-droid system config with home-manager.";
+  description = "Minimal example of Nix-on-Droid system config with home-manager.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
