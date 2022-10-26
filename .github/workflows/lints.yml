@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
 jobs:
-  cachix:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -13,8 +13,5 @@ jobs:
       - name: Install nix
         uses: cachix/install-nix-action@v18
 
-      - name: Run formatter
-        run: nix fmt -- --check .
-
-      - name: Run statix
-        run: nix run nixpkgs#statix -- check
+      - name: Run nix-formatter-pack-check
+        run: nix build .#checks.x86_64-linux.nix-formatter-pack-check
