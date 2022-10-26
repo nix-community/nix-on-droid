@@ -12,8 +12,6 @@ jobs:
 
       - name: Install nix
         uses: cachix/install-nix-action@v17
-        with:
-          nix_path: nixpkgs=channel:nixos-22.05
 
       - name: Setup cachix
         uses: cachix/cachix-action@v10
