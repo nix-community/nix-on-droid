@@ -13,12 +13,12 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-for-bootstrap, home-manager, flake-utils }:
+  outputs = { self, nixpkgs, nixpkgs-for-bootstrap, home-manager }:
     let
+      forEachSystem = nixpkgs.lib.genAttrs [ "aarch64-linux" "x86_64-linux" ];
+
       overlay = nixpkgs.lib.composeManyExtensions (import ./overlays);
 
       pkgs' = import nixpkgs {
@@ -26,8 +26,9 @@
         overlays = [ overlay ];
       };
 
-      app = flake-utils.lib.mkApp {
-        drv = pkgs'.callPackage ./nix-on-droid { };
+      app = {
+        type = "app";
+        program = "${pkgs'.callPackage ./nix-on-droid { }}/bin/nix-on-droid";
       };
     in
     {
@@ -35,6 +36,8 @@
         default = app;
         nix-on-droid = app;
       };
+
+      formatter = forEachSystem (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
 
       lib.nixOnDroidConfiguration =
         { config
@@ -54,6 +57,21 @@
 
       overlays.default = overlay;
 
+      packages = forEachSystem (system:
+        (import ./pkgs {
+          inherit system;
+          nixpkgs = nixpkgs-for-bootstrap;
+        }).customPkgs
+        // {
+          fakedroid = import ./tests {
+            inherit system;
+            nixpkgs = nixpkgs-for-bootstrap;
+          };
+
+          nix-on-droid = nixpkgs.legacyPackages.${system}.callPackage ./nix-on-droid { };
+        }
+      );
+
       templates = {
         default = self.templates.minimal;
 
@@ -72,22 +90,5 @@
           description = "Advanced example of nix-on-droid system config with home-manager.";
         };
       };
-    }
-    // flake-utils.lib.eachSystem [ "aarch64-linux" "i686-linux" "x86_64-darwin" "x86_64-linux" ] (system: {
-      formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
-
-      packages =
-        (import ./pkgs {
-          inherit system;
-          nixpkgs = nixpkgs-for-bootstrap;
-        }).customPkgs
-        // {
-          fakedroid = import ./tests {
-            inherit system;
-            nixpkgs = nixpkgs-for-bootstrap;
-          };
-
-          nix-on-droid = nixpkgs.legacyPackages.${system}.callPackage ./nix-on-droid { };
-        };
-    });
+    };
 }
