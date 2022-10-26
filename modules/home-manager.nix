@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, home-manager-path, ... }:
 
@@ -51,6 +51,8 @@ in
       config = mkOption {
         type = types.nullOr hmModule;
         default = null;
+        # Prevent the entire submodule being included in the documentation.
+        visible = "shallow";
         description = "Home Manager configuration.";
       };
 
