@@ -1,0 +1,60 @@
+name: Build and deploy docs
+
+on:
+  push:
+    branches: ["master"]
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v18
+
+      - name: Build docs
+        run: |
+          nix \
+            --print-build-logs \
+            --option keep-going true \
+            --show-trace \
+            build .#manualHtml
+
+          # see https://github.com/actions/deploy-pages/issues/58
+          cp \
+            --recursive \
+            --dereference \
+            --no-preserve=mode,ownership \
+            result/share/doc/nix-formatter-pack \
+            public
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
