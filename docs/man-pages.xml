@@ -1,0 +1,38 @@
+<!-- Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE. -->
+<reference xmlns="http://docbook.org/ns/docbook"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           xmlns:xi="http://www.w3.org/2001/XInclude">
+ <title>Nix-on-Droid Reference Pages</title>
+ <info>
+  <author><personname>Nix-on-Droid contributors</personname>
+  </author>
+  <copyright><year>2022</year><holder>Nix-on-Droid contributors</holder>
+  </copyright>
+ </info>
+ <refentry>
+  <refmeta>
+   <refentrytitle><filename>nix-on-droid-options</filename></refentrytitle>
+   <manvolnum>5</manvolnum>
+   <refmiscinfo class="source">Nix-on-Droid</refmiscinfo>
+  </refmeta>
+  <refnamediv>
+   <refname><filename>nix-on-droid-options</filename>
+   </refname><refpurpose>Nix-on-Droid configuration specification</refpurpose>
+  </refnamediv>
+  <refsection>
+   <title>Description</title>
+   <para>
+    This contains the module options available for Nix-on-Droid.
+   </para>
+  </refsection>
+  <refsection>
+   <title>Options</title>
+   <para>
+    You can use the following options in <filename>nix-on-droid.nix</filename> or in the
+    <varname>modules</varname> argument of <varname>lib.nixOnDroidConfiguration</varname>
+    in your <filename>flake.nix</filename>:
+   </para>
+   <xi:include href="./nmd-result/nix-on-droid-options.xml" />
+  </refsection>
+ </refentry>
+</reference>

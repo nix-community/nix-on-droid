@@ -18,9 +18,14 @@
       url = "github:Gerschtli/nix-formatter-pack";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nmd = {
+      url = "gitlab:rycee/nmd";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-for-bootstrap, home-manager, nix-formatter-pack }:
+  outputs = { self, nixpkgs, nixpkgs-for-bootstrap, home-manager, nix-formatter-pack, nmd }:
     let
       forEachSystem = nixpkgs.lib.genAttrs [ "aarch64-linux" "x86_64-linux" ];
 
@@ -106,11 +111,19 @@
       overlays.default = overlay;
 
       packages = forEachSystem (system:
-        (import ./pkgs {
-          inherit system;
-          nixpkgs = nixpkgs-for-bootstrap;
-        }).customPkgs
-        // {
+        let
+          nixOnDroidPkgs = import ./pkgs {
+            inherit system;
+            nixpkgs = nixpkgs-for-bootstrap;
+          };
+
+          docs = import ./docs {
+            inherit home-manager;
+            pkgs = nixpkgs.legacyPackages.${system};
+            nmdSrc = nmd;
+          };
+        in
+        {
           fakedroid = import ./tests {
             inherit system;
             nixpkgs = nixpkgs-for-bootstrap;
@@ -118,6 +131,8 @@
 
           nix-on-droid = nixpkgs.legacyPackages.${system}.callPackage ./nix-on-droid { };
         }
+        // nixOnDroidPkgs.customPkgs
+        // docs
       );
 
       templates = {
