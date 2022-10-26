@@ -24,6 +24,8 @@
 * For flake setups, the output `nixOnDroidConfigurations.default` will be used
   when `nix-on-droid switch --flake path/to/flake` is called without attribute
   name
+* Add html and man pages with all available options, see <https://t184256.github.io/nix-on-droid/>
+  and `nix build github:t184256/nix-on-droid#manPages`
 
 ## Release 22.05
 

@@ -72,8 +72,7 @@ An alternative location is `~/.config/nixpkgs/config.nix` with the key
 }
 ```
 
-Currently there is no complete list of all available options. Please have a
-look inside the `./modules` directory for all modules.
+See <https://t184256.github.io/nix-on-droid/> for list of all available options.
 
 ### [`home-manager`](https://github.com/rycee/home-manager) integration
 
