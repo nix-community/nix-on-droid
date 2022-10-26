@@ -53,7 +53,10 @@ in
         default = null;
         # Prevent the entire submodule being included in the documentation.
         visible = "shallow";
-        description = "Home Manager configuration.";
+        description = ''
+          Home Manager configuration, see
+          <link xlink:href="https://nix-community.github.io/home-manager/options.html" />.
+        '';
       };
 
       extraSpecialArgs = mkOption {
@@ -67,14 +70,7 @@ in
       };
 
       sharedModules = mkOption {
-        type = with types;
-          # TODO: use types.raw once this PR is merged: https://github.com/NixOS/nixpkgs/pull/132448
-          listOf (mkOptionType {
-            name = "submodule";
-            inherit (submodule { }) check;
-            merge = lib.options.mergeOneOption;
-            description = "Home Manager modules";
-          });
+        type = with types; listOf raw;
         default = [ ];
         example = literalExpression "[ { home.packages = [ nixpkgs-fmt ]; } ]";
         description = ''

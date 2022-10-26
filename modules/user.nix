@@ -50,6 +50,7 @@ in
       shell = mkOption {
         type = types.path;
         default = "${pkgs.bashInteractive}/bin/bash";
+        defaultText = literalExpression "${pkgs.bashInteractive}/bin/bash";
         description = "Path to login shell.";
       };
 

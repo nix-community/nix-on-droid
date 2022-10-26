@@ -67,7 +67,9 @@ in
         example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
         description = ''
           Environment variables to always set at login.
+
           </para><para>
+
           The values may refer to other environment variables using
           POSIX.2 style variable references. For example, a variable
           <varname>parameter</varname> may be referenced as
@@ -76,19 +78,24 @@ in
           <code>''${parameter:-foo}</code> and, similarly, an alternate
           value <literal>bar</literal> can be given as per
           <code>''${parameter:+bar}</code>.
+
           </para><para>
+
           Note, these variables may be set in any order so no session
           variable may have a runtime dependency on another session
           variable. In particular code like
+
           <programlisting language="nix">
           environment.sessionVariables = {
             FOO = "Hello";
             BAR = "$FOO World!";
           };
           </programlisting>
+
           may not work as expected. If you need to reference another
           session variable, then do so inside Nix instead. The above
           example then becomes
+
           <programlisting language="nix">
           environment.sessionVariables = {
             FOO = "Hello";
