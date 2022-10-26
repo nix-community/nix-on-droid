@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
@@ -76,7 +76,7 @@ in
       etc = mkOption {
         type = types.loaOf fileType;
         default = { };
-        example = literalExample ''
+        example = literalExpression ''
           {
             example-configuration-file = {
               source = "/nix/store/.../etc/dir/file.conf.example";
