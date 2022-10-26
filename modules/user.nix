@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
@@ -35,6 +35,7 @@ in
       gid = mkOption {
         type = types.int;
         default = ids.gid;
+        defaultText = "$(id -g)";
         description = ''
           Gid.  This value should not be set manually except you know what you are doing.
         '';
@@ -61,6 +62,7 @@ in
       uid = mkOption {
         type = types.int;
         default = ids.uid;
+        defaultText = "$(id -u)";
         description = ''
           Uid.  This value should not be set manually except you know what you are doing.
         '';
