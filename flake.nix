@@ -31,7 +31,10 @@
       };
     in
     {
-      overlays.default = overlay;
+      apps.aarch64-linux = {
+        default = app;
+        nix-on-droid = app;
+      };
 
       lib.nixOnDroidConfiguration =
         { config
@@ -49,10 +52,7 @@
             isFlake = true;
           };
 
-      apps.aarch64-linux = {
-        default = app;
-        nix-on-droid = app;
-      };
+      overlays.default = overlay;
 
       templates = {
         default = self.templates.minimal;
