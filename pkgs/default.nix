@@ -14,6 +14,14 @@ let
 
   pkgs = import nixpkgs { inherit system; };
 
+  urlOptionValue = url: envVar:
+    let
+      envValue = builtins.getEnv envVar;
+    in
+    pkgs.lib.mkIf
+      (envValue != "" || url != null)
+      (if url == null then envValue else url);
+
   modules = import ../modules {
     inherit pkgs;
 
@@ -29,15 +37,15 @@ let
       # Fix invoking bash after initial build.
       user.shell = "${initialPackageInfo.bash}/bin/bash";
 
-      build = with pkgs.lib; {
+      build = {
         inherit arch;
 
         channel = {
-          nixpkgs = mkIf (nixpkgsChannelURL != null) nixpkgsChannelURL;
-          nix-on-droid = mkIf (nixOnDroidChannelURL != null) nixOnDroidChannelURL;
+          nixpkgs = urlOptionValue nixpkgsChannelURL "NIXPKGS_CHANNEL_URL";
+          nix-on-droid = urlOptionValue nixOnDroidChannelURL "NIX_ON_DROID_CHANNEL_URL";
         };
 
-        flake.nix-on-droid = mkIf (nixOnDroidFlakeURL != null) nixOnDroidFlakeURL;
+        flake.nix-on-droid = urlOptionValue nixOnDroidFlakeURL "NIX_ON_DROID_FLAKE_URL";
       };
     };
   };
