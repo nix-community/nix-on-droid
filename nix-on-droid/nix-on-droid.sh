@@ -1,6 +1,6 @@
 #!@bash@/bin/bash
 
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 PATH=@coreutils@/bin:@nix@/bin:${PATH:+:}$PATH
 
@@ -136,7 +136,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         -F|--flake)
-            PASSTHROUGH_OPTS+=(--extra-experimental-features flakes --extra-experimental-features nix-command)
+            PASSTHROUGH_OPTS+=(--extra-experimental-features "flakes nix-command")
             # add "nixOnDroidConfigurations." as prefix in attribute name, e.g.
             # /path/to/flake#device -> /path/to/flake#nixOnDroidConfigurations.device
             FLAKE_CONFIG_URI="${1%#*}#nixOnDroidConfigurations.${1#*#}"
