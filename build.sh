@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 # If you want to change something in this repo and now you're wondering
 # how to recompile Nix-on-Droid with your changes and put it to your device,
@@ -10,16 +10,14 @@
 # * fork it to github.com/YOUR_USERNAME/nix-on-droid
 # * change something, commit your changes to some BRANCH
 # * push it
-# * nix build --show-trace -f pkgs --argstr arch aarch64 \
-#       --argstr nixOnDroidChannelURL \
-#       https://github.com/YOUR_USERNAME/nix-on-droid/archive/BRANCH.tar.gz \
-#       bootstrapZip -o out/nix-on-droid-aarch64
+# * NIX_ON_DROID_CHANNEL_URL=https://github.com/YOUR_USERNAME/nix-on-droid/archive/BRANCH.tar.gz \
+#       nix build --show-trace ".#bootstrapZip" --impure -o out/nix-on-droid-aarch64
 # * put out/nix-on-droid-aarch64/bootstrap-aarch64.zip to some HTTP server
 # * install the app and, on first startup, enter the URL of the directory
 #   containing the resulting zip file, start the installation
 
 # The zipfile will be used to provide proot and kickstart the installation,
-# it will build what's available from nixOnDroidChannelURL you've specified,
+# it will build what's available from NIX_ON_DROID_CHANNEL_URL you've specified,
 # (i.e., what you've pushed to BRANCH), and the resulting system will be
 # subscribed to the updates that you push to the specified BRANCH of your fork.
 # But note: this way proot is not updatable without reinstalling, see below.
@@ -43,7 +41,7 @@
 #    which has to be downloaded from some web server during the installation,
 #    the user is asked for location on the initial app startup.
 #    (https://nix-on-droid.unboiled.info/bootstrap + /bootstrap-$arch.zip
-#     for the official builds, the user can override the first part).
+#    for the official builds, the user can override the first part).
 #    Needed only once, doesn't matter after the installation.
 # 2. Sources for building nix-on-droid-specific packages on device,
 #    which also have to be put somewhere on the web.  If you push to GitHub,
@@ -79,7 +77,7 @@ for arch in $arches; do
     # Build proot for the target architecture.
     # We don't really need to compile it separately...
     echo $arch: building proot...
-    nix build --show-trace -f pkgs --argstr arch $arch prootTermux -o out/proot-$arch
+    nix build ".#prootTermux" -o out/proot-$arch
     proot=$(realpath out/proot-$arch)
 
     # ... except for the rare case you've advanced pinned nixpkgs
@@ -137,7 +135,7 @@ for arch in $arches; do
 nixOnDroidChannelURL=${nixOnDroidChannelURL:-$channel_url}
 
     echo $arch: building nix-on-droid...
-    nix build --show-trace -f pkgs --argstr arch $arch --argstr nixOnDroidChannelURL $nixOnDroidChannelURL bootstrapZip -o out/nix-on-droid-$arch
+    NIX_ON_DROID_CHANNEL_URL="$nixOnDroidChannelURL" nix build ".#bootstrapZip" --impure -o out/nix-on-droid-$arch
 
     if [ -z "$rsync_to" ]; then
         echo "Done. Now put out/nix-on-droid-$arch/bootstrap-$arch.zip on some HTTP server and point the app to it. Good luck!"
