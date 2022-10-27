@@ -78,6 +78,15 @@ writeText "login-inner" ''
         echo "Installing flake from default template..."
         ${nixCmd} flake new ${config.user.home}/.config/nix-on-droid --template ${config.build.flake.nix-on-droid}
 
+        ${lib.optionalString config.build.flake.inputOverrides ''
+          echo "Overriding input urls in flake..."
+          ${nixCmd} run nixpkgs#gnused -- \
+            -i \
+            -e 's,\"github:NixOS/nixpkgs.*\",\"${config.build.flake.nixpkgs}\",' \
+            -e 's,\"github:t184256/nix-on-droid.*\",\"${config.build.flake.nix-on-droid}\",' \
+            "${config.user.home}/.config/nix-on-droid/flake.nix"
+        ''}
+
         echo "Installing first nix-on-droid generation..."
         ${nixCmd} run ${config.build.flake.nix-on-droid} -- switch --flake ${config.user.home}/.config/nix-on-droid#deviceName
 
