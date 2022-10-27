@@ -5,7 +5,7 @@
 let
   inherit (initialPackageInfo) cacert nix;
 
-  nixCmd = "${nix}/bin/nix --extra-experimental-features flakes --extra-experimental-features nix-command";
+  nixCmd = "${nix}/bin/nix --extra-experimental-features 'flakes nix-command'";
 in
 
 writeText "login-inner" ''
