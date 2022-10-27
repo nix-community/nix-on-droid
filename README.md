@@ -137,7 +137,9 @@ To re-trigger the installation, you can use
 
 If you want to change the nix-on-droid channel to your custom one,
 you can do that either with `nix-channel` after the installation,
-or by using `--argstr nixOnDroidChannelURL <URL>`.
+or by setting the environment variable `NIX_ON_DROID_CHANNEL_URL`.
+Other environment variables are `NIXPKGS_CHANNEL_URL` an
+`NIX_ON_DROID_FLAKE_URL`.
 
 **Note**: The `proot` binary is not built on the android device
 (NDK is required for building it, and it's not available on mobile platforms).
