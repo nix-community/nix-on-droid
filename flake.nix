@@ -31,11 +31,6 @@
         overlays = [ overlay ];
       };
 
-      app = {
-        type = "app";
-        program = "${pkgs'.callPackage ./nix-on-droid { }}/bin/nix-on-droid";
-      };
-
       formatterPackArgsFor = forEachSystem (system: {
         inherit nixpkgs system;
         checkFiles = [ ./. ];
@@ -51,10 +46,14 @@
       });
     in
     {
-      apps.aarch64-linux = {
-        default = app;
-        nix-on-droid = app;
-      };
+      apps = forEachSystem (system: {
+        default = self.apps.${system}.nix-on-droid;
+
+        nix-on-droid = {
+          type = "app";
+          program = "${self.packages.${system}.nix-on-droid}/bin/nix-on-droid";
+        };
+      });
 
       checks = forEachSystem (system: {
         nix-formatter-pack-check = nix-formatter-pack.lib.mkCheck formatterPackArgsFor.${system};
