@@ -54,6 +54,11 @@
           program = "${self.packages.${system}.nix-on-droid}/bin/nix-on-droid";
         };
 
+        deploy = {
+          type = "app";
+          program = toString (import ./scripts/deploy.nix { inherit nixpkgs system; });
+        };
+
         fakedroid = {
           type = "app";
           program = toString self.packages.${system}.fakedroid;
