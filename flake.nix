@@ -53,6 +53,11 @@
           type = "app";
           program = "${self.packages.${system}.nix-on-droid}/bin/nix-on-droid";
         };
+
+        fakedroid = {
+          type = "app";
+          program = toString self.packages.${system}.fakedroid;
+        };
       });
 
       checks = forEachSystem (system: {

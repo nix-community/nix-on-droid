@@ -19,28 +19,18 @@ jobs:
           name: nix-on-droid
           signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
 
-      - name: Build fakedroid script
-        run: |
-          nix \
-            --log-format bar-with-logs \
-            --option keep-going true \
-            --show-trace \
-            build .#fakedroid \
-            --impure \
-            --out-link fakedroid
-
       - name: Initialize fakedroid for channel setup
-        run: ./fakedroid echo INIT
+        run: nix run --impure .#fakedroid -- echo INIT
 
       - name: Run tests
         run: |
-          ./fakedroid mkdir -p .cache/nix-on-droid-self-test
-          ./fakedroid touch .cache/nix-on-droid-self-test/confirmation-granted
-          ./fakedroid nix-on-droid on-device-test
+          nix run --impure .#fakedroid -- mkdir -p .cache/nix-on-droid-self-test
+          nix run --impure .#fakedroid -- touch .cache/nix-on-droid-self-test/confirmation-granted
+          nix run --impure .#fakedroid -- nix-on-droid on-device-test
 
       - name: Push to cachix
         if: always() && github.event_name != 'pull_request'
-        run: ./fakedroid nix-shell -p cachix --run 'nix --extra-experimental-features nix-command path-info --all | cachix push nix-on-droid'
+        run: nix run --impure .#fakedroid -- nix-shell -p cachix --run 'nix --extra-experimental-features nix-command path-info --all | cachix push nix-on-droid'
 
 
   fakedroid-flakes:
@@ -59,19 +49,9 @@ jobs:
           name: nix-on-droid
           signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
 
-      - name: Build fakedroid script
-        run: |
-          nix \
-            --log-format bar-with-logs \
-            --option keep-going true \
-            --show-trace \
-            build .#fakedroid \
-            --impure \
-            --out-link fakedroid
-
       - name: Initialize fakedroid for flake setup
-        run: USE_FLAKE=1 ./fakedroid echo INIT
+        run: USE_FLAKE=1 nix run --impure .#fakedroid -- echo INIT
 
       - name: Push to cachix
         if: always() && github.event_name != 'pull_request'
-        run: ./fakedroid nix-shell -p cachix --run 'nix --extra-experimental-features nix-command path-info --all | cachix push nix-on-droid'
+        run: nix run --impure .#fakedroid -- nix-shell -p cachix --run 'nix --extra-experimental-features nix-command path-info --all | cachix push nix-on-droid'
