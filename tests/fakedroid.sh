@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!@bash@/bin/bash
 
 # This is a script to run "on-device" tests in CI, without the device.
 # Takes the bootstrap aarch64 zipball, unpacks, proots into it.
@@ -7,6 +7,8 @@
 # Set up envvars, prepare directories:
 
 set -ueo pipefail
+
+PATH=@path@
 
 USE_FLAKE="${USE_FLAKE:-0}"
 if [[ ! "$USE_FLAKE" =~ ^[01]$ ]]; then

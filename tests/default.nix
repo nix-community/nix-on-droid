@@ -8,9 +8,21 @@ let
     nixOnDroidChannelURL = "file:///n-o-d/archive.tar.gz";
     nixOnDroidFlakeURL = "/n-o-d/unpacked";
   };
+
+  pkgs = nixpkgs.legacyPackages.${system};
+
+  runtimePackages = with pkgs; [
+    coreutils
+    git
+    gnutar
+    gzip
+    unzip
+    wget
+    zip
+  ];
 in
 
-nixpkgs.legacyPackages.${system}.runCommand
+pkgs.runCommand
   "fakedroid"
 {
   preferLocalBuild = true;
@@ -20,6 +32,8 @@ nixpkgs.legacyPackages.${system}.runCommand
     install -D -m755  ${./fakedroid.sh} $out
 
     substituteInPlace $out \
+      --subst-var-by bash "${pkgs.bash}" \
+      --subst-var-by path "${pkgs.lib.makeBinPath runtimePackages}" \
       --subst-var-by bootstrapZip "${bootstrap.customPkgs.bootstrapZip}" \
       --subst-var-by prootTest "${bootstrap.customPkgs.prootTermuxTest}" \
       --subst-var-by installationDir "${bootstrap.config.build.installationDir}" \
