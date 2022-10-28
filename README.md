@@ -124,10 +124,20 @@ is probably not interesting for you, just download and use a prebuilt one.
 If you really want to rebuild it, you can just use Android Studio for that.
 
 The zipball generation is probably what you are after.
-Get an x86_64 computer with flake-enabled Nix. Run
+Get an x86_64 computer with flake-enabled Nix.
+
+> **tl;dr**: Use the deploy app like the following which executes all steps mentioned below:
+>
+> ```sh
+> nix run ".#deploy" -- <public_url> <rsync_target>
+> # or run the following for explanation of this script
+> nix run ".#deploy"
+> ```
+
+Run
 
 ```sh
-nix build .#bootstrapZip --impure
+nix build ".#bootstrapZip" --impure
 ```
 
 Put the zip file from `result` on some HTTP server
