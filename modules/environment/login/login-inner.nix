@@ -41,10 +41,10 @@ writeText "login-inner" ''
 
         if [[ "$flakes" =~ ^[Yy]$ ]]; then
           USE_FLAKE=1
-        elif [[ "$flakes" =~ ^[Nn]$ ]]; then
+        elif [[ "$flakes" =~ ^[Nn]$ || -z "$flakes" ]]; then
           USE_FLAKE=0
         else
-          echo "Received invalid input, please try again. $flakes"
+          echo "Received invalid input '$flakes', please try again."
         fi
       done
 
