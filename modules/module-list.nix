@@ -1,6 +1,6 @@
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ pkgs, isFlake }:
+{ pkgs, home-manager-path, isFlake }:
 
 [
   ./build/activation.nix
@@ -22,4 +22,12 @@
   ./user.nix
   ./version.nix
   (pkgs.path + "/nixos/modules/misc/assertions.nix")
+
+  {
+    _file = ./module-list.nix;
+    _module.args = {
+      inherit home-manager-path isFlake;
+      pkgs = pkgs.lib.mkDefault pkgs;
+    };
+  }
 ] ++ pkgs.lib.optionals (!isFlake) [ ./nixpkgs/config.nix ]
