@@ -58,7 +58,8 @@ function doHelp() {
     echo "  -n|--dry-run      Do a dry run, only prints what actions would be taken"
     echo "  -v|--verbose      Verbose output"
     echo "  -f|--file FILE    Path to config file"
-    echo "  -F|--flake FLAKE  Path to flake and device name (e.g. path/to/flake#device)"
+    echo "  -F|--flake FLAKE  Path to flake and device name (e.g. path/to/flake#device),"
+    echo "                    device 'default' will be used if no attribute name is given"
     echo
     echo "Options passed on to nix build"
     echo
@@ -139,7 +140,12 @@ while [[ $# -gt 0 ]]; do
             PASSTHROUGH_OPTS+=(--extra-experimental-features "flakes nix-command")
             # add "nixOnDroidConfigurations." as prefix in attribute name, e.g.
             # /path/to/flake#device -> /path/to/flake#nixOnDroidConfigurations.device
-            FLAKE_CONFIG_URI="${1%#*}#nixOnDroidConfigurations.${1#*#}"
+            # if no attribute name given, use "default"
+            if [[ "$1" =~ \# ]]; then
+                FLAKE_CONFIG_URI="${1%#*}#nixOnDroidConfigurations.${1#*#}"
+            else
+                FLAKE_CONFIG_URI="${1}#nixOnDroidConfigurations.default"
+            fi
             shift
             ;;
         -h|--help)
