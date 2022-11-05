@@ -21,6 +21,9 @@
   and `config` and `extraModules` are now combined into `modules`
 * Add option `environment.motd` to edit the startup message that is printed in
   every shell
+* For flake setups, the output `nixOnDroidConfigurations.default` will be used
+  when `nix-on-droid switch --flake path/to/flake` is called without attribute
+  name
 
 ## Release 22.05
 

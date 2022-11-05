@@ -192,7 +192,7 @@ A minimal example could look like the following:
 
   outputs = { self, nixpkgs, nix-on-droid }: {
 
-    nixOnDroidConfigurations.deviceName = nix-on-droid.lib.nixOnDroidConfiguration {
+    nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
       modules = [ ./nix-on-droid.nix ];
     };
 
@@ -208,8 +208,9 @@ nix flake init --template github:t184256/nix-on-droid#advanced
 
 ### Usage with `nix-on-droid`
 
-Use `nix-on-droid switch --flake .#device` to build and activate your configuration (`.#device` will expand to
-`.#nixOnDroidConfigurations.device`).
+Use `nix-on-droid switch --flake path/to/flake#device` to build and activate your configuration (`path/to/flake#device`
+will expand to `.#nixOnDroidConfigurations.device`). If you run `nix-on-droid switch --flake path/to/flake`, the
+`default` configuration will be used.
 
 **Note:** Currently, nix-on-droid can not be built with an pure flake build because of hardcoded store paths for proot.
 Therefore, every evaluation of a flake configuration will be executed with `--impure` flag. (This behaviour will be

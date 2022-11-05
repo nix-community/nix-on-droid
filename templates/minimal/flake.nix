@@ -12,7 +12,7 @@
 
   outputs = { self, nixpkgs, nix-on-droid }: {
 
-    nixOnDroidConfigurations.deviceName = nix-on-droid.lib.nixOnDroidConfiguration {
+    nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
       modules = [ ./nix-on-droid.nix ];
     };
 

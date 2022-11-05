@@ -1,8 +1,11 @@
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 load lib
 
-@test 'flake example works' {
+function flake_example() {
+  local flake_url="$1"
+  local flake_file_name="$2"
+
   # assertions to verify initial state is as expected
   assert_command vi
   assert_no_command unzip
@@ -15,10 +18,10 @@ load lib
     > ~/.config/nixpkgs/nix-on-droid.nix
 
   _sed "s|<<FLAKE_URL>>|$FLAKE_URL|g" \
-    "$ON_DEVICE_TESTS_DIR/config-flake.nix" \
+    "$ON_DEVICE_TESTS_DIR/$flake_file_name" \
     > ~/.config/nixpkgs/flake.nix
 
-  nix-on-droid switch --flake ~/.config/nixpkgs#device
+  nix-on-droid switch --flake "$flake_url"
 
   # test presence of several crucial commands
   assert_command nix-on-droid nix-shell bash
@@ -31,4 +34,12 @@ load lib
   switch_to_default_config
   assert_command vi
   assert_no_command unzip
+}
+
+@test 'flake example works' {
+  flake_example ~/.config/nixpkgs#device config-flake.nix
+}
+
+@test 'flake with default config works' {
+  flake_example ~/.config/nixpkgs config-flake-default.nix
 }
