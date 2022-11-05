@@ -90,7 +90,14 @@ function doHelp() {
 
 function doOnDeviceTest() {
     # This is for maintainer convenience only, see tests/on-device/.run.sh
-    nix-channel --update nix-on-droid
+
+    # /n-o-d/unpacked is available in fakedroid environment
+    if [[ -d "/n-o-d/unpacked" ]]; then
+        export NIX_PATH="nix-on-droid=/n-o-d/unpacked:$NIX_PATH"
+    else
+        nix-channel --update nix-on-droid
+    fi
+
     exec "$(nix-instantiate --eval --expr \
                             "<nix-on-droid/tests/on-device/.run.sh>")"
 }
