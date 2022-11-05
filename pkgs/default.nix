@@ -25,15 +25,16 @@ let
   modules = import ../modules {
     inherit pkgs;
 
-    extraModules = [ ../modules/build/initial-build.nix ];
-    extraSpecialArgs = {
-      inherit initialPackageInfo;
-      pkgs = pkgs.lib.mkForce pkgs; # to override ./modules/nixpkgs/config.nix
-    };
-
     isFlake = true;
 
     config = {
+      imports = [ ../modules/build/initial-build.nix ];
+
+      _module.args = {
+        inherit initialPackageInfo;
+        pkgs = pkgs.lib.mkForce pkgs; # to override ./modules/nixpkgs/config.nix
+      };
+
       # Fix invoking bash after initial build.
       user.shell = "${initialPackageInfo.bash}/bin/bash";
 

@@ -72,20 +72,36 @@
       formatter = forEachSystem (system: nix-formatter-pack.lib.mkFormatter formatterPackArgsFor.${system});
 
       lib.nixOnDroidConfiguration =
-        { config
-        , system ? "aarch64-linux"  # unused, only supported variant
-        , extraModules ? [ ]
+        { modules ? [ ]
         , extraSpecialArgs ? { }
         , pkgs ? pkgs'
         , home-manager-path ? home-manager.outPath
+          # deprecated:
+        , config ? null
+        , extraModules ? null
+        , system ? null
         }:
-        if system != "aarch64-linux" then
+        if pkgs.system != "aarch64-linux" then
           throw "aarch64-linux is the only currently supported system type"
         else
-          import ./modules {
-            inherit config extraModules extraSpecialArgs home-manager-path pkgs;
-            isFlake = true;
-          };
+          pkgs.lib.throwIf
+            (config != null || extraModules != null)
+            ''
+              The 'nixOnDroidConfiguration' arguments
+
+              - 'config'
+              - 'extraModules'
+              - 'system'
+
+              have been removed. Instead use the argument 'modules'. The
+              'system' will be inferred by 'pkgs.system'.
+              See the 22.11 release notes for more.
+            ''
+            (import ./modules {
+              inherit extraSpecialArgs home-manager-path pkgs;
+              config.imports = modules;
+              isFlake = true;
+            });
 
       overlays.default = overlay;
 
