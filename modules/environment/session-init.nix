@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
@@ -49,41 +49,54 @@ in
 
   options = {
 
-    environment.sessionVariables = mkOption {
-      default = { };
-      type = types.attrs;
-      example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
-      description = ''
-        Environment variables to always set at login.
-        </para><para>
-        The values may refer to other environment variables using
-        POSIX.2 style variable references. For example, a variable
-        <varname>parameter</varname> may be referenced as
-        <code>$parameter</code> or <code>''${parameter}</code>. A
-        default value <literal>foo</literal> may be given as per
-        <code>''${parameter:-foo}</code> and, similarly, an alternate
-        value <literal>bar</literal> can be given as per
-        <code>''${parameter:+bar}</code>.
-        </para><para>
-        Note, these variables may be set in any order so no session
-        variable may have a runtime dependency on another session
-        variable. In particular code like
-        <programlisting language="nix">
-        environment.sessionVariables = {
-          FOO = "Hello";
-          BAR = "$FOO World!";
-        };
-        </programlisting>
-        may not work as expected. If you need to reference another
-        session variable, then do so inside Nix instead. The above
-        example then becomes
-        <programlisting language="nix">
-        environment.sessionVariables = {
-          FOO = "Hello";
-          BAR = "''${config.environment.sessionVariables.FOO} World!";
-        };
-        </programlisting>
-      '';
+    environment = {
+      motd = mkOption {
+        default = ''
+          Welcome to Nix-on-Droid!
+          If nothing works, open an issue at https://github.com/t184256/nix-on-droid/issues or try the rescue shell.
+        '';
+        type = types.nullOr types.lines;
+        description = ''
+          Text to show on every new shell created by nix-on-droid.
+        '';
+      };
+
+      sessionVariables = mkOption {
+        default = { };
+        type = types.attrs;
+        example = { EDITOR = "emacs"; GS_OPTIONS = "-sPAPERSIZE=a4"; };
+        description = ''
+          Environment variables to always set at login.
+          </para><para>
+          The values may refer to other environment variables using
+          POSIX.2 style variable references. For example, a variable
+          <varname>parameter</varname> may be referenced as
+          <code>$parameter</code> or <code>''${parameter}</code>. A
+          default value <literal>foo</literal> may be given as per
+          <code>''${parameter:-foo}</code> and, similarly, an alternate
+          value <literal>bar</literal> can be given as per
+          <code>''${parameter:+bar}</code>.
+          </para><para>
+          Note, these variables may be set in any order so no session
+          variable may have a runtime dependency on another session
+          variable. In particular code like
+          <programlisting language="nix">
+          environment.sessionVariables = {
+            FOO = "Hello";
+            BAR = "$FOO World!";
+          };
+          </programlisting>
+          may not work as expected. If you need to reference another
+          session variable, then do so inside Nix instead. The above
+          example then becomes
+          <programlisting language="nix">
+          environment.sessionVariables = {
+            FOO = "Hello";
+            BAR = "''${config.environment.sessionVariables.FOO} World!";
+          };
+          </programlisting>
+        '';
+      };
     };
 
   };
