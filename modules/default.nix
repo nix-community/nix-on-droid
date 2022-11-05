@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config ? null
 , extraModules ? [ ]
@@ -18,20 +18,11 @@ let
     else if builtins.pathExists defaultConfigFile then defaultConfigFile
     else pkgs.config.nix-on-droid or (throw "No config file found! Create one in ~/.config/nixpkgs/nix-on-droid.nix");
 
+  nodModules = import ./module-list.nix { inherit pkgs home-manager-path isFlake; };
+
   rawModule = evalModules {
-    modules = [
-      {
-        _module.args =
-          {
-            inherit home-manager-path isFlake;
-            pkgs = mkDefault pkgs;
-          }
-          // extraSpecialArgs;
-      }
-      configModule
-    ]
-    ++ extraModules
-    ++ import ./module-list.nix { inherit pkgs isFlake; };
+    modules = [ configModule ] ++ extraModules ++ nodModules;
+    specialArgs = extraSpecialArgs;
   };
 
   failedAssertions = map (x: x.message) (filter (x: !x.assertion) rawModule.config.assertions);

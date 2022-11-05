@@ -13,6 +13,9 @@
 * Add support for `nix profile` managed profiles
 * Add possibilty to bootstrap Nix-on-Droid with flakes via prompt on initial
   boot
+* Fix usage of `extraSpecialArgs`: All values were previously set in
+  `_module.args` instead of passing them as `specialArgs` into `evalModules`.
+  This enables usage of `specialArgs` to use in `imports` in module defintions.
 
 ## Release 22.05
 
