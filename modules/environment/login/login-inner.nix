@@ -13,10 +13,11 @@ writeText "login-inner" ''
 
   set -eo pipefail
 
-  if [ "$#" -eq 0 ]; then  # if script is called from within nix-on-droid app
-    echo "Welcome to Nix-on-Droid!"
-    echo "If nothing works, open an issue at https://github.com/t184256/nix-on-droid/issues or try the rescue shell."
-  fi
+  ${lib.optionalString (config.environment.motd != null) ''
+    if [ "$#" -eq 0 ]; then  # if script is called from within nix-on-droid app
+      echo "${lib.removeSuffix "\n" config.environment.motd}"
+    fi
+  ''}
 
   ${lib.optionalString config.build.initialBuild ''
     if [ -e /etc/UNINTIALISED ]; then

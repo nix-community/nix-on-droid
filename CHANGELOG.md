@@ -19,6 +19,8 @@
 * In an effort to reduce the number of arguments to `lib.nixOnDroidConfiguration`
   function in flake configurations, `system` is now inferred from `pkgs.system`
   and `config` and `extraModules` are now combined into `modules`
+* Add option `environment.motd` to edit the startup message that is printed in
+  every shell
 
 ## Release 22.05
 
