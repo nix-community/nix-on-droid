@@ -12,8 +12,7 @@
   outputs = { nix-on-droid, ... }: {
     nixOnDroidConfigurations = {
       device = nix-on-droid.lib.nixOnDroidConfiguration {
-        config = ./nix-on-droid.nix;
-        system = "aarch64-linux";
+        modules = [ ./nix-on-droid.nix ];
       };
     };
   };

@@ -19,11 +19,10 @@
   outputs = { self, nixpkgs, home-manager, nix-on-droid }: {
 
     nixOnDroidConfigurations.deviceName = nix-on-droid.lib.nixOnDroidConfiguration {
-      system = "aarch64-linux";
-      config = ./nix-on-droid.nix;
+      modules = [
+        ./nix-on-droid.nix
 
-      # list of extra modules for nix-on-droid system
-      extraModules = [
+        # list of extra modules for nix-on-droid system
         # { nix.registry.nixpkgs.flake = nixpkgs; }
         # ./path/to/module.nix
 

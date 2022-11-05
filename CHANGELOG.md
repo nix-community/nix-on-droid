@@ -16,6 +16,9 @@
 * Fix usage of `extraSpecialArgs`: All values were previously set in
   `_module.args` instead of passing them as `specialArgs` into `evalModules`.
   This enables usage of `specialArgs` to use in `imports` in module defintions.
+* In an effort to reduce the number of arguments to `lib.nixOnDroidConfiguration`
+  function in flake configurations, `system` is now inferred from `pkgs.system`
+  and `config` and `extraModules` are now combined into `modules`
 
 ## Release 22.05
 

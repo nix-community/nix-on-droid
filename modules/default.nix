@@ -1,7 +1,6 @@
 # Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config ? null
-, extraModules ? [ ]
 , extraSpecialArgs ? { }
 , pkgs ? import <nixpkgs> { }
 , home-manager-path ? <home-manager>
@@ -21,7 +20,7 @@ let
   nodModules = import ./module-list.nix { inherit pkgs home-manager-path isFlake; };
 
   rawModule = evalModules {
-    modules = [ configModule ] ++ extraModules ++ nodModules;
+    modules = [ configModule ] ++ nodModules;
     specialArgs = extraSpecialArgs;
   };
 

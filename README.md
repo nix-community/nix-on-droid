@@ -193,8 +193,7 @@ A minimal example could look like the following:
   outputs = { self, nixpkgs, nix-on-droid }: {
 
     nixOnDroidConfigurations.deviceName = nix-on-droid.lib.nixOnDroidConfiguration {
-      system = "aarch64-linux";
-      config = ./nix-on-droid.nix;
+      modules = [ ./nix-on-droid.nix ];
     };
 
   };
