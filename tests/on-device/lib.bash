@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 # call _setup when defining a setup function in your test
 _setup() {
@@ -20,6 +20,8 @@ _setup() {
       FLAKE_URL=github:$repoUser/$repoName/$repoBranch
     elif [[ "$channelUrl" == file:///n-o-d/archive.tar.gz ]]; then
       FLAKE_URL=/n-o-d/unpacked
+    else
+      FLAKE_URL="$channelUrl"
     fi
     echo "autodetected flake url: $FLAKE_URL"
 
