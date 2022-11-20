@@ -44,7 +44,7 @@ jobs:
             --recursive \
             --dereference \
             --no-preserve=mode,ownership \
-            result/share/doc/nix-formatter-pack \
+            result/share/doc/nix-on-droid \
             public
 
       - name: Setup Pages
