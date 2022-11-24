@@ -35,4 +35,5 @@ in
 {
   inherit (module.config.build) activationPackage;
   inherit (module) config options;
+  inherit pkgs;
 }
