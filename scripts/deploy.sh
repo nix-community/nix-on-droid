@@ -13,8 +13,9 @@ flake) and uploads it to the directory specified in <rsync_target>. The
 contents of this directory should be reachable by the android device with
 <public_url>.
 
-Example:
-$ nix run .#deploy -- 'https://example.com/bootstrap' 'user@host:/path/to/bootstrap'
+Examples:
+$ nix run .#deploy -- 'https://example.com/bootstrap/source.tar.gz' 'user@host:/path/to/bootstrap'
+$ nix run .#deploy -- 'github:USER/nix-on-droid/BRANCH' 'user@host:/path/to/bootstrap'
 
 EOF
     exit 1
@@ -35,6 +36,16 @@ function log() {
 }
 
 
+if [[ "$PUBLIC_URL" =~ ^github:(.*)/(.*)/(.*) ]]; then
+    export NIX_ON_DROID_CHANNEL_URL="https://github.com/${BASH_REMATCH[1]}/${BASH_REMATCH[2]}/archive/${BASH_REMATCH[3]}.tar.gz"
+else
+    [[ "$PUBLIC_URL" =~ ^https?:// ]] || \
+        { echo "unsupported url $PUBLIC_URL" >&2; exit 1; }
+    export NIX_ON_DROID_CHANNEL_URL="$PUBLIC_URL"
+fi
+export NIX_ON_DROID_FLAKE_URL="$PUBLIC_URL"
+
+
 log "building proot..."
 PROOT="$(nix build --no-link --print-out-paths ".#prootTermux")"
 
@@ -47,8 +58,6 @@ grep "prootStatic = \"/nix/store/" "$PROOT_HASH_FILE"
 
 
 log "building bootstrapZip..."
-export NIX_ON_DROID_CHANNEL_URL="$PUBLIC_URL/$SOURCE_FILE"
-export NIX_ON_DROID_FLAKE_URL="$PUBLIC_URL/$SOURCE_FILE"
 BOOTSTRAP_ZIP="$(nix build --no-link --print-out-paths --impure ".#bootstrapZip")"
 
 
