@@ -26,6 +26,9 @@
   name
 * Add html and man pages with all available options, see <https://t184256.github.io/nix-on-droid/>
   and `nix build github:t184256/nix-on-droid#manPages`
+* The option `system.stateVersion` does not have a default value anymore.
+  Previously, its default was `"19.09"` the release the state version was
+  introduced.
 
 ## Release 22.05
 
