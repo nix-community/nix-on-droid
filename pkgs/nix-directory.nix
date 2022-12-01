@@ -8,6 +8,7 @@ let
   prootCommand = lib.concatStringsSep " " [
     "${proot}/bin/proot"
     "-b ${pkgsStatic.nix}:/static-nix"
+    "-b /proc:/proc" # needed because tries to access /proc/self/exe
     "-r ${buildRootDirectory}"
     "-w /"
   ];
@@ -30,7 +31,8 @@ stdenv.mkDerivation {
   PROOT_NO_SECCOMP = 1; # see https://github.com/proot-me/PRoot/issues/106
 
   buildPhase = ''
-    mkdir --parents ${buildRootDirectory}/nix
+    # create nix state directory to satisfy nix heuristics to recognize the manual create /nix directory as valid nix store
+    mkdir --parents ${buildRootDirectory}/nix/var/nix/db
     cp --recursive store ${buildRootDirectory}/nix/store
 
     CACERT=$(find ${buildRootDirectory}/nix/store -path '*-nss-cacert-*/ca-bundle.crt' | sed 's,^${buildRootDirectory},,')
