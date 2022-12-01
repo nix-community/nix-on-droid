@@ -4,10 +4,29 @@
 
 ## Release 22.11
 
+### Compatibility considerations
+
+* Fix usage of `extraSpecialArgs`: All values were previously set in
+  `_module.args` instead of passing them as `specialArgs` into `evalModules`.
+  This enables usage of `specialArgs` to use in `imports` in module defintions.
+* In an effort to reduce the number of arguments to `lib.nixOnDroidConfiguration`
+  function in flake configurations, `system` is now inferred from `pkgs.system`
+  and `config` and `extraModules` are now combined into `modules`
+* The option `system.stateVersion` does not have a default value anymore.
+  Previously, its default was `"19.09"` the release the state version was
+  introduced.
+
+### New Options
+
 * Terminal font now should be specified using `terminal.font` option,
   set it to a TTF file to apply a font.
   An in-app `Styling` option will no longer work.
   Previously present file will be backed up to `~/.termux/font.ttf.bak`.
+* Add option `environment.motd` to edit the startup message that is printed in
+  every shell
+
+### Other notable changes
+
 * `/proc/uptime` is now faked with a stub that allows unpatched `ps` to work.
 * Refactored project for flakes usage (still supporting non-flake setups on
   device, but bootstrap zip ball creation and running tests via fakedroid
@@ -15,22 +34,11 @@
 * Add support for `nix profile` managed profiles
 * Add possibilty to bootstrap Nix-on-Droid with flakes via prompt on initial
   boot
-* Fix usage of `extraSpecialArgs`: All values were previously set in
-  `_module.args` instead of passing them as `specialArgs` into `evalModules`.
-  This enables usage of `specialArgs` to use in `imports` in module defintions.
-* In an effort to reduce the number of arguments to `lib.nixOnDroidConfiguration`
-  function in flake configurations, `system` is now inferred from `pkgs.system`
-  and `config` and `extraModules` are now combined into `modules`
-* Add option `environment.motd` to edit the startup message that is printed in
-  every shell
 * For flake setups, the output `nixOnDroidConfigurations.default` will be used
   when `nix-on-droid switch --flake path/to/flake` is called without attribute
   name
 * Add html and man pages with all available options, see <https://t184256.github.io/nix-on-droid/>
   and `nix build github:t184256/nix-on-droid#manPages`
-* The option `system.stateVersion` does not have a default value anymore.
-  Previously, its default was `"19.09"` the release the state version was
-  introduced.
 
 ## Release 22.05
 
@@ -46,7 +54,7 @@
 
 * The `nix.package` can be used to set the system-wide nix package.
 
-## Removed Options
+### Removed Options
 
 * The `system.workaround.make-posix-spawn.enable` has been removed.
 * i686 support has been removed.
