@@ -1,6 +1,8 @@
 # Changelog
 
-## Release 22.11 (unreleased)
+## Release 23.05 (unreleased)
+
+## Release 22.11
 
 * Terminal font now should be specified using `terminal.font` option,
   set it to a TTF file to apply a font.

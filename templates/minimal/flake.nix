@@ -2,10 +2,10 @@
   description = "Basic example of Nix-on-Droid system config.";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
 
     nix-on-droid = {
-      url = "github:t184256/nix-on-droid/release-22.05";
+      url = "github:t184256/nix-on-droid/release-22.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

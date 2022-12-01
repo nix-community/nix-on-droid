@@ -35,7 +35,7 @@ let
         pkgs = pkgs.lib.mkForce pkgs; # to override ./modules/nixpkgs/config.nix
       };
 
-      system.stateVersion = "22.05";
+      system.stateVersion = "22.11";
 
       # Fix invoking bash after initial build.
       user.shell = "${initialPackageInfo.bash}/bin/bash";
