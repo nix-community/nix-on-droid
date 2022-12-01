@@ -11,7 +11,16 @@ with lib;
   options = {
 
     system.stateVersion = mkOption {
-      type = types.enum [ "19.09" "20.03" "20.09" "21.05" "21.11" "22.05" ];
+      type = types.enum [
+        "19.09"
+        "20.03"
+        "20.09"
+        "21.05"
+        "21.11"
+        "22.05"
+        "22.11"
+        "23.05"
+      ];
       description = ''
         It is occasionally necessary for Nix-on-Droid to change
         configuration defaults in a way that is incompatible with

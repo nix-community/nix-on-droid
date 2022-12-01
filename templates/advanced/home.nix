@@ -2,7 +2,7 @@
 
 {
   # Read the changelog before changing this value
-  home.stateVersion = "22.05";
+  home.stateVersion = "22.11";
 
   # insert home-manager config
 }
