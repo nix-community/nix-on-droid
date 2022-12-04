@@ -20,7 +20,7 @@ in
       example = lib.literalExpression
         ''"''${pkgs.terminus_font_ttf}/share/fonts/truetype/TerminusTTF.ttf"'';
       description = ''
-        Font used for the terminal.  Must be a path to a TTF font.
+        Font used for the terminal.
       '';
     };
 

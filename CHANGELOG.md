@@ -19,7 +19,7 @@
 ### New Options
 
 * Terminal font now should be specified using `terminal.font` option,
-  set it to a TTF file to apply a font.
+  set it to any file containing a font to apply it.
   An in-app `Styling` option will no longer work.
   Previously present file will be backed up to `~/.termux/font.ttf.bak`.
 * Add option `environment.motd` to edit the startup message that is printed in
