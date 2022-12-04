@@ -28,15 +28,13 @@ function nixActivationPackage() {
     local extraArgs=("${@:2}"
                      --extra-experimental-features nix-command
                      "${PASSTHROUGH_OPTS[@]}")
-    local nix=nix
     if [[ -n "${FLAKE_CONFIG_URI}" ]]; then
-        nix=@nixge24@/bin/nix
         extraArgs+=(--impure "${FLAKE_CONFIG_URI}.activationPackage")
     else
         extraArgs+=(--file "<nix-on-droid/modules>" activationPackage)
     fi
 
-    $nix "${command}" "${extraArgs[@]}"
+    nix "${command}" "${extraArgs[@]}"
 }
 
 
