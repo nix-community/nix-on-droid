@@ -35,6 +35,10 @@ let
         pkgs = pkgs.lib.mkForce pkgs; # to override ./modules/nixpkgs/config.nix
       };
 
+      # It is recommended to at least use nix >= 2.12 because of
+      # https://github.com/t184256/nix-on-droid/issues/213
+      nix.package = pkgs.nixVersions.nix_2_12;
+
       system.stateVersion = "22.11";
 
       # Fix invoking bash after initial build.
