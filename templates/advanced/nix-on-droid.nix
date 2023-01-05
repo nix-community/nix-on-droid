@@ -27,6 +27,10 @@
   # Backup etc files instead of failing to activate generation if a file already exists in /etc
   environment.etcBackupExtension = ".bak";
 
+  # It is recommended to at least use nix >= 2.12 because of
+  # https://github.com/t184256/nix-on-droid/issues/213
+  nix.package = pkgs.nixVersions.nix_2_12;
+
   # Read the changelog before changing this value
   system.stateVersion = "22.11";
 
