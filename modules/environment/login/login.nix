@@ -46,6 +46,11 @@ writeScript "login" ''
     BIND_PROC_UPTIME=""
   fi
 
+  # See https://github.com/CypherpunkArmory/UserLAnd/issues/1333
+  unset LD_LIBRARY_PATH
+  unset LD_PRELOAD
+
+
   exec ${installationDir}/bin/proot-static \
     -b ${installationDir}/nix:/nix \
     -b ${installationDir}/bin:/bin! \
