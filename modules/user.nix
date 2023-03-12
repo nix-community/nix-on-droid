@@ -91,7 +91,7 @@ in
 
     user = {
       group = "nix-on-droid";
-      home = "/data/data/com.termux.nix/files/home";
+      home = "/data/data/com.termux/files/home";
       userName = "nix-on-droid";
     };
 
