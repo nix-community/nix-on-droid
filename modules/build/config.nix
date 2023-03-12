@@ -43,7 +43,7 @@ with lib;
 
   config = {
 
-    build.installationDir = "/data/data/com.termux/files/usr";
+    build.installationDir = "/data/data/com.termux/files/nix";
 
   };
 
