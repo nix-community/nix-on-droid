@@ -46,6 +46,10 @@ writeScript "login" ''
     BIND_PROC_UPTIME=""
   fi
 
+  if [ -r /etc/linker/config.pb ]; then
+    cp /etc/linker.config.pb ${installationDir}/etc/  # HACK
+  fi
+
   exec ${installationDir}/bin/proot-static \
     -b ${installationDir}/nix:/nix \
     -b ${installationDir}/etc:/etc \
