@@ -6,6 +6,7 @@ with lib;
 
 let
   cfg = config.environment;
+  inherit (config.build) installationDir;
 in
 
 {
@@ -36,11 +37,13 @@ in
   config = {
 
     build.activationBefore = {
-      #linkBinSh = ''
-      #  $DRY_RUN_CMD mkdir $VERBOSE_ARG --parents /bin
-      #  $DRY_RUN_CMD ln $VERBOSE_ARG --symbolic --force ${cfg.binSh} /bin/.sh.tmp
-      #  $DRY_RUN_CMD mv $VERBOSE_ARG /bin/.sh.tmp /bin/sh
-      #'';
+      linkBinSh = ''
+        $DRY_RUN_CMD mkdir $VERBOSE_ARG --parents ${installationDir}/bin
+        $DRY_RUN_CMD ln $VERBOSE_ARG --symbolic --force \
+          ${cfg.binSh} ${installationDir}/bin/.sh.tmp
+        $DRY_RUN_CMD mv $VERBOSE_ARG \
+          ${installationDir}/bin/.sh.tmp ${installationDir}/bin/sh
+      '';
 
       linkUsrBinEnv = ''
         $DRY_RUN_CMD mkdir $VERBOSE_ARG --parents /usr/bin

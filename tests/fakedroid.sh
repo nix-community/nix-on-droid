@@ -52,7 +52,6 @@ PROOT_ARGS=(
     "-q" "$QEMU"
     "-w" "$TARGET_HOME"
     "-b" "$ENV_DIR/$INSTALLATION_DIR/nix:/nix"
-    "-b" "$ENV_DIR/$INSTALLATION_DIR/bin:/bin"
     "-b" "$ENV_DIR/$INSTALLATION_DIR/etc:/etc"
     "-b" "$ENV_DIR/$INSTALLATION_DIR/tmp:/tmp"
     "-b" "$ENV_DIR/$INSTALLATION_DIR/usr:/usr"

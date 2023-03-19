@@ -7,8 +7,9 @@ with lib;
 let
   cfg = config.environment.files;
 
-  login = pkgs.callPackage ./login.nix { inherit config; };
+  inherit (config.build) installationDir;
 
+  login = pkgs.callPackage ./login.nix { inherit config; };
   loginInner = pkgs.callPackage ./login-inner.nix { inherit config initialPackageInfo; };
 in
 
@@ -50,11 +51,14 @@ in
 
     build.activation = {
       installLogin = ''
-        if ! diff /bin/login ${login} > /dev/null; then
-          $DRY_RUN_CMD mkdir $VERBOSE_ARG --parents /bin
-          $DRY_RUN_CMD cp $VERBOSE_ARG ${login} /bin/.login.tmp
-          $DRY_RUN_CMD chmod $VERBOSE_ARG u+w /bin/.login.tmp
-          $DRY_RUN_CMD mv $VERBOSE_ARG /bin/.login.tmp /bin/login
+        if ! diff ${installationDir}/bin/login ${login} > /dev/null; then
+          $DRY_RUN_CMD mkdir $VERBOSE_ARG --parents ${installationDir}/bin
+          $DRY_RUN_CMD cp $VERBOSE_ARG ${login} \
+            ${installationDir}/bin/.login.tmp
+          $DRY_RUN_CMD chmod $VERBOSE_ARG u+w \
+            ${installationDir}/bin/.login.tmp
+          $DRY_RUN_CMD mv $VERBOSE_ARG \
+            ${installationDir}/bin/.login.tmp ${installationDir}/bin/login
         fi
       '';
 
@@ -69,12 +73,20 @@ in
       '';
 
       installProotStatic = ''
-        if (test -e /bin/.proot-static.new && ! diff /bin/.proot-static.new ${cfg.prootStatic}/bin/proot-static > /dev/null) || \
-            (! test -e /bin/.proot-static.new && ! diff /bin/proot-static ${cfg.prootStatic}/bin/proot-static > /dev/null); then
-          $DRY_RUN_CMD mkdir $VERBOSE_ARG --parents /bin
-          $DRY_RUN_CMD cp $VERBOSE_ARG ${cfg.prootStatic}/bin/proot-static /bin/.proot-static.tmp
-          $DRY_RUN_CMD chmod $VERBOSE_ARG u+w /bin/.proot-static.tmp
-          $DRY_RUN_CMD mv $VERBOSE_ARG /bin/.proot-static.tmp /bin/.proot-static.new
+      if (test -e ${installationDir}/bin/.proot-static.new && \
+          ! diff ${installationDir}/bin/.proot-static.new \
+                 ${cfg.prootStatic}/bin/proot-static > /dev/null) || \
+         (! test -e ${installationDir}/bin/.proot-static.new && \
+          ! diff ${installationDir}/bin/proot-static \
+                 ${cfg.prootStatic}/bin/proot-static > /dev/null); then
+          $DRY_RUN_CMD mkdir $VERBOSE_ARG --parents ${installationDir}/bin
+          $DRY_RUN_CMD cp $VERBOSE_ARG ${cfg.prootStatic}/bin/proot-static \
+            ${installationDir}/bin/.proot-static.tmp
+          $DRY_RUN_CMD chmod $VERBOSE_ARG u+w \
+            ${installationDir}/bin/.proot-static.tmp
+          $DRY_RUN_CMD mv $VERBOSE_ARG \
+            ${installationDir}/bin/.proot-static.tmp \
+            ${installationDir}/bin/.proot-static.new
         fi
       '';
     };
