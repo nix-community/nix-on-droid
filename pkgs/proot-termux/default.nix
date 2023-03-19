@@ -9,13 +9,13 @@
 
 stdenv.mkDerivation {
   pname = "proot-termux";
-  version = "unstable-2022-05-03";
+  version = "unstable-2023-02-23";
 
   src = fetchFromGitHub {
     repo = "proot";
     owner = "termux";
-    rev = "5c462a6ecfddd629b1439f38fbb61216d6fcb359";
-    sha256 = "sha256-XS4js80NsAN2C4jMuISSqMm/DwYpH/stbABaxzoqZcE=";
+    rev = "d4658fcfc30d9dfddbfb66e95865fd84bf684abe";
+    sha256 = "sha256-RFFJfloT2hKqMBs/Ob4pA6nyhlPRUifHPfylfCzl+rA=";
   };
 
   # ashmem.h is rather small, our needs are even smaller, so just define these:
@@ -27,6 +27,7 @@ stdenv.mkDerivation {
     #define ASHMEM_NAME_LEN 256
     #define ASHMEM_SET_NAME _IOW(__ASHMEMIOC, 1, char[ASHMEM_NAME_LEN])
     #define ASHMEM_SET_SIZE _IOW(__ASHMEMIOC, 3, size_t)
+    #define ASHMEM_GET_SIZE _IO(__ASHMEMIOC, 4)
     EOF
   '';
 
