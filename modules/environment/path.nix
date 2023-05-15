@@ -27,6 +27,13 @@ in
         internal = true;
         description = "Derivation for installing user packages.";
       };
+
+      extraOutputsToInstall = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = [ "doc" "info" "devdoc" ];
+        description = "List of additional package outputs to be installed as user packages.";
+      };
     };
 
   };
@@ -70,6 +77,8 @@ in
         name = "nix-on-droid-path";
 
         paths = cfg.packages;
+
+        inherit (cfg) extraOutputsToInstall;
 
         meta = {
           description = "Environment of packages installed through Nix-on-Droid.";
