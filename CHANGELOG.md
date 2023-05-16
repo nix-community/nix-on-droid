@@ -2,6 +2,10 @@
 
 ## Release 23.05 (unreleased)
 
+### New Options
+
+* Add option `environment.extraOutputsToInstall`.
+
 ## Release 22.11
 
 ### Compatibility considerations
