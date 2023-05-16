@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install nix
-        uses: cachix/install-nix-action@v18
+        uses: cachix/install-nix-action@v20
 
       - name: Run nix-formatter-pack-check
         run: nix build .#checks.x86_64-linux.nix-formatter-pack-check

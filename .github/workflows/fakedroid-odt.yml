@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install nix
-        uses: cachix/install-nix-action@v18
+        uses: cachix/install-nix-action@v20
 
       - name: Setup cachix
         uses: cachix/cachix-action@v12
@@ -32,7 +32,6 @@ jobs:
         if: always() && github.event_name != 'pull_request'
         run: nix run --impure .#fakedroid -- nix-shell -p cachix --run 'nix --extra-experimental-features nix-command path-info --all | cachix push nix-on-droid'
 
-
   fakedroid-flakes:
     runs-on: ubuntu-latest
 
@@ -41,7 +40,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install nix
-        uses: cachix/install-nix-action@v18
+        uses: cachix/install-nix-action@v20
 
       - name: Setup cachix
         uses: cachix/cachix-action@v12
