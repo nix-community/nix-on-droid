@@ -3,6 +3,8 @@ name: Build and deploy docs
 on:
   push:
     branches: ["master"]
+  schedule:
+    - cron: 0 0 * * 1
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:

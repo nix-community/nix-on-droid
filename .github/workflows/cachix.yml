@@ -2,6 +2,8 @@ name: Build bootstrap packages and push to cachix
 on:
   pull_request:
   push:
+  schedule:
+    - cron: 0 0 * * 1
 jobs:
   cachix:
     runs-on: ubuntu-latest
