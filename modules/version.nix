@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
@@ -20,6 +20,7 @@ with lib;
         "22.05"
         "22.11"
         "23.05"
+        "23.11"
       ];
       description = ''
         It is occasionally necessary for Nix-on-Droid to change

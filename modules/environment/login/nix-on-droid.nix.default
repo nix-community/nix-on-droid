@@ -28,7 +28,7 @@
   environment.etcBackupExtension = ".bak";
 
   # Read the changelog before changing this value
-  system.stateVersion = "22.11";
+  system.stateVersion = "23.05";
 
   # Set up nix for flakes
   #nix.extraOptions = ''
@@ -39,7 +39,7 @@
   #time.timeZone = "Europe/Berlin";
 
   # After installing home-manager channel like
-  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-22.11.tar.gz home-manager
+  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-23.05.tar.gz home-manager
   #   nix-channel --update
   # you can configure home-manager in here like
   #home-manager = {
@@ -49,7 +49,7 @@
   #    { config, lib, pkgs, ... }:
   #    {
   #      # Read the changelog before changing this value
-  #      home.stateVersion = "22.11";
+  #      home.stateVersion = "23.05";
   #
   #      # insert home-manager config
   #    };

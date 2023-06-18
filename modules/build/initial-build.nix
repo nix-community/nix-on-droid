@@ -1,12 +1,12 @@
-# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
 with lib;
 
 let
-  defaultNixpkgsBranch = "nixos-22.11";
-  defaultNixOnDroidBranch = "release-22.11";
+  defaultNixpkgsBranch = "nixos-23.05";
+  defaultNixOnDroidBranch = "release-23.05";
 
   defaultNixpkgsChannel = "https://nixos.org/channels/${defaultNixpkgsBranch}";
   defaultNixOnDroidChannel = "https://github.com/t184256/nix-on-droid/archive/${defaultNixOnDroidBranch}.tar.gz";

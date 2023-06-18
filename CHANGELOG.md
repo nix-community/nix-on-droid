@@ -1,6 +1,8 @@
 # Changelog
 
-## Release 23.05 (unreleased)
+## Release 23.11 (unreleased)
+
+## Release 23.05
 
 ### New Options
 
