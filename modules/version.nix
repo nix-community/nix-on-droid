@@ -20,6 +20,7 @@ with lib;
         "22.05"
         "22.11"
         "23.05"
+        "23.11"
       ];
       description = ''
         It is occasionally necessary for Nix-on-Droid to change

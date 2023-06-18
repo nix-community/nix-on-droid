@@ -28,7 +28,7 @@
   environment.etcBackupExtension = ".bak";
 
   # Read the changelog before changing this value
-  system.stateVersion = "22.11";
+  system.stateVersion = "23.05";
 
   # Set up nix for flakes
   nix.extraOptions = ''

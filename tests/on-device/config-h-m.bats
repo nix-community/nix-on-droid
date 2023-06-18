@@ -21,7 +21,7 @@ teardown() {
   [[ ! -e ~/.config/example ]]
 
   # set up / build / activate the configuration
-  nix-channel --add https://github.com/rycee/home-manager/archive/release-22.11.tar.gz home-manager
+  nix-channel --add https://github.com/rycee/home-manager/archive/release-23.05.tar.gz home-manager
   nix-channel --update
   cp "$ON_DEVICE_TESTS_DIR/config-h-m.nix" ~/.config/nixpkgs/nix-on-droid.nix
   nix-on-droid switch
