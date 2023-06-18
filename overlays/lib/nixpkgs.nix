@@ -3,12 +3,12 @@
 { super }:
 
 let
-  # head of nixos-22.11 as of 2022-12-01
+  # head of nixos-23.05 as of 2023-06-18
   pinnedPkgsSrc = super.fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "596a8e828c5dfa504f91918d0fa4152db3ab5502";
-    sha256 = "sha256-YnhZGHgb4C3Q7DSGisO/stc50jFb9F/MzHeKS4giotg=";
+    rev = "c7ff1b9b95620ce8728c0d7bd501c458e6da9e04";
+    sha256 = "sha256-J1bX9plPCFhTSh6E3TWn9XSxggBh/zDD4xigyaIQBy8=";
   };
 in
 
