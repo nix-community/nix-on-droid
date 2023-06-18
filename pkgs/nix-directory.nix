@@ -24,8 +24,8 @@ stdenv.mkDerivation {
   name = "nix-directory";
 
   src = builtins.fetchurl {
-    url = "https://nixos.org/releases/nix/nix-2.11.1/nix-2.11.1-${config.build.arch}-linux.tar.xz";
-    sha256 = "1cvdvka4qs1zx916g23pi9i024sx9h28nv8pvngxh3nk8gm8bvxq";
+    url = "https://nixos.org/releases/nix/nix-2.16.1/nix-2.16.1-${config.build.arch}-linux.tar.xz";
+    sha256 = "1v7k1cajyxgaq3adrzykaf0a32n5pyrd7njy0rns1fma85y8n944";
   };
 
   PROOT_NO_SECCOMP = 1; # see https://github.com/proot-me/PRoot/issues/106
