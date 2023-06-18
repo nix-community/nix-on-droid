@@ -21,6 +21,21 @@ jobs:
           name: nix-on-droid
           signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
 
+      # https://github.com/cachix/cachix/issues/544
+      - name: Build proot separately and pin it in cachix
+        run: |
+          nix \
+            --log-format bar-with-logs \
+            --show-trace \
+            build .#prootTermux \
+            --out-link ./proot \
+            --impure
+          cachix \
+            push nix-on-droid $(realpath ./proot)
+          cachix \
+            pin nix-on-droid proot-${{ github.ref_name }} $(realpath ./proot) \
+            --artifact bin/proot-static
+
       - name: Build bootstrap zip
         run: |
           nix \
