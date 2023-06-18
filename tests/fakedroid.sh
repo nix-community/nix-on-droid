@@ -22,7 +22,7 @@ REPO_DIR="$(git rev-parse --show-toplevel)"
 INJ_DIR="$REPO_DIR/.fakedroid/inj"
 ENV_DIR="$REPO_DIR/.fakedroid/env/$USE_FLAKE"
 
-QEMU_URL="https://github.com/multiarch/qemu-user-static/releases/download/v7.1.0-2/qemu-aarch64-static"
+QEMU_URL="https://github.com/multiarch/qemu-user-static/releases/download/v7.2.0-1/qemu-aarch64-static"
 QEMU="$INJ_DIR/qemu-aarch64"
 
 INSTALLATION_DIR="@installationDir@"
