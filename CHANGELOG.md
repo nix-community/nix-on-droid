@@ -7,6 +7,15 @@
 * New options `networking.hosts`, `networking.hostFiles` and
   `networking.extraHosts` for `/etc/hosts` configuration.
 
+* Add option `nix.settings` to support
+  [structural `settings`](https://github.com/NixOS/rfcs/blob/master/rfcs/0042-config-option.md)
+  for `nix.conf`.
+  `nix.substituters` and `nix.trustedPublicKeys` are now aliases of
+  `nix.settings.substituters` and `nix.settings.trusted-public-keys`,
+  respectively.
+  Nix Flakes functionality can now be enabled with
+  `nix.settings.experimental-features = [ "nix-command" "flakes" ];`
+
 ## Release 23.05
 
 ### New Options
