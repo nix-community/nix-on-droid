@@ -239,6 +239,12 @@ with the command as arguments:
 nix run --impure ".#fakedroid" -- ls -l
 ```
 
+To override the default state directory of fakedroid (`$PWD/.fakedroid`), call it with `STATE_DIR`:
+
+```sh
+STATE_DIR=path/to/local/dir nix run --impure github:t184256/nix-on-droid#fakedroid
+```
+
 ## Testing
 
 In the [./tests/on-device](./tests/on-device) directory, there is small set

@@ -9,6 +9,8 @@
 set -ueo pipefail
 
 PATH=@path@
+FLAKE_ROOT_DIR=@flakeRootDir@
+STATE_DIR="${STATE_DIR:-"$(pwd)/.fakedroid"}"
 
 USE_FLAKE="${USE_FLAKE:-0}"
 if [[ ! "$USE_FLAKE" =~ ^[01]$ ]]; then
@@ -16,11 +18,8 @@ if [[ ! "$USE_FLAKE" =~ ^[01]$ ]]; then
     exit 1
 fi
 
-# this allows to run this script from every place in this git repo
-REPO_DIR="$(git rev-parse --show-toplevel)"
-
-INJ_DIR="$REPO_DIR/.fakedroid/inj"
-ENV_DIR="$REPO_DIR/.fakedroid/env/$USE_FLAKE"
+INJ_DIR="$STATE_DIR/inj"
+ENV_DIR="$STATE_DIR/env/$USE_FLAKE"
 
 QEMU_URL="https://github.com/multiarch/qemu-user-static/releases/download/v7.2.0-1/qemu-aarch64-static"
 QEMU="$INJ_DIR/qemu-aarch64"
@@ -100,10 +99,8 @@ fi
 
 rm -rf "$ENV_DIR/n-o-d"
 mkdir -p "$ENV_DIR/n-o-d/unpacked"
-git -C "$REPO_DIR" archive --format=tar --prefix n-o-d/ HEAD \
-    > "$ENV_DIR/n-o-d/archive.tar"
-tar --strip-components=1 -xf \
-    "$ENV_DIR/n-o-d/archive.tar" -C "$ENV_DIR/n-o-d/unpacked"
+tar -cf "$ENV_DIR/n-o-d/archive.tar" --mode='u+w' -C "$FLAKE_ROOT_DIR" --transform 's,^,n-o-d/,' .
+tar --strip-components=1 -xf "$ENV_DIR/n-o-d/archive.tar" -C "$ENV_DIR/n-o-d/unpacked"
 gzip "$ENV_DIR/n-o-d/archive.tar"
 
 
