@@ -2,6 +2,11 @@
 
 ## Release 23.11 (unreleased)
 
+### New Options
+
+* New options `networking.hosts`, `networking.hostFiles` and
+  `networking.extraHosts` for `/etc/hosts` configuration.
+
 ## Release 23.05
 
 ### New Options
