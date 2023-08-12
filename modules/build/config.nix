@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
@@ -37,7 +37,7 @@ with lib;
       };
 
       extraProotOptions = mkOption {
-        type = types.listOf types.string;
+        type = types.listOf types.str;
         default = [ ];
         description = "Extra options passed to proot, e.g., extra bind mounts.";
       };
