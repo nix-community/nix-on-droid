@@ -12,7 +12,7 @@ prototype-grade quality as of now, but hey, it works!
 
 It does not require root, user namespaces support or disabling SELinux,
 but it relies on `proot` and other hacks instead.
-It uses [a fork](https://github.com/t184256/nix-on-droid-app)
+It uses [a fork](https://github.com/nix-community/nix-on-droid-app)
 of [Termux-the-terminal-emulator app](https://github.com/termux/termux-app),
 but has no relation to [Termux-the-distro](https://termux.com/).
 Please do not pester Termux folks about Nix-on-Droid.
@@ -72,7 +72,7 @@ An alternative location is `~/.config/nixpkgs/config.nix` with the key
 }
 ```
 
-See <https://t184256.github.io/nix-on-droid/> for list of all available options.
+See <https://nix-community.github.io/nix-on-droid/> for list of all available options.
 
 ### [`home-manager`](https://github.com/rycee/home-manager) integration
 
@@ -118,7 +118,7 @@ For more information, please run `nix-on-droid help`.
 
 ## Build Nix-on-Droid on your own
 
-The [terminal emulator part](https://github.com/t184256/nix-on-droid-app)
+The [terminal emulator part](https://github.com/nix-community/nix-on-droid-app)
 is probably not interesting for you, just download and use a prebuilt one.
 If you really want to rebuild it, you can just use Android Studio for that.
 
@@ -184,7 +184,7 @@ A minimal example could look like the following:
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
 
     nix-on-droid = {
-      url = "github:t184256/nix-on-droid/release-23.05";
+      url = "github:nix-community/nix-on-droid/release-23.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -202,7 +202,7 @@ A minimal example could look like the following:
 For more examples and nix flake templates, see [`templates`](./templates) directory or explore with:
 
 ```sh
-nix flake init --template github:t184256/nix-on-droid#advanced
+nix flake init --template github:nix-community/nix-on-droid#advanced
 ```
 
 ### Usage with `nix-on-droid`
@@ -260,7 +260,7 @@ clean installations.
   (reachable from Android settings).
 * If the terminal freezes, use 'Acquire wakelock' button in the notification
   and/or tone down your device's aggressive power saving measures.
-* We have a [wiki](https://github.com/t184256/nix-on-droid/wiki)
+* We have a [wiki](https://github.com/nix-community/nix-on-droid/wiki)
   with tips and success stories, you're encouraged to add yours as well.
 
 
@@ -300,7 +300,7 @@ Two rewrites ago it was based off the official Nix install script
 (https://nixos.org/nix/install),
 presumably written by Eelco Dolstra.
 
-Is deployed and used with [a fork](https://github.com/t184256/nix-on-droid-app)
+Is deployed and used with [a fork](https://github.com/nix-community/nix-on-droid-app)
 of [Termux-the-terminal-emulator app](https://github.com/termux/termux-app),
 but has no relation to Termux-the-distro.
 

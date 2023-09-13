@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, ... }:
 
@@ -53,7 +53,7 @@ in
       motd = mkOption {
         default = ''
           Welcome to Nix-on-Droid!
-          If nothing works, open an issue at https://github.com/t184256/nix-on-droid/issues or try the rescue shell.
+          If nothing works, open an issue at https://github.com/nix-community/nix-on-droid/issues or try the rescue shell.
         '';
         type = types.nullOr types.lines;
         description = ''

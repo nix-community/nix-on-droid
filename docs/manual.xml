@@ -14,7 +14,7 @@
   </para>
   <para>
    If you encounter problems or bugs then please report them on the
-   <link xlink:href="https://github.com/t184256/nix-on-droid/issues">issue tracker</link>.
+   <link xlink:href="https://github.com/nix-community/nix-on-droid/issues">issue tracker</link>.
   </para>
  </preface>
 
@@ -34,7 +34,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
 
     nix-on-droid = {
-      url = "github:t184256/nix-on-droid/release-23.05";
+      url = "github:nix-community/nix-on-droid/release-23.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
