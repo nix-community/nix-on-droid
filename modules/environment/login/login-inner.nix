@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, initialPackageInfo, writeText }:
 
@@ -84,7 +84,7 @@ writeText "login-inner" ''
           ${nixCmd} run nixpkgs#gnused -- \
             -i \
             -e 's,\"github:NixOS/nixpkgs.*\",\"${config.build.flake.nixpkgs}\",' \
-            -e 's,\"github:t184256/nix-on-droid.*\",\"${config.build.flake.nix-on-droid}\",' \
+            -e 's,\"github:nix-community/nix-on-droid.*\",\"${config.build.flake.nix-on-droid}\",' \
             "${config.user.home}/.config/nix-on-droid/flake.nix"
         ''}
 

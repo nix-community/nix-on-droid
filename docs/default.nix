@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { pkgs, home-manager, nmdSrc }:
 
@@ -22,7 +22,7 @@ let
   modulesDocs = nmd.buildModulesDocs {
     modules = modules ++ [ setupModule ];
     moduleRootPaths = [ ../. ];
-    mkModuleUrl = path: "https://github.com/t184256/nix-on-droid/blob/master/${path}";
+    mkModuleUrl = path: "https://github.com/nix-community/nix-on-droid/blob/master/${path}";
     channelName = "nix-on-droid";
     docBook.id = "nix-on-droid-options";
   };
