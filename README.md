@@ -74,13 +74,13 @@ An alternative location is `~/.config/nixpkgs/config.nix` with the key
 
 See <https://nix-community.github.io/nix-on-droid/> for list of all available options.
 
-### [`home-manager`](https://github.com/rycee/home-manager) integration
+### [`home-manager`](https://github.com/nix-community/home-manager) integration
 
 To enable `home-manager` you simply need to follow the instructions already provided in the example `nix-on-droid.nix`:
 
 1.  Add `home-manager` channel:
     ```sh
-    nix-channel --add https://github.com/rycee/home-manager/archive/release-23.05.tar.gz home-manager
+    nix-channel --add https://github.com/nix-community/home-manager/archive/release-23.05.tar.gz home-manager
     nix-channel --update
     ```
 2.  Configure `home-manager`:
