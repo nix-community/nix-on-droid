@@ -7,6 +7,11 @@
     vim # or some other editor, e.g. nano or neovim
 
     # Some common stuff that people expect to have
+    #openssh
+    #which
+    #file
+    #procps
+    #killall
     #diffutils
     #findutils
     #utillinux
