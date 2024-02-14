@@ -7,6 +7,9 @@
 * New options `networking.hosts`, `networking.hostFiles` and
   `networking.extraHosts` for `/etc/hosts` configuration.
 
+* Terminal colorscheme can now be configured with `terminal.colors` option.
+  Previously present file will be backed up to `colors.properties.bak`.
+
 ## Release 23.05
 
 ### New Options
