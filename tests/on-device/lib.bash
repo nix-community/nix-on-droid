@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 # call _setup when defining a setup function in your test
 _setup() {
@@ -63,4 +63,10 @@ _sed() {
   local storePath
   storePath="$(nix-build "<nixpkgs>" --no-out-link --attr gnused)"
   "${storePath}/bin/sed" "$@"
+}
+
+_diff() {
+  local storePath
+  storePath="$(nix-build "<nixpkgs>" --no-out-link --attr diffutils)"
+  "${storePath}/bin/diff" "$@"
 }
