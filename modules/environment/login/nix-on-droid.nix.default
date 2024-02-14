@@ -39,7 +39,7 @@
   #time.timeZone = "Europe/Berlin";
 
   # After installing home-manager channel like
-  #   nix-channel --add https://github.com/rycee/home-manager/archive/release-23.05.tar.gz home-manager
+  #   nix-channel --add https://github.com/nix-community/home-manager/archive/release-23.05.tar.gz home-manager
   #   nix-channel --update
   # you can configure home-manager in here like
   #home-manager = {
