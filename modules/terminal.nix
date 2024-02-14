@@ -6,6 +6,10 @@
 }:
 with lib; let
   cfg = config.terminal;
+  validColornames =
+    [ "background" "foreground" "cursor" ] ++
+    (builtins.map (n: "color${builtins.toString n}") (lib.lists.range 0 15));
+  validColorname = colorName: builtins.elem colorName validColornames;
 in
 {
   ###### interface
@@ -34,6 +38,8 @@ in
         '';
         description = ''
           Colorscheme used for the terminal.
+          Acceptable attribute names are:
+          `background`, `foreground`, `cursor` and `color0`-`color15`.
         '';
       };
     };
@@ -42,6 +48,14 @@ in
   ###### implementation
 
   config = {
+    assertions = [{
+      assertion = builtins.all validColorname (attrNames cfg.colors);
+      message = ''
+        `terminal.colors` only accepts the following attributes:
+        `background`, `foreground`, `cursor` and `color0`-`color15`.
+      '';
+    }];
+
     build.activation =
       let
         fontPath =
