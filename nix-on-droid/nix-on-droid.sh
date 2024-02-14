@@ -1,6 +1,6 @@
 #!@bash@/bin/bash
 
-# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 PATH=@coreutils@/bin:@nix@/bin:${PATH:+:}$PATH
 
@@ -97,7 +97,7 @@ function doOnDeviceTest() {
     fi
 
     exec "$(nix-instantiate --eval --expr \
-                            "<nix-on-droid/tests/on-device/.run.sh>")"
+                            "<nix-on-droid/tests/on-device/.run.sh>")" "$@"
 }
 
 function doSwitch() {
@@ -180,7 +180,7 @@ while [[ $# -gt 0 ]]; do
             ;;
             *)
                 case $COMMAND in
-                    switch-generation)
+                    switch-generation|on-device-test)
                         COMMAND_ARGS+=("$opt")
                         ;;
                     *)
@@ -211,7 +211,7 @@ case $COMMAND in
         doHelp
         ;;
     on-device-test)
-        doOnDeviceTest
+        doOnDeviceTest "${COMMAND_ARGS[@]}"
         ;;
     rollback)
         if [[ $(readlink $PROFILE_DIRECTORY) =~ ^nix-on-droid-([0-9]+)-link$ ]]; then

@@ -1,7 +1,7 @@
 #!/usr/bin/env nix-shell
 #! nix-shell -i bash -p bats ncurses
 
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 set -ueo pipefail
 
@@ -41,6 +41,6 @@ fi
 
 mkdir -p ~/.config/nixpkgs
 
-bats "${SCRIPT_DIR}" --verbose-run --timing --pretty
+bats "${SCRIPT_DIR}" --verbose-run --timing --pretty "$@"
 
 _cleanup
