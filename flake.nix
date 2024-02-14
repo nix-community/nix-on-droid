@@ -20,8 +20,8 @@
     };
 
     nmd = {
-      url = "gitlab:rycee/nmd";
-      flake = false;
+      url = "sourcehut:~rycee/nmd";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
