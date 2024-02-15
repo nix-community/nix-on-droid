@@ -27,6 +27,16 @@ in
   options = {
 
     nix = {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to enable Nix.
+          Disabling Nix is not supported in NixOnDroid. This option is here to
+          make it compatible to the upstream NixOS modules.
+        '';
+      };
+
       package = mkOption {
         type = types.package;
         default = pkgs.nix;
@@ -150,6 +160,7 @@ in
     };
 
     nix = {
+      enable = true;
       substituters = [
         "https://cache.nixos.org"
         "https://nix-on-droid.cachix.org"
