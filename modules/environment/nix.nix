@@ -20,7 +20,6 @@ in
   imports = [
     (renameNixOpt "binaryCaches" "substituters")
     (renameNixOpt "binaryCachePublicKeys" "trustedPublicKeys")
-    (renameNixOpt "extraConfig" "extraOptions")
   ];
 
   ###### interface
