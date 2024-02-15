@@ -7,21 +7,27 @@
 # (Copyright (c) 2003-2022 Eelco Dolstra and the Nixpkgs/NixOS contributors,
 # licensed under MIT License as well)
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, nixpkgs, ... }:
 
 with lib;
 
 let
   cfg = config.nix;
   renameNixOpt = old: new:
-    (mkRenamedOptionModule [ "nix" old ] [ "nix" new ]);
+    mkRenamedOptionModuleWith {
+      sinceRelease = 2205;
+      from = [ "nix" old ];
+      to = [ "nix" "settings" new ];
+    };
 in
 
 {
-  # Backward-compatibility with the NixOS options.
   imports = [
-    (renameNixOpt "binaryCaches" "substituters")
-    (renameNixOpt "binaryCachePublicKeys" "trustedPublicKeys")
+    # Use options and config from upstream nix.nix
+    "${nixpkgs}/nixos/modules/config/nix.nix"
+    # Backward-compatibility with pre-`settings` options.
+    (renameNixOpt "substituters" "substituters")
+    (renameNixOpt "trustedPublicKeys" "trusted-public-keys")
   ];
 
   ###### interface
@@ -51,32 +57,6 @@ in
         '';
       };
 
-      ## From nix.nix
-
-      substituters = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        description = ''
-          A list of URLs of substituters.  The official NixOS and Nix-on-Droid
-          substituters are added by default.
-        '';
-      };
-
-      trustedPublicKeys = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        description = ''
-          A list of public keys.  When paths are copied from another Nix store (such as a
-          binary cache), they must be signed with one of these keys.  The official NixOS
-          and Nix-on-Droid public keys are added by default.
-        '';
-      };
-
-      extraOptions = mkOption {
-        type = types.lines;
-        default = "";
-        description = "Extra config to be appended to <filename>/etc/nix/nix.conf</filename>.";
-      };
     };
 
   };
@@ -85,22 +65,13 @@ in
   ###### implementation
 
   config = {
-    environment.etc = {
-      "nix/nix.conf".text = ''
-        sandbox = false
-        substituters = ${concatStringsSep " " cfg.substituters}
-        trusted-public-keys = ${concatStringsSep " " cfg.trustedPublicKeys}
-        ${cfg.extraOptions}
-      '';
-    };
-
     nix = {
       enable = true;
-      substituters = [
+      settings.substituters = [
         "https://cache.nixos.org"
         "https://nix-on-droid.cachix.org"
       ];
-      trustedPublicKeys = [
+      settings.trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "nix-on-droid.cachix.org-1:56snoMJTXmDRC1Ei24CmKoUqvHJ9XCp+nidK7qkMQrU="
       ];
