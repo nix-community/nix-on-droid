@@ -134,37 +134,33 @@ in
 
   ###### implementation
 
-  config = mkMerge [
-    {
-      environment.etc = {
-        "nix/nix.conf".text = ''
-          sandbox = false
-          substituters = ${concatStringsSep " " cfg.substituters}
-          trusted-public-keys = ${concatStringsSep " " cfg.trustedPublicKeys}
-          ${cfg.extraOptions}
-        '';
+  config = {
+    environment.etc = {
+      "nix/nix.conf".text = ''
+        sandbox = false
+        substituters = ${concatStringsSep " " cfg.substituters}
+        trusted-public-keys = ${concatStringsSep " " cfg.trustedPublicKeys}
+        ${cfg.extraOptions}
+      '';
 
-        "nix/registry.json".text = builtins.toJSON {
-          version = 2;
-          flakes = mapAttrsToList (_n: v: { inherit (v) from to exact; }) cfg.registry;
-        };
+      "nix/registry.json".text = builtins.toJSON {
+        version = 2;
+        flakes = mapAttrsToList (_n: v: { inherit (v) from to exact; }) cfg.registry;
       };
+    };
 
-      nix = {
-        substituters = [
-          "https://cache.nixos.org"
-          "https://nix-on-droid.cachix.org"
-        ];
-        trustedPublicKeys = [
-          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-          "nix-on-droid.cachix.org-1:56snoMJTXmDRC1Ei24CmKoUqvHJ9XCp+nidK7qkMQrU="
-        ];
-      };
-    }
+    nix = {
+      substituters = [
+        "https://cache.nixos.org"
+        "https://nix-on-droid.cachix.org"
+      ];
+      trustedPublicKeys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-on-droid.cachix.org-1:56snoMJTXmDRC1Ei24CmKoUqvHJ9XCp+nidK7qkMQrU="
+      ];
+    };
 
-    (mkIf (cfg.nixPath != [ ]) {
-      environment.sessionVariables.NIX_PATH = concatStringsSep ":" cfg.nixPath;
-    })
-  ];
+    environment.sessionVariables.NIX_PATH = concatStringsSep ":" cfg.nixPath;
+  };
 
 }
