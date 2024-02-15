@@ -25,7 +25,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-for-bootstrap, home-manager, nix-formatter-pack, nmd }:
+  outputs = { self, nixpkgs, nixpkgs-for-bootstrap, home-manager, nix-formatter-pack, nmd }@inputs:
     let
       forEachSystem = nixpkgs.lib.genAttrs [ "aarch64-linux" "x86_64-linux" ];
 
@@ -80,6 +80,7 @@
         { modules ? [ ]
         , extraSpecialArgs ? { }
         , pkgs ? pkgs'
+        , nixpkgs ? inputs.nixpkgs
         , home-manager-path ? home-manager.outPath
           # deprecated:
         , config ? null
@@ -103,7 +104,7 @@
               See the 22.11 release notes for more.
             ''
             (import ./modules {
-              inherit extraSpecialArgs home-manager-path pkgs;
+              inherit extraSpecialArgs home-manager-path nixpkgs pkgs;
               config.imports = modules;
               isFlake = true;
             });
@@ -118,7 +119,7 @@
           };
 
           docs = import ./docs {
-            inherit home-manager;
+            inherit nixpkgs home-manager;
             pkgs = nixpkgs.legacyPackages.${system};
             nmdSrc = nmd;
           };
