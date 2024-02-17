@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, stdenv, closureInfo, prootTermux, proot, pkgsStatic }:
 
@@ -24,8 +24,8 @@ stdenv.mkDerivation {
   name = "nix-directory";
 
   src = builtins.fetchurl {
-    url = "https://nixos.org/releases/nix/nix-2.16.1/nix-2.16.1-${config.build.arch}-linux.tar.xz";
-    sha256 = "1v7k1cajyxgaq3adrzykaf0a32n5pyrd7njy0rns1fma85y8n944";
+    url = "https://nixos.org/releases/nix/nix-2.20.4/nix-2.20.4-${config.build.arch}-linux.tar.xz";
+    sha256 = "sha256:10nk5dn5mhlql3842jn8ikvywcidgfjycfqcv7cg9i97lgi12x0q";
   };
 
   PROOT_NO_SECCOMP = 1; # see https://github.com/proot-me/PRoot/issues/106
