@@ -1,7 +1,6 @@
 # Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { callPackage
-, nixpkgs
 , fetchurl
 , python3
 , pkg-config
@@ -9,7 +8,7 @@
 }:
 
 let
-  pkgsCross = import nixpkgs (callPackage ./cross-pkgs-args.nix { });
+  pkgsCross = callPackage ./cross-pkgs.nix { };
 in
 
 pkgsCross.stdenv.mkDerivation rec {

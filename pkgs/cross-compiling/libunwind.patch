@@ -1,0 +1,13 @@
+diff --git a/pkgs/development/compilers/llvm/16/libunwind/default.nix b/pkgs/development/compilers/llvm/16/libunwind/default.nix
+index 1b677a7a2c0d..6c16e869a085 100644
+--- a/pkgs/development/compilers/llvm/16/libunwind/default.nix
++++ b/pkgs/development/compilers/llvm/16/libunwind/default.nix
+@@ -49,6 +49,8 @@ stdenv.mkDerivation rec {
+
+   nativeBuildInputs = [ cmake ninja python3 ];
+
++  LDFLAGS = "-unwindlib=none";
++
+   cmakeFlags = [
+     "-DLLVM_ENABLE_RUNTIMES=libunwind"
+   ] ++ lib.optional (!enableShared) "-DLIBUNWIND_ENABLE_SHARED=OFF";

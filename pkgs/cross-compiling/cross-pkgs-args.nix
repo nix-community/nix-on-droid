@@ -1,6 +1,6 @@
-# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, nixpkgs, system }:
+{ config, system }:
 
 {
   inherit system;
