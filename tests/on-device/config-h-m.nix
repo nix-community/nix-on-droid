@@ -1,12 +1,12 @@
 { pkgs, config, ... }:
 
 {
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 
   home-manager.config =
     { pkgs, lib, ... }:
     {
-      home.stateVersion = "23.05";
+      home.stateVersion = "23.11";
       nixpkgs = { inherit (config.nixpkgs) overlays; };
 
       # example config

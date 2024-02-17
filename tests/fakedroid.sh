@@ -59,7 +59,6 @@ PROOT_ARGS=(
     "-b" "/dev"
     "-b" "/proc"
     "-b" "/sys"
-    "--link2symlink"
 )
 
 
