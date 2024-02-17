@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { nixpkgs
 , system
@@ -35,7 +35,7 @@ let
         pkgs = pkgs.lib.mkForce pkgs; # to override ./modules/nixpkgs/config.nix
       };
 
-      system.stateVersion = "23.05";
+      system.stateVersion = "23.11";
 
       # Fix invoking bash after initial build.
       user.shell = "${initialPackageInfo.bash}/bin/bash";

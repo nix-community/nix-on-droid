@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE. -->
+<!-- Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE. -->
 <book xmlns="http://docbook.org/ns/docbook"
       xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:xi="http://www.w3.org/2001/XInclude"
@@ -31,10 +31,10 @@
 <programlisting language="nix">
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     nix-on-droid = {
-      url = "github:nix-community/nix-on-droid/release-23.05";
+      url = "github:nix-community/nix-on-droid/release-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
