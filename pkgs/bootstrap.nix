@@ -1,9 +1,10 @@
-# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { runCommand, nixDirectory, prootTermux, bash, pkgs, config, initialPackageInfo }:
 
 runCommand "bootstrap" { } ''
-  mkdir --parents $out/{.l2s,bin,dev/shm,etc,nix,root,tmp,usr/{bin,lib}}
+  mkdir --parents $out/{.l2s,bin,dev/shm,etc,root,tmp,usr/{bin,lib}}
+  mkdir --parents $out/nix/var/nix/{profiles,gcroots}/per-user/nix-on-droid
 
   cp --recursive ${nixDirectory}/store $out/nix/store
   cp --recursive ${nixDirectory}/var $out/nix/var
