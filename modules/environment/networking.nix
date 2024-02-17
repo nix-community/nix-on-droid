@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 # Inspired by
 # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/config/networking.nix
@@ -19,9 +19,9 @@ in
 
   ###### interface
 
-  options = {
+  options.networking = {
 
-    networking.hosts = lib.mkOption {
+    hosts = lib.mkOption {
       type = types.attrsOf (types.listOf types.str);
       default = { };
       example = literalExpression ''
@@ -35,7 +35,7 @@ in
       '';
     };
 
-    networking.hostFiles = lib.mkOption {
+    hostFiles = lib.mkOption {
       type = types.listOf types.path;
       defaultText = literalMD "Hosts from {option}`networking.hosts` and {option}`networking.extraHosts`";
       example = literalExpression ''[ "''${pkgs.my-blocklist-package}/share/my-blocklist/hosts" ]'';
@@ -44,7 +44,7 @@ in
       '';
     };
 
-    networking.extraHosts = lib.mkOption {
+    extraHosts = lib.mkOption {
       type = types.lines;
       default = "";
       example = "192.168.0.1 lanlocalhost";

@@ -1,9 +1,9 @@
 # Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ callPackage, nixpkgs, tallocStatic }:
+{ callPackage, tallocStatic }:
 
 let
-  pkgsCross = import nixpkgs (callPackage ./cross-pkgs-args.nix { });
+  pkgsCross = callPackage ./cross-pkgs.nix { };
   stdenv = pkgsCross.stdenvAdapters.makeStaticBinaries pkgsCross.stdenv;
 in
 
