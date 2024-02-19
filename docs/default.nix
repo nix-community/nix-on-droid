@@ -1,6 +1,6 @@
 # Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ pkgs, home-manager, nmdSrc }:
+{ pkgs, nixpkgs, home-manager, nmdSrc }:
 
 let
   nmd = import nmdSrc { inherit pkgs; };
@@ -14,7 +14,7 @@ let
   };
 
   modules = import ../modules/module-list.nix {
-    inherit pkgs;
+    inherit pkgs nixpkgs;
     home-manager-path = home-manager.outPath;
     isFlake = true;
   };

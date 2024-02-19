@@ -3,6 +3,7 @@
 { config ? null
 , extraSpecialArgs ? { }
 , pkgs ? import <nixpkgs> { }
+, nixpkgs ? <nixpkgs>
 , home-manager-path ? <home-manager>
 , isFlake ? false
 }:
@@ -21,7 +22,7 @@ let
 
   rawModule = evalModules {
     modules = [ configModule ] ++ nodModules;
-    specialArgs = extraSpecialArgs;
+    specialArgs = { inherit nixpkgs; } // extraSpecialArgs;
   };
 
   failedAssertions = map (x: x.message) (filter (x: !x.assertion) rawModule.config.assertions);
