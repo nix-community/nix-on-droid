@@ -10,13 +10,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install nix
-        uses: cachix/install-nix-action@v20
+        uses: cachix/install-nix-action@v25
 
       - name: Setup cachix
-        uses: cachix/cachix-action@v12
+        uses: cachix/cachix-action@v14
         with:
           name: nix-on-droid
           signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
