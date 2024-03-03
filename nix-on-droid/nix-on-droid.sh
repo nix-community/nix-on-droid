@@ -101,6 +101,12 @@ function doOnDeviceTest() {
 }
 
 function doSwitch() {
+    if [[ -e "$HOME/.config/nix-on-droid/flake.nix" && -z "${FLAKE_CONFIG_URI}" ]]; then
+        echo -n '~/.config/nix-on-droid/flake.nix exists, '
+        echo -n "you might've intended to run "
+        echo '`nix-on-droid switch --flake ~/.config/nix-on-droid`'
+    fi
+
     echo "Building activation package..."
     nixActivationPackage build --no-link
 
