@@ -10,10 +10,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install nix
-        uses: cachix/install-nix-action@v20
+        uses: cachix/install-nix-action@v25
 
       - name: Run nix-formatter-pack-check
         run: nix build .#checks.x86_64-linux.nix-formatter-pack-check
