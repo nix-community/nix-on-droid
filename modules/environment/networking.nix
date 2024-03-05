@@ -99,6 +99,7 @@ in
       "resolv.conf".text = ''
         nameserver 1.1.1.1
         nameserver 8.8.8.8
+        nameserver 2a00:1098:2c::1
       '';
     };
 
