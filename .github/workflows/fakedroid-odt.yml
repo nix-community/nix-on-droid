@@ -6,20 +6,11 @@ on:
     - cron: 0 0 * * 1
 jobs:
   fakedroid-odt-channel:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Install nix
-        uses: cachix/install-nix-action@v25
-
-      - name: Setup cachix
-        uses: cachix/cachix-action@v14
-        with:
-          name: nix-on-droid
-          signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
 
       - name: Initialize fakedroid for channel setup
         run: nix run --impure .#fakedroid -- echo INIT
@@ -35,20 +26,11 @@ jobs:
         run: nix run --impure .#fakedroid -- nix-shell -p cachix --run 'nix --extra-experimental-features nix-command path-info --all | cachix push nix-on-droid'
 
   fakedroid-flakes:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Install nix
-        uses: cachix/install-nix-action@v25
-
-      - name: Setup cachix
-        uses: cachix/cachix-action@v14
-        with:
-          name: nix-on-droid
-          signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
 
       - name: Initialize fakedroid for flake setup
         run: USE_FLAKE=1 nix run --impure .#fakedroid -- echo INIT
