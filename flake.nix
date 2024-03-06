@@ -19,13 +19,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixpkgs-docs.url = "github:NixOS/nixpkgs/release-23.05";
+
     nmd = {
       url = "sourcehut:~rycee/nmd";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-docs";
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-for-bootstrap, home-manager, nix-formatter-pack, nmd }:
+  outputs = { self, nixpkgs, nixpkgs-for-bootstrap, home-manager, nix-formatter-pack, nmd, nixpkgs-docs }:
     let
       forEachSystem = nixpkgs.lib.genAttrs [ "aarch64-linux" "x86_64-linux" ];
 
@@ -119,7 +121,7 @@
 
           docs = import ./docs {
             inherit home-manager;
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = nixpkgs-docs.legacyPackages.${system};
             nmdSrc = nmd;
           };
         in

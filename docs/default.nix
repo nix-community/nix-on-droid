@@ -11,6 +11,7 @@ let
     _module.args.pkgs = pkgs.lib.mkForce (nmd.scrubDerivations "pkgs" pkgs);
 
     system.stateVersion = "19.09";
+    home-manager.sharedModules = [ (_: { home.stateVersion = "24.05"; }) ];
   };
 
   modules = import ../modules/module-list.nix {
