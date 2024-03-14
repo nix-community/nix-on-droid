@@ -7,6 +7,8 @@
     vim # or some other editor, e.g. nano or neovim
 
     # Some common stuff that people expect to have
+    #procps
+    #killall
     #diffutils
     #findutils
     #utillinux
