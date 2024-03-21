@@ -38,4 +38,5 @@ pkgs.runCommand
       --subst-var-by prootTest "${bootstrap.customPkgs.prootTermuxTest}" \
       --subst-var-by installationDir "${bootstrap.config.build.installationDir}" \
       --subst-var-by homeDir "${bootstrap.config.user.home}" \
+      --subst-var-by flakeRootDir "${toString ../.}"
   ''
