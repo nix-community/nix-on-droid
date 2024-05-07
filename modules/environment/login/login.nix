@@ -48,8 +48,8 @@ writeScript "login" ''
 
   exec ${installationDir}/bin/proot-static \
     -b ${installationDir}/nix:/nix \
-    -b ${installationDir}/bin:/bin \
-    -b ${installationDir}/etc:/etc \
+    -b ${installationDir}/bin:/bin! \
+    -b ${installationDir}/etc:/etc! \
     -b ${installationDir}/tmp:/tmp \
     -b ${installationDir}/usr:/usr \
     -b ${installationDir}/dev/shm:/dev/shm \
