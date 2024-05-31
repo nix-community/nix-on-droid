@@ -19,7 +19,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixpkgs-docs.url = "github:NixOS/nixpkgs/release-23.05";
+    nixpkgs-docs.url = "github:NixOS/nixpkgs/release-23.11";
 
     nmd = {
       url = "sourcehut:~rycee/nmd";
