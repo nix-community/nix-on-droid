@@ -9,6 +9,7 @@
 [
   ./build/activation.nix
   ./build/config.nix
+  ./environment/android-integration.nix
   ./environment/ca.nix
   ./environment/etc
   ./environment/links.nix

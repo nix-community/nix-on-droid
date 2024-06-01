@@ -52,3 +52,5 @@ def run(d):
     wait_for(d, 'c21va2UtdGVzdAo=')
 
     screenshot(d, 'success-bootstrap-channels')
+
+    return nod
