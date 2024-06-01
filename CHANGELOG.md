@@ -2,6 +2,12 @@
 
 ## Release 24.05 (unreleased)
 
+### New Options
+
+* New options under `android-integration`,
+  offer some of the tools familiar to Termux users.
+  Currently it's just `am`.
+
 ### Compatibility considerations
 
 * `nixOnDroidConfigurations` `pkgs` argument is now mandatory.

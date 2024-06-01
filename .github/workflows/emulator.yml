@@ -108,6 +108,7 @@ jobs:
         # below 28: bootstrap didn't start, IDK why
         # 34: sometimes work, but doesn't seem stable, even w/o caching images
         script:
+          - android_integration
           - bootstrap_flakes
           - bootstrap_channels
           - poke_around
