@@ -1,9 +1,8 @@
-diff --git a/pkgs/development/compilers/llvm/16/compiler-rt/default.nix b/pkgs/d
-evelopment/compilers/llvm/16/compiler-rt/default.nix
-index 0f15a9e12cde..a32533e5285c 100644
---- a/pkgs/development/compilers/llvm/16/compiler-rt/default.nix
-+++ b/pkgs/development/compilers/llvm/16/compiler-rt/default.nix
-@@ -130,8 +130,8 @@ stdenv.mkDerivation {
+diff --git a/pkgs/development/compilers/llvm/common/compiler-rt/default.nix b/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
+index 7d47436b714f..d30df471e92a 100644
+--- a/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
++++ b/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
+@@ -155,8 +155,8 @@ stdenv.mkDerivation ({
      # The presence of crtbegin_shared has been added and removed; it's possible
      # people have added/removed it to get it working on their platforms.
      # Try each in turn for now.

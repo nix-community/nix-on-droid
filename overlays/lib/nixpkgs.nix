@@ -1,14 +1,14 @@
-# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { super }:
 
 let
-  # head of nixos-23.11 as of 2024-02-17
+  # head of nixos-24.05 as of 2024-07-06
   pinnedPkgsSrc = super.fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "1d1817869c47682a6bee85b5b0a6537b6c0fba26";
-    sha256 = "sha256-sS4AItZeUnAei6v8FqxNlm+/27MPlfoGym/TZP0rmH0=";
+    rev = "49ee0e94463abada1de470c9c07bfc12b36dcf40";
+    sha256 = "sha256-WrDV0FPMVd2Sq9hkR5LNHudS3OSMmUrs90JUTN+MXpA=";
   };
 in
 

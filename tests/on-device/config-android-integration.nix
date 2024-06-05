@@ -1,7 +1,7 @@
 _:
 
 {
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
   android-integration = {
     am.enable = true;
     termux-open.enable = true;

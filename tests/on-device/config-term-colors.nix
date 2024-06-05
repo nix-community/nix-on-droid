@@ -1,7 +1,7 @@
 _:
 
 {
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
   terminal.colors = {
     background = "#FFFFFF";
     foreground = "#000000";
