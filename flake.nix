@@ -5,9 +5,9 @@
     nixpkgs.url = "github:NixOS/nixpkgs";
 
     # for bootstrap zip ball creation and proot-termux builds, we use a fixed version of nixpkgs to ease maintanence.
-    # head of nixos-23.11 as of 2024-02-17
+    # head of nixos-24.05 as of 2024-06-05
     # note: when updating nixpkgs-for-bootstrap, update store paths of proot-termux in modules/environment/login/default.nix
-    nixpkgs-for-bootstrap.url = "github:NixOS/nixpkgs/1d1817869c47682a6bee85b5b0a6537b6c0fba26";
+    nixpkgs-for-bootstrap.url = "github:NixOS/nixpkgs/b3b2b28c1daa04fe2ae47c21bb76fd226eac4ca1";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -19,7 +19,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nixpkgs-docs.url = "github:NixOS/nixpkgs/release-23.11";
+    nixpkgs-docs.url = "github:NixOS/nixpkgs/release-24.05";
 
     nmd = {
       url = "sourcehut:~rycee/nmd";

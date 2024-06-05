@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, ... }:
 

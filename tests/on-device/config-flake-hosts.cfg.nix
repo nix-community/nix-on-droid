@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 
   networking = {
     hosts."127.0.0.2" = [ "a" "b" ];
