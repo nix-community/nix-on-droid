@@ -31,6 +31,10 @@ jobs:
     steps:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
+      - name: Setup cachix
+        uses: cachix/cachix-action@v14
+        with:
+          name: nix-on-droid
       - name: Configure Nix magic cache
         uses: DeterminateSystems/magic-nix-cache-action@main
 

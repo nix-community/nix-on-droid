@@ -30,7 +30,7 @@
   environment.etcBackupExtension = ".bak";
 
   # Read the changelog before changing this value
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 
   # Set up nix for flakes
   nix.extraOptions = ''
@@ -49,7 +49,7 @@
       { config, lib, pkgs, ... }:
       {
         # Read the changelog before changing this value
-        home.stateVersion = "23.11";
+        home.stateVersion = "24.05";
 
         # insert home-manager config
       };

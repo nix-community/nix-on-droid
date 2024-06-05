@@ -1,7 +1,7 @@
 { pkgs, config, ... }:
 
 {
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 
   # no nixpkgs.overlays defined
   environment.packages = with pkgs; [ zsh ];
@@ -9,7 +9,7 @@
   home-manager.config =
     { pkgs, ... }:
     {
-      home.stateVersion = "23.11";
+      home.stateVersion = "24.05";
 
       nixpkgs.overlays = config.nixpkgs.overlays;
       home.packages = with pkgs; [ dash ];
