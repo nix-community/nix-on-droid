@@ -65,11 +65,6 @@
           type = "app";
           program = toString (import ./scripts/deploy.nix { inherit nixpkgs system; });
         };
-
-        fakedroid = {
-          type = "app";
-          program = toString self.packages.${system}.fakedroid;
-        };
       });
 
       checks = forEachSystem (system: {
@@ -126,11 +121,6 @@
           };
         in
         {
-          fakedroid = import ./tests {
-            inherit system;
-            nixpkgs = nixpkgs-for-bootstrap;
-          };
-
           nix-on-droid = nixpkgs.legacyPackages.${system}.callPackage ./nix-on-droid { };
         }
         // nixOnDroidPkgs.customPkgs
