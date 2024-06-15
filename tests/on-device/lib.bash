@@ -18,8 +18,9 @@ _setup() {
       local repoName=${BASH_REMATCH[2]}
       local repoBranch=${BASH_REMATCH[3]}
       FLAKE_URL=github:$repoUser/$repoName/$repoBranch
-    elif [[ "$channelUrl" == file:///n-o-d/archive.tar.gz ]]; then
-      FLAKE_URL=/n-o-d/unpacked
+    elif [[ "$channelUrl" == file:///data/local/tmp/n-o-d/archive.tar.gz ]]
+    then
+      FLAKE_URL=/data/local/tmp/n-o-d/unpacked
     else
       FLAKE_URL="$channelUrl"
     fi
