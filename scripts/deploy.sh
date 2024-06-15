@@ -23,6 +23,7 @@ fi
 
 PUBLIC_URL="$1"
 RSYNC_TARGET="$2"
+: ${ARCHES:=aarch64 x86_64}
 
 # this allows to run this script from every place in this git repo
 REPO_DIR="$(git rev-parse --show-toplevel)"
@@ -54,27 +55,35 @@ log "NIX_ON_DROID_CHANNEL_URL=$NIX_ON_DROID_CHANNEL_URL"
 log "NIX_ON_DROID_FLAKE_URL=$NIX_ON_DROID_FLAKE_URL"
 
 
-log "building proot..."
-PROOT="$(nix build --no-link --print-out-paths ".#prootTermux")"
-
-
 PROOT_HASH_FILE="modules/environment/login/default.nix"
-log "patching proot path in $PROOT_HASH_FILE..."
-grep "prootStatic = \"/nix/store/" "$PROOT_HASH_FILE"
-sed -i "s|prootStatic = \"/nix/store/.*\";|prootStatic = \"$PROOT\";|" "$PROOT_HASH_FILE"
-grep "prootStatic = \"/nix/store/" "$PROOT_HASH_FILE"
+UPLOADS=()
+for arch in $ARCHES; do
+    log "building $arch proot..."
+    proot="$(nix build --no-link --print-out-paths ".#prootTermux-${arch}")"
 
+    if grep -q "$arch = \"$proot\";" "$PROOT_HASH_FILE"; then
+        log "keeping $arch proot path in $PROOT_HASH_FILE"
+    elif grep -q "$arch = \"/nix/store/" "$PROOT_HASH_FILE"; then
+        log "patching $arch proot path in $PROOT_HASH_FILE..."
+        grep "$arch = \"/nix/store/" "$PROOT_HASH_FILE"
+        sed -i "s|$arch = \"/nix/store/.*\";|$arch = \"$proot\";|" "$PROOT_HASH_FILE"
+        log "            ->"
+        grep "$arch = \"/nix/store/" "$PROOT_HASH_FILE"
+    else
+        log "no $arch proot hash found in $PROOT_HASH_FILE!"
+        exit 1
+    fi
 
-log "building bootstrapZip..."
-BOOTSTRAP_ZIP="$(nix build --no-link --print-out-paths --impure ".#bootstrapZip")"
+    log "building $arch bootstrapZip..."
+    BOOTSTRAP_ZIP="$(nix build --no-link --print-out-paths --impure ".#bootstrapZip-${arch}")"
+    UPLOADS+=($BOOTSTRAP_ZIP/bootstrap-$arch.zip)
+done
 
 
 log "creating tar ball of current HEAD..."
 git archive --prefix nix-on-droid/ --output "$SOURCE_FILE" HEAD
+UPLOADS+=($SOURCE_FILE)
 
 
 log "uploading artifacts..."
-rsync --progress \
-    "$SOURCE_FILE" \
-    "$BOOTSTRAP_ZIP/bootstrap-aarch64.zip" \
-    "$RSYNC_TARGET"
+rsync --progress "${UPLOADS[@]}" "$RSYNC_TARGET"

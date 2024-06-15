@@ -6,7 +6,7 @@ load lib
   # set up / build / activate the configuration
   cat "$ON_DEVICE_TESTS_DIR/config-flake-hosts.cfg.nix" \
     > ~/.config/nixpkgs/nix-on-droid.nix
-  _sed "s|<<FLAKE_URL>>|$FLAKE_URL|g" \
+  _sed -e "s|<<FLAKE_URL>>|$FLAKE_URL|g" -e "s|<<SYSTEM>>|$(detect_system)|g" \
     "$ON_DEVICE_TESTS_DIR/config-flake.nix" \
     > ~/.config/nixpkgs/flake.nix
 
@@ -27,7 +27,7 @@ load lib
   # set up / build / activate the configuration
   cat "$ON_DEVICE_TESTS_DIR/config-flake-hosts-localhost.cfg.nix" \
     > ~/.config/nixpkgs/nix-on-droid.nix
-  _sed "s|<<FLAKE_URL>>|$FLAKE_URL|g" \
+  _sed -e "s|<<FLAKE_URL>>|$FLAKE_URL|g" -e "s|<<SYSTEM>>|$(detect_system)|g" \
     "$ON_DEVICE_TESTS_DIR/config-flake.nix" \
     > ~/.config/nixpkgs/flake.nix
 

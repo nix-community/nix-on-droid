@@ -14,6 +14,7 @@
   outputs = { nix-on-droid, ... }: {
     nixOnDroidConfigurations = {
       device = nix-on-droid.lib.nixOnDroidConfiguration {
+        system = "<<SYSTEM>>";
         modules = [ ./nix-on-droid.nix ];
       };
     };
