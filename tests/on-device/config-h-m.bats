@@ -16,7 +16,7 @@ teardown() {
 
 @test 'using home-manager works' {
   # assertions to verify initial state is as expected
-  assert_command vi
+  assert_command vim
   assert_no_command dash
   [[ ! -e ~/.config/example ]]
 
@@ -33,8 +33,8 @@ teardown() {
   # test common commands presence
   assert_command nix-on-droid nix-shell bash
 
-  # test that vi has disappeared
-  assert_no_command vi
+  # test that vim has disappeared
+  assert_no_command vim
 
   # test dash has appeared and works
   assert_command dash
@@ -44,7 +44,7 @@ teardown() {
 
   # check that reverting works too
   switch_to_default_config
-  assert_command vi
+  assert_command vim
   assert_no_command unzip
 
   # file will be still present because home-manager needs to be set up to remove old links

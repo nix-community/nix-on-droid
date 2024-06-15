@@ -1,10 +1,10 @@
-# Copyright (c) 2019-2021, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 load lib
 
 @test 'flake + h-m + #134 overlays case work' {
   # assertions to verify initial state is as expected
-  assert_command vi
+  assert_command vim
   assert_no_command dash zsh
 
   # set up / build / activate the configuration
@@ -21,10 +21,10 @@ load lib
 
   # test that both zsh (system) and dash (user) have appeared in $PATH
   assert_command dash zsh
-  assert_no_command vi
+  assert_no_command vim
 
   # check that reverting works too
   switch_to_default_config
-  assert_command vi
+  assert_command vim
   assert_no_command dash zsh
 }

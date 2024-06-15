@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 load lib
 
@@ -7,7 +7,7 @@ function flake_example() {
   local flake_file_name="$2"
 
   # assertions to verify initial state is as expected
-  assert_command vi
+  assert_command vim
   assert_no_command unzip
 
   # set up / build / activate the configuration
@@ -26,13 +26,13 @@ function flake_example() {
   # test presence of several crucial commands
   assert_command nix-on-droid nix-shell bash
 
-  # test that nano has replaced vi and unzip has appeared in $PATH
+  # test that nano has replaced vim and unzip has appeared in $PATH
   assert_command nano unzip
-  assert_no_command vi
+  assert_no_command vim
 
   # check that reverting works too
   switch_to_default_config
-  assert_command vi
+  assert_command vim
   assert_no_command unzip
 }
 
