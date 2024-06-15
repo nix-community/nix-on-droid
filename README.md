@@ -215,44 +215,20 @@ will expand to `.#nixOnDroidConfigurations.device`). If you run `nix-on-droid sw
 Therefore, every evaluation of a flake configuration will be executed with `--impure` flag. (This behaviour will be
 dropped as soon as the default setup does not require it anymore.)
 
-## Emulate Nix-on-Droid-like environment with `fakedroid`
-
-For easier debugging and testing, there is a so-called `fakedroid` environment which
-emulates the on-device environment including proot as good as possible.
-
-You can enter this emulated environment with
-
-```sh
-nix run --impure ".#fakedroid"
-```
-
-This will install Nix-on-Droid with initial channel setup and save the state of
-this session in the `.fakedroid` directory in the project directory. To enter this
-environment with initial flake setup, set `USE_FLAKE=1` as environment variable.
-Channel and flake setups can co-exist in the `.fakedroid` state directory. To
-rebuild/re-test the bootstrap process, remove the `.fakedroid` directory.
-
-To only run a command in fakedroid and not enter an interactive shell, just call it
-with the command as arguments:
-
-```sh
-nix run --impure ".#fakedroid" -- ls -l
-```
-
 ## Testing
 
 In the [./tests/on-device](./tests/on-device) directory, there is small set
-of [bats](https://github.com/bats-core/bats-core) tests that can be executed on the
-android device or run in the `fakedroid` environment.
+of [bats](https://github.com/bats-core/bats-core) tests
+that can be executed on a real or emulated android device.
 
-To run the tests (on device or in fakedroid), run
+To run the tests, execute
 
 ```sh
 nix-on-droid on-device-test
 ```
 
 **Note:** This currently requires a channel setup and should only be executed on
-clean installations.
+clean, disposable installations.
 
 ## Tips
 
