@@ -10,6 +10,7 @@
   outputs = { nix-on-droid, ... }: {
     nixOnDroidConfigurations = {
       default = nix-on-droid.lib.nixOnDroidConfiguration {
+        system = "<<SYSTEM>>";
         modules = [ ./nix-on-droid.nix ];
       };
     };

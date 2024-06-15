@@ -17,7 +17,7 @@ function flake_example() {
     "$CHANNEL_DIR/modules/environment/login/nix-on-droid.nix.default" \
     > ~/.config/nixpkgs/nix-on-droid.nix
 
-  _sed "s|<<FLAKE_URL>>|$FLAKE_URL|g" \
+  _sed -e "s|<<FLAKE_URL>>|$FLAKE_URL|g" -e "s|<<SYSTEM>>|$(detect_system)|g" \
     "$ON_DEVICE_TESTS_DIR/$flake_file_name" \
     > ~/.config/nixpkgs/flake.nix
 
