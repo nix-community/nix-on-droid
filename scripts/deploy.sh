@@ -40,10 +40,18 @@ if [[ "$PUBLIC_URL" =~ ^github:(.*)/(.*)/(.*) ]]; then
     export NIX_ON_DROID_CHANNEL_URL="https://github.com/${BASH_REMATCH[1]}/${BASH_REMATCH[2]}/archive/${BASH_REMATCH[3]}.tar.gz"
 else
     [[ "$PUBLIC_URL" =~ ^https?:// ]] || \
+    [[ "$PUBLIC_URL" =~ ^file:/// ]] || \
         { echo "unsupported url $PUBLIC_URL" >&2; exit 1; }
     export NIX_ON_DROID_CHANNEL_URL="$PUBLIC_URL"
 fi
-export NIX_ON_DROID_FLAKE_URL="$PUBLIC_URL"
+# special case for local / CI testing
+if [[ "$PUBLIC_URL" =~ ^file:///(.*)/archive.tar.gz ]]; then
+    export NIX_ON_DROID_FLAKE_URL="/${BASH_REMATCH[1]}/unpacked"
+else
+    export NIX_ON_DROID_FLAKE_URL="$PUBLIC_URL"
+fi
+log "NIX_ON_DROID_CHANNEL_URL=$NIX_ON_DROID_CHANNEL_URL"
+log "NIX_ON_DROID_FLAKE_URL=$NIX_ON_DROID_FLAKE_URL"
 
 
 log "building proot..."
