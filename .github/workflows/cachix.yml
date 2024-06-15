@@ -27,5 +27,5 @@ jobs:
             --log-format bar-with-logs \
             --option keep-going true \
             --show-trace \
-            build .#bootstrapZip \
+            build .#bootstrapZip-aarch64 .#bootstrapZip-x86_64 \
             --impure

@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, initialPackageInfo, ... }:
 
@@ -82,7 +82,14 @@ in
     environment.files = {
       inherit login loginInner;
 
-      prootStatic = "/nix/store/7w09z1kw62wg7nv3q3z2p6kxf1ihk178-proot-termux-static-aarch64-unknown-linux-android-unstable-2023-11-11";
+      prootStatic =
+        let
+          crossCompiledPaths = {
+            aarch64 = "/nix/store/7w09z1kw62wg7nv3q3z2p6kxf1ihk178-proot-termux-static-aarch64-unknown-linux-android-unstable-2023-11-11";
+            x86_64 = "/nix/store/i6jppi627sakbgm5x2a8jjdfyv8571zc-proot-termux-static-x86_64-unknown-linux-android-unstable-2023-11-11";
+          };
+        in
+        "${crossCompiledPaths.${config.build.arch}}";
     };
 
   };

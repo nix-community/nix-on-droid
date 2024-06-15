@@ -33,8 +33,8 @@
 
       overlay = nixpkgs.lib.composeManyExtensions (import ./overlays);
 
-      pkgs' = import nixpkgs {
-        system = "aarch64-linux";
+      pkgsPerSystem = system: import nixpkgs {
+        inherit system;
         overlays = [ overlay ];
       };
 
@@ -75,16 +75,18 @@
 
       lib.nixOnDroidConfiguration =
         { modules ? [ ]
+        , system ? "aarch64-linux"
         , extraSpecialArgs ? { }
-        , pkgs ? pkgs'
+        , pkgs ? pkgsPerSystem system
         , home-manager-path ? home-manager.outPath
           # deprecated:
         , config ? null
         , extraModules ? null
-        , system ? null
         }:
-        if pkgs.system != "aarch64-linux" then
-          throw "aarch64-linux is the only currently supported system type"
+        if ! (builtins.elem system [ "aarch64-linux" "x86_64-linux" ]) then
+          throw
+            ("${system} is not supported; aarch64-linux / x86_64-linux " +
+              "are the only currently supported system types")
         else
           pkgs.lib.throwIf
             (config != null || extraModules != null)
@@ -102,6 +104,8 @@
             (import ./modules {
               inherit extraSpecialArgs home-manager-path pkgs;
               config.imports = modules;
+              config.build.arch =
+                nixpkgs.lib.strings.removeSuffix "-linux" system;
               isFlake = true;
             });
 
@@ -109,10 +113,17 @@
 
       packages = forEachSystem (system:
         let
-          nixOnDroidPkgs = import ./pkgs {
-            inherit system;
-            nixpkgs = nixpkgs-for-bootstrap;
-          };
+          flattenArch = arch: derivationAttrset:
+            nixpkgs.lib.attrsets.mapAttrs'
+              (name: drv:
+                nixpkgs.lib.attrsets.nameValuePair (name + "-" + arch) drv
+              )
+              derivationAttrset;
+          perArchCustomPkgs = arch: flattenArch arch
+            (import ./pkgs {
+              inherit system arch;
+              nixpkgs = nixpkgs-for-bootstrap;
+            }).customPkgs;
 
           docs = import ./docs {
             inherit home-manager;
@@ -123,7 +134,8 @@
         {
           nix-on-droid = nixpkgs.legacyPackages.${system}.callPackage ./nix-on-droid { };
         }
-        // nixOnDroidPkgs.customPkgs
+        // (perArchCustomPkgs "aarch64")
+        // (perArchCustomPkgs "x86_64")
         // docs
       );
 

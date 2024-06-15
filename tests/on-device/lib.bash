@@ -71,3 +71,9 @@ _diff() {
   storePath="$(nix-build "<nixpkgs>" --no-out-link --attr diffutils)"
   "${storePath}/bin/diff" "$@"
 }
+
+detect_system() {
+  nix --experimental-features nix-command \
+      eval --impure --expr 'builtins.currentSystem' \
+    | sed 's|"||g'
+}

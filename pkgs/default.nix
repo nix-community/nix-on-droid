@@ -41,7 +41,10 @@ let
       user.shell = "${initialPackageInfo.bash}/bin/bash";
 
       build = {
-        inherit arch;
+        arch =
+          if arch != null
+          then arch
+          else nixpkgs.lib.strings.removeSuffix "-linux" builtins.currentSystem;
 
         channel = {
           nixpkgs = urlOptionValue nixpkgsChannelURL "NIXPKGS_CHANNEL_URL";

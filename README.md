@@ -136,7 +136,7 @@ Get an x86_64 computer with flake-enabled Nix.
 Run
 
 ```sh
-nix build ".#bootstrapZip" --impure
+nix build ".#bootstrapZip-aarch64" --impure
 ```
 
 Put the zip file from `result` on some HTTP server
@@ -192,6 +192,7 @@ A minimal example could look like the following:
   outputs = { self, nixpkgs, nix-on-droid }: {
 
     nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
+      system = "aarch64-linux";
       modules = [ ./nix-on-droid.nix ];
     };
 

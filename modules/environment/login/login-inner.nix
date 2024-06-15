@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, initialPackageInfo, writeText }:
 
@@ -80,9 +80,10 @@ writeText "login-inner" ''
         ${nixCmd} flake new ${config.user.home}/.config/nix-on-droid --template ${config.build.flake.nix-on-droid}
 
         ${lib.optionalString config.build.flake.inputOverrides ''
-          echo "Overriding input urls in flake..."
+          echo "Overriding input urls / arch in flake..."
           ${nixCmd} run nixpkgs#gnused -- \
             -i \
+            -e 's,\"aarch64-linux",\"${config.build.arch}-linux\",' \
             -e 's,\"github:NixOS/nixpkgs.*\",\"${config.build.flake.nixpkgs}\",' \
             -e 's,\"github:nix-community/nix-on-droid.*\",\"${config.build.flake.nix-on-droid}\",' \
             "${config.user.home}/.config/nix-on-droid/flake.nix"
