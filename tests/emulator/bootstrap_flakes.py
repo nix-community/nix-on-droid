@@ -9,6 +9,7 @@ def run(d):
     nod.launch()
 
     wait_for(d, 'Bootstrap zipball location')
+    screenshot(d, 'initial')
     d.ui(className='android.widget.EditText').set_text(BOOTSTRAP_URL)
     screenshot(d, 'entered-url')
     for i in range(2):
