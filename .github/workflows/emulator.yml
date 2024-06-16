@@ -6,17 +6,108 @@ on:
     - cron: 0 0 * * 1
 
 jobs:
+
+  prepare-droidctl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      path: ${{ steps.droidctl-build.outputs.path }}
+    steps:
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+      - name: Configure Nix magic cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Build droidctl
+        id: droidctl-build
+        run: |
+          nix build 'github:t184256/droidctl' --out-link /tmp/droidctl
+          echo "path=$(realpath /tmp/droidctl)" >> "$GITHUB_OUTPUT"
+
+
+  prepare-n-o-d:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+      - name: Configure Nix magic cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build zipball and channel tarball to inject (n-o-d)
+        id: injection-build
+        run: |
+          rm -rf n-o-d
+          mkdir -p n-o-d
+          git -C . archive --format=tar.gz --prefix n-o-d/ HEAD > n-o-d/archive.tar.gz
+          ARCHES=x86_64 nix run '.#deploy' -- file:///data/local/tmp/n-o-d/archive.tar.gz n-o-d/
+          tar cf n-o-d.tar n-o-d
+
+      - name: Store zipball and channel tarball to inject (n-o-d)
+        uses: actions/upload-artifact@v4
+        with:
+          name: n-o-d.tar
+          path: n-o-d.tar
+          retention-days: 2
+
+
+  prepare-avd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        api-level: [29]  # keep in sync
+    steps:
+      - name: Configure AVD cache
+        id: avd-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+      - name: Enable KVM
+        if: matrix.api-level == 29 && steps.avd-cache.outputs.cache-hit != 'true'
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Create AVD and generate snapshot for caching
+        if: matrix.api-level == 29 && steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          # ! Keep in sync with the other one,
+          # ! but w/o -no-snapshot-save and with disable-animations: false
+          target: default
+          arch: x86_64
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+
   emulate:
+    needs:
+      - prepare-droidctl
+      - prepare-n-o-d
+      - prepare-avd
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     strategy:
       fail-fast: false
       matrix:
-        api-level: [29]
-        # below 28: didn't start, IDK why
+        api-level: [29]  # keep in sync
+        # below 28: bootstrap didn't start, IDK why
         # 34: sometimes work, but doesn't seem stable, even w/o caching images
-        way:
+        script:
           - bootstrap_flakes
           - bootstrap_channels
           - poke_around
@@ -27,48 +118,41 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Retrieve zipball and channel tarball to inject (n-o-d)
+        uses: actions/download-artifact@v4
+        with:
+          name: n-o-d.tar
+
+      - name: Unpack zipball and channel tarball to inject (n-o-d)
+        run: tar xf n-o-d.tar
+
       - name: Install Nix / enable KVM
         uses: DeterminateSystems/nix-installer-action@main
+      - name: Configure Nix magic cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
 
-      - name: Setup cachix
-        uses: cachix/cachix-action@v14
-        with:
-          name: nix-on-droid
-          signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
+      - name: Fetch droidctl (using previous eval)
+        id: droidctl-fetch
+        env:
+          DROIDCTL: ${{needs.prepare-droidctl.outputs.path}}
+        run: nix build "$DROIDCTL" --out-link /tmp/droidctl
+        continue-on-error: true  # GitHub Actions can throttle magic-nix-cache
 
-      - name: Build droidctl
-        run: nix build 'github:t184256/droidctl' --out-link droidctl
+      - name: Build droidctl (anew, fallback)
+        if: always() && (steps.droidctl-fetch.outcome == 'failure')
+        run: nix build 'github:t184256/droidctl' --out-link /tmp/droidctl
 
-      - name: Build zipball, channel tarball and flake to inject
-        run: |
-          rm -rf n-o-d
-          mkdir -p n-o-d
-          git -C . archive --format=tar.gz --prefix n-o-d/ HEAD > n-o-d/archive.tar.gz
-          ARCHES=x86_64 nix run '.#deploy' -- file:///data/local/tmp/n-o-d/archive.tar.gz n-o-d/
-
-      - name: Configure AVD cache
-        if: matrix.api-level == 29
-        uses: actions/cache@v4
+      - name: Restore AVD cache
         id: avd-cache
+        if: matrix.api-level == 29  # tested, robust with kill workaround
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.api-level }}-${{ matrix.way }}  # concurrent save
+          key: avd-${{ matrix.api-level }}
 
-      - name: Create AVD and generate snapshot for caching
-        if: matrix.api-level == 29 && steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          target: default
-          arch: x86_64
-          api-level: ${{ matrix.api-level }}
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          script: echo "Generated AVD snapshot for caching."
-
-      - name: Test way=${{ matrix.way}} api-level=${{ matrix.api-level }}
+      - name: Test script=${{ matrix.script }} api-level=${{ matrix.api-level }}
         uses: reactivecircus/android-emulator-runner@v2
         with:
           target: default
@@ -88,13 +172,14 @@ jobs:
             cd tests/emulator &&
             adb shell settings put secure enabled_accessibility_services com.google.android.marvin.talkback/com.google.android.marvin.talkback.TalkBackService &&
             echo 'ready' &&
-            nix run 'github:t184256/droidctl' -- run ${{ matrix.way }}.py
-            # TODO: push to cachix from within the emulator
+            /tmp/droidctl/bin/droidctl run ${{ matrix.script }}.py
+            # TODO: push to cachix from within the emulator?
+            #       would be of use on aarch64, not x86_64
 
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: screenshots-${{ matrix.way }}-${{ matrix.api-level }}
+          name: screenshots-${{ matrix.script }}-${{ matrix.api-level }}
           path: tests/emulator/screenshots
           if-no-files-found: warn # 'error' or 'ignore' are also available
