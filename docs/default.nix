@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2023, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { pkgs, home-manager, nmdSrc }:
 
@@ -18,6 +18,7 @@ let
     inherit pkgs;
     home-manager-path = home-manager.outPath;
     isFlake = true;
+    targetSystem = "aarch64-linux/x86_64-linux";
   };
 
   modulesDocs = nmd.buildModulesDocs {

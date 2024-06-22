@@ -1,18 +1,19 @@
 # Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { nixpkgs
-, system
-, arch ? "aarch64"
+, system  # system to compile for, user-facing name of targetSystem
+, _nativeSystem ? null  # system to cross-compile from, see flake.nix
 , nixOnDroidChannelURL ? null
 , nixpkgsChannelURL ? null
 , nixOnDroidFlakeURL ? null
 }:
 
 let
-  nixDirectory = callPackage ./nix-directory.nix { };
+  nativeSystem = if _nativeSystem == null then system else _nativeSystem;
+  nixDirectory = callPackage ./nix-directory.nix { inherit system; };
   initialPackageInfo = import "${nixDirectory}/nix-support/package-info.nix";
 
-  pkgs = import nixpkgs { inherit system; };
+  pkgs = import nixpkgs { system = nativeSystem; };
 
   urlOptionValue = url: envVar:
     let
@@ -24,6 +25,7 @@ let
 
   modules = import ../modules {
     inherit pkgs;
+    targetSystem = system;
 
     isFlake = true;
 
@@ -41,11 +43,6 @@ let
       user.shell = "${initialPackageInfo.bash}/bin/bash";
 
       build = {
-        arch =
-          if arch != null
-          then arch
-          else nixpkgs.lib.strings.removeSuffix "-linux" builtins.currentSystem;
-
         channel = {
           nixpkgs = urlOptionValue nixpkgsChannelURL "NIXPKGS_CHANNEL_URL";
           nix-on-droid = urlOptionValue nixOnDroidChannelURL "NIX_ON_DROID_CHANNEL_URL";
@@ -60,6 +57,7 @@ let
     pkgs // customPkgs // {
       inherit (modules) config;
       inherit callPackage nixpkgs nixDirectory initialPackageInfo;
+      targetSystem = system;
     }
   );
 

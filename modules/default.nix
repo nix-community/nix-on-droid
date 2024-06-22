@@ -1,6 +1,7 @@
-# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config ? null
+{ targetSystem ? builtins.currentSystem  # system to compile for
+, config ? null
 , extraSpecialArgs ? { }
 , pkgs ? import <nixpkgs> { }
 , home-manager-path ? <home-manager>
@@ -17,7 +18,9 @@ let
     else if builtins.pathExists defaultConfigFile then defaultConfigFile
     else pkgs.config.nix-on-droid or (throw "No config file found! Create one in ~/.config/nixpkgs/nix-on-droid.nix");
 
-  nodModules = import ./module-list.nix { inherit pkgs home-manager-path isFlake; };
+  nodModules = import ./module-list.nix {
+    inherit pkgs home-manager-path isFlake targetSystem;
+  };
 
   rawModule = evalModules {
     modules = [ configModule ] ++ nodModules;

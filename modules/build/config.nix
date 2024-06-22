@@ -11,13 +11,6 @@ with lib;
   options = {
 
     build = {
-      arch = mkOption {
-        type = types.enum [ "aarch64" "x86_64" ];
-        default = strings.removeSuffix "-linux" builtins.currentSystem;
-        internal = true;
-        description = "Destination arch.";
-      };
-
       initialBuild = mkOption {
         type = types.bool;
         default = false;

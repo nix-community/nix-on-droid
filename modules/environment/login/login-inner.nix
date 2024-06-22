@@ -1,6 +1,6 @@
 # Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, lib, initialPackageInfo, writeText }:
+{ config, lib, initialPackageInfo, writeText, targetSystem }:
 
 let
   inherit (initialPackageInfo) cacert nix;
@@ -80,14 +80,19 @@ writeText "login-inner" ''
         ${nixCmd} flake new ${config.user.home}/.config/nix-on-droid --template ${config.build.flake.nix-on-droid}
 
         ${lib.optionalString config.build.flake.inputOverrides ''
-          echo "Overriding input urls / arch in flake..."
+          echo "Overriding input urls in the flake..."
           ${nixCmd} run nixpkgs#gnused -- \
             -i \
-            -e 's,\"aarch64-linux",\"${config.build.arch}-linux\",' \
             -e 's,\"github:NixOS/nixpkgs.*\",\"${config.build.flake.nixpkgs}\",' \
             -e 's,\"github:nix-community/nix-on-droid.*\",\"${config.build.flake.nix-on-droid}\",' \
             "${config.user.home}/.config/nix-on-droid/flake.nix"
         ''}
+
+        echo "Overriding system value in the flake..."
+        ${nixCmd} run nixpkgs#gnused -- \
+          -i \
+          -e 's,\"aarch64-linux",\"${targetSystem}\",' \
+          "${config.user.home}/.config/nix-on-droid/flake.nix"
 
         echo "Installing first Nix-on-Droid generation..."
         ${nixCmd} run ${config.build.flake.nix-on-droid} -- switch --flake ${config.user.home}/.config/nix-on-droid

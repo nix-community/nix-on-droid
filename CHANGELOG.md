@@ -11,6 +11,7 @@
   `pkgs = import nixpkgs { system = "aarch64-linux"; };`
   as an argument to `nixOnDroidConfiguration`.
   If in doubt, refer to the `templates`.
+* `config.arch` option has been dropped. Consider using `pkgs.system` instead.
 
 ## Release 23.11
 
