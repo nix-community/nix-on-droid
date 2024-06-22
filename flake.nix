@@ -33,11 +33,6 @@
 
       overlay = nixpkgs.lib.composeManyExtensions (import ./overlays);
 
-      pkgsPerSystem = system: import nixpkgs {
-        inherit system;
-        overlays = [ overlay ];
-      };
-
       formatterPackArgsFor = forEachSystem (system: {
         inherit nixpkgs system;
         checkFiles = [ ./. ];
@@ -74,22 +69,22 @@
       formatter = forEachSystem (system: nix-formatter-pack.lib.mkFormatter formatterPackArgsFor.${system});
 
       lib.nixOnDroidConfiguration =
-        { modules ? [ ]
-        , system ? "aarch64-linux"
+        { pkgs
+        , modules ? [ ]
         , extraSpecialArgs ? { }
-        , pkgs ? pkgsPerSystem system
         , home-manager-path ? home-manager.outPath
           # deprecated:
         , config ? null
         , extraModules ? null
+        , system ? null  # pkgs.system is used to detect user's arch
         }:
-        if ! (builtins.elem system [ "aarch64-linux" "x86_64-linux" ]) then
+        if ! (builtins.elem pkgs.system [ "aarch64-linux" "x86_64-linux" ]) then
           throw
-            ("${system} is not supported; aarch64-linux / x86_64-linux " +
+            ("${pkgs.system} is not supported; aarch64-linux / x86_64-linux " +
               "are the only currently supported system types")
         else
           pkgs.lib.throwIf
-            (config != null || extraModules != null)
+            (config != null || extraModules != null || system != null)
             ''
               The 'nixOnDroidConfiguration' arguments
 
@@ -97,15 +92,17 @@
               - 'extraModules'
               - 'system'
 
-              have been removed. Instead use the argument 'modules'. The
-              'system' will be inferred by 'pkgs.system'.
+              have been removed.
+              Instead of 'extraModules' use the argument 'modules'.
+              The 'system' will be inferred by 'pkgs.system',
+              so pass a 'pkgs = import nixpkgs { system = "aarch64-linux"; };'
               See the 22.11 release notes for more.
             ''
             (import ./modules {
               inherit extraSpecialArgs home-manager-path pkgs;
               config.imports = modules;
               config.build.arch =
-                nixpkgs.lib.strings.removeSuffix "-linux" system;
+                nixpkgs.lib.strings.removeSuffix "-linux" pkgs.system;
               isFlake = true;
             });
 
