@@ -2,6 +2,16 @@
 
 ## Release 24.05 (unreleased)
 
+### Compatibility considerations
+
+* `nixOnDroidConfigurations` `pkgs` argument is now mandatory.
+  Put simply, if one's using a flake config, they need to add `nixpkgs` to
+  `outputs = { self, nixpkgs, ... }:` if it was previously missing,
+  then add a
+  `pkgs = import nixpkgs { system = "aarch64-linux"; };`
+  as an argument to `nixOnDroidConfiguration`.
+  If in doubt, refer to the `templates`.
+
 ## Release 23.11
 
 ### New Options

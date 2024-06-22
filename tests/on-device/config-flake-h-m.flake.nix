@@ -11,10 +11,10 @@
     };
   };
 
-  outputs = { nix-on-droid, ... }: {
+  outputs = { nix-on-droid, nixpkgs, ... }: {
     nixOnDroidConfigurations = {
       device = nix-on-droid.lib.nixOnDroidConfiguration {
-        system = "<<SYSTEM>>";
+        pkgs = import nixpkgs { system = "<<SYSTEM>>"; };
         modules = [ ./nix-on-droid.nix ];
       };
     };
