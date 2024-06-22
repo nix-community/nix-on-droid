@@ -99,10 +99,9 @@
               See the 22.11 release notes for more.
             ''
             (import ./modules {
+              targetSystem = pkgs.system; # system to cross-compile to
               inherit extraSpecialArgs home-manager-path pkgs;
               config.imports = modules;
-              config.build.arch =
-                nixpkgs.lib.strings.removeSuffix "-linux" pkgs.system;
               isFlake = true;
             });
 
@@ -118,7 +117,8 @@
               derivationAttrset;
           perArchCustomPkgs = arch: flattenArch arch
             (import ./pkgs {
-              inherit system arch;
+              _nativeSystem = system; # system to cross-compile from
+              system = "${arch}-linux"; # system to cross-compile to
               nixpkgs = nixpkgs-for-bootstrap;
             }).customPkgs;
 

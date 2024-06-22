@@ -30,9 +30,9 @@ def run(d):
     wait_for(d, 'Setting up Nix-on-Droid with flakes...')
 
     wait_for(d, 'Installing flake from default template...')
-    wait_for(d, 'Overriding input urls / arch in flake...')
-    wait_for(d, 'Installing first Nix-on-Droid generation...', timeout=600)
-    wait_for(d, 'Building activation package')
+    wait_for(d, 'Overriding system value in the flake...', timeout=600)
+    wait_for(d, 'Installing first Nix-on-Droid generation...')
+    wait_for(d, 'Building activation package', timeout=180)
     wait_for(d, 'Congratulations!', timeout=900)
     wait_for(d, 'bash-5.2$')
     screenshot(d, 'bootstrap-ends')

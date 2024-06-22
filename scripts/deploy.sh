@@ -61,14 +61,14 @@ for arch in $ARCHES; do
     log "building $arch proot..."
     proot="$(nix build --no-link --print-out-paths ".#prootTermux-${arch}")"
 
-    if grep -q "$arch = \"$proot\";" "$PROOT_HASH_FILE"; then
+    if grep -q "$arch-linux = \"$proot\";" "$PROOT_HASH_FILE"; then
         log "keeping $arch proot path in $PROOT_HASH_FILE"
-    elif grep -q "$arch = \"/nix/store/" "$PROOT_HASH_FILE"; then
+    elif grep -q "$arch-linux = \"/nix/store/" "$PROOT_HASH_FILE"; then
         log "patching $arch proot path in $PROOT_HASH_FILE..."
-        grep "$arch = \"/nix/store/" "$PROOT_HASH_FILE"
-        sed -i "s|$arch = \"/nix/store/.*\";|$arch = \"$proot\";|" "$PROOT_HASH_FILE"
+        grep "$arch-linux = \"/nix/store/" "$PROOT_HASH_FILE"
+        sed -i "s|$arch-linux = \"/nix/store/.*\";|$arch-linux = \"$proot\";|" "$PROOT_HASH_FILE"
         log "            ->"
-        grep "$arch = \"/nix/store/" "$PROOT_HASH_FILE"
+        grep "$arch-linux = \"/nix/store/" "$PROOT_HASH_FILE"
     else
         log "no $arch proot hash found in $PROOT_HASH_FILE!"
         exit 1

@@ -1,6 +1,10 @@
-# Copyright (c) 2019-2022, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ pkgs, home-manager-path, isFlake }:
+{ pkgs
+, home-manager-path
+, isFlake
+, targetSystem  # system to cross-compile to
+}:
 
 [
   ./build/activation.nix
@@ -26,7 +30,7 @@
   {
     _file = ./module-list.nix;
     _module.args = {
-      inherit home-manager-path isFlake;
+      inherit home-manager-path isFlake targetSystem;
       pkgs = pkgs.lib.mkDefault pkgs;
     };
   }

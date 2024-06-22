@@ -1,12 +1,15 @@
 # Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, system }:
+{ lib, config, system, targetSystem }:
 
+let
+  arch = lib.strings.removeSuffix "-linux" targetSystem;
+in
 {
   inherit system;
 
   crossSystem = {
-    config = "${config.build.arch}-unknown-linux-android";
+    config = "${arch}-unknown-linux-android";
     sdkVer = "32";
     libc = "bionic";
     useAndroidPrebuilt = false;
