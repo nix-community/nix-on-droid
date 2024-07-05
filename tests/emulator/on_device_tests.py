@@ -29,5 +29,5 @@ def run(d):
         d.ui(text='ALLOW').click()
     screenshot(d, 'tests-running')
 
-    wait_for(d, 'tests, 0 failures in', timeout=1800)
+    wait_for(d, 'tests, 0 failures in', timeout=1200)
     screenshot(d, 'tests-finished')
