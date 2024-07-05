@@ -3,6 +3,7 @@
 load lib
 
 @test 'android-integration options can be used' {
+  bats_require_minimum_version 1.5.0
   run ! command -v am
 
   cp \
