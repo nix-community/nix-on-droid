@@ -8,12 +8,17 @@ from common import screenshot, wait_for
 def run(d):
     nod = bootstrap_channels.run(d)
 
+    # Verify that android-integration tools aren't installed by default
     d('input text "am"')
     d.ui.press('enter')
     wait_for(d, 'bash: am: command not found')
     screenshot(d, 'no-am')
+    d('input text "termux-setup-storage"')
+    d.ui.press('enter')
+    wait_for(d, 'bash: termux-setup-storage: command not found')
+    screenshot(d, 'no-termux-setup-storage')
 
-    # Apply a config that enables am
+    # Apply a config that enables android-integration tools
     cfg = ('/data/local/tmp/n-o-d/unpacked/tests/on-device/'
            'config-android-integration.nix')
     d(f'input text \'cp {cfg} .config/nixpkgs/nix-on-droid.nix\'')
@@ -67,3 +72,31 @@ def run(d):
     d('input text "am | head -n2"')
     d.ui.press('enter')
     wait_for(d, 'termux-am is a wrapper script')
+
+    # Verify termux-setup-storage is there
+    d('input text "termux-setup-storage"')
+    d.ui.press('enter')
+    screenshot(d, 'termux-setup-storage-invoked')
+    wait_for(d, 'Allow Nix to access')
+    screenshot(d, 'permission-requested')
+    if 'text="Allow"' in d.ui.dump_hierarchy():
+        d.ui(text='Allow').click()
+    elif 'text="ALLOW"' in d.ui.dump_hierarchy():
+        d.ui(text='ALLOW').click()
+    screenshot(d, 'permission-granted')
+
+    d('input text "ls -l storage"')
+    d.ui.press('enter')
+    screenshot(d, 'storage-listed')
+    wait_for(d, 'pictures -&gt; /storage/emulated/0/Pictures')
+    wait_for(d, 'shared -&gt; /storage/emulated/0')
+    screenshot(d, 'storage-listed-ok')
+
+    # Invoke termux-setup-storage again
+    d('input text "termux-setup-storage"')
+    d.ui.press('enter')
+    screenshot(d, 'termux-setup-storage-invoked-again')
+    wait_for(d, 'already exists')
+    wait_for(d, 'Do you want to continue?')
+    d.ui.press('enter')
+    wait_for(d, 'Aborting configuration and leaving')
