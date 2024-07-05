@@ -1,0 +1,87 @@
+From 6d72b44d90347ddce8473b604c38f352e6773f8d Mon Sep 17 00:00:00 2001
+From: Alexander Sosedkin <monk@unboiled.info>
+Date: Sat, 1 Jun 2024 17:14:22 +0200
+Subject: [PATCH] scripts: replace com.termux with @TERMUX_APP_PACKAGE@
+
+---
+ scripts/termux-open.in            | 2 +-
+ scripts/termux-reload-settings.in | 2 +-
+ scripts/termux-reset.in           | 2 +-
+ scripts/termux-setup-storage.in   | 4 ++--
+ scripts/termux-wake-lock.in       | 4 ++--
+ scripts/termux-wake-unlock.in     | 4 ++--
+ 6 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/scripts/termux-open.in b/scripts/termux-open.in
+index 9c81630..9a04e7b 100644
+--- a/scripts/termux-open.in
++++ b/scripts/termux-open.in
+@@ -44,7 +44,7 @@ case "${TERMUX__USER_ID:-}" in ''|*[!0-9]*|0[0-9]*) TERMUX__USER_ID=0;; esac
+ 
+ am broadcast --user "$TERMUX__USER_ID" \
+ 	-a $ACTION \
+-	-n com.termux/com.termux.app.TermuxOpenReceiver \
++	-n @TERMUX_APP_PACKAGE@/@TERMUX_APP_PACKAGE@.app.TermuxOpenReceiver \
+ 	$EXTRAS \
+ 	-d "$FILE" \
+ 	> /dev/null
+diff --git a/scripts/termux-reload-settings.in b/scripts/termux-reload-settings.in
+index 4e71f8a..ef8b0f4 100644
+--- a/scripts/termux-reload-settings.in
++++ b/scripts/termux-reload-settings.in
+@@ -11,4 +11,4 @@ fi
+ 
+ case "${TERMUX__USER_ID:-}" in ''|*[!0-9]*|0[0-9]*) TERMUX__USER_ID=0;; esac
+ 
+-am broadcast --user "$TERMUX__USER_ID" -a com.termux.app.reload_style com.termux > /dev/null
++am broadcast --user "$TERMUX__USER_ID" -a @TERMUX_APP_PACKAGE@.app.reload_style @TERMUX_APP_PACKAGE@ > /dev/null
+diff --git a/scripts/termux-reset.in b/scripts/termux-reset.in
+index 6f807a7..2161d1f 100644
+--- a/scripts/termux-reset.in
++++ b/scripts/termux-reset.in
+@@ -45,6 +45,6 @@ else
+ 		/system/bin/killall -9 "$SHELL"
+ 	else
+ 		export CLASSPATH="@TERMUX_CACHE_DIR@/termux-am/am.apk"
+-		/system/bin/app_process / com.termux.termuxam.Am stopservice com.termux/.app.TermuxService
++		/system/bin/app_process / @TERMUX_APP_PACKAGE@.termuxam.Am stopservice @TERMUX_APP_PACKAGE@/.app.TermuxService
+ 	fi
+ fi
+diff --git a/scripts/termux-setup-storage.in b/scripts/termux-setup-storage.in
+index c621234..a086159 100644
+--- a/scripts/termux-setup-storage.in
++++ b/scripts/termux-setup-storage.in
+@@ -27,5 +27,5 @@ fi
+ case "${TERMUX__USER_ID:-}" in ''|*[!0-9]*|0[0-9]*) TERMUX__USER_ID=0;; esac
+ 
+ am broadcast --user "$TERMUX__USER_ID" \
+-		 --es com.termux.app.reload_style storage \
+-		 -a com.termux.app.reload_style com.termux > /dev/null
++		 --es @TERMUX_APP_PACKAGE@.app.reload_style storage \
++		 -a @TERMUX_APP_PACKAGE@.app.reload_style @TERMUX_APP_PACKAGE@ > /dev/null
+diff --git a/scripts/termux-wake-lock.in b/scripts/termux-wake-lock.in
+index ba4b899..f3fd59e 100644
+--- a/scripts/termux-wake-lock.in
++++ b/scripts/termux-wake-lock.in
+@@ -10,6 +10,6 @@ case "${TERMUX__USER_ID:-}" in ''|*[!0-9]*|0[0-9]*) TERMUX__USER_ID=0;; esac
+ 
+ am startservice \
+ 	--user "$TERMUX__USER_ID" \
+-	-a com.termux.service_wake_lock \
+-	com.termux/com.termux.app.TermuxService \
++	-a @TERMUX_APP_PACKAGE@.service_wake_lock \
++	@TERMUX_APP_PACKAGE@/@TERMUX_APP_PACKAGE@.app.TermuxService \
+ 	> /dev/null
+diff --git a/scripts/termux-wake-unlock.in b/scripts/termux-wake-unlock.in
+index a4b1f57..d53ce31 100644
+--- a/scripts/termux-wake-unlock.in
++++ b/scripts/termux-wake-unlock.in
+@@ -10,6 +10,6 @@ case "${TERMUX__USER_ID:-}" in ''|*[!0-9]*|0[0-9]*) TERMUX__USER_ID=0;; esac
+ 
+ am startservice \
+ 	--user "$TERMUX__USER_ID" \
+-	-a com.termux.service_wake_unlock \
+-	com.termux/com.termux.app.TermuxService \
++	-a @TERMUX_APP_PACKAGE@.service_wake_unlock \
++	@TERMUX_APP_PACKAGE@/@TERMUX_APP_PACKAGE@.app.TermuxService \
+ 	> /dev/null
