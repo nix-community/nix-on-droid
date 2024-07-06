@@ -6,17 +6,17 @@ from common import screenshot, wait_for
 
 
 def run(d):
+    OPENERS = ['termux-open', 'termux-open-url', 'xdg-open']
+    TOOLS = ['am', 'termux-setup-storage'] + OPENERS
+
     nod = bootstrap_channels.run(d)
 
     # Verify that android-integration tools aren't installed by default
-    d('input text "am"')
-    d.ui.press('enter')
-    wait_for(d, 'bash: am: command not found')
-    screenshot(d, 'no-am')
-    d('input text "termux-setup-storage"')
-    d.ui.press('enter')
-    wait_for(d, 'bash: termux-setup-storage: command not found')
-    screenshot(d, 'no-termux-setup-storage')
+    for toolname in TOOLS:
+        d(f'input text "{toolname}"')
+        d.ui.press('enter')
+        wait_for(d, f'bash: {toolname}: command not found')
+        screenshot(d, f'no-{toolname}')
 
     # Apply a config that enables android-integration tools
     cfg = ('/data/local/tmp/n-o-d/unpacked/tests/on-device/'
@@ -100,3 +100,14 @@ def run(d):
     wait_for(d, 'Do you want to continue?')
     d.ui.press('enter')
     wait_for(d, 'Aborting configuration and leaving')
+
+    # Verify that *-open* commands work
+    for opener in OPENERS:
+        d(f'input text "{opener} https://example.org"')
+        d.ui.press('enter')
+        screenshot(d, f'{opener}-opened')
+        wait_for(d, 'This domain is for use in illustrative')
+        screenshot(d, f'{opener}-waited')
+        d.ui.press('back')
+        screenshot(d, f'{opener}-back')
+        wait_for(d, f'{opener} https://example.org')

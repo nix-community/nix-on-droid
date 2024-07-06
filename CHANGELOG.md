@@ -5,8 +5,8 @@
 ### New Options
 
 * New options under `android-integration`,
-  offer some of the tools familiar to Termux users.
-  Currently only `am` and `termux-setup-storage` are provided.
+  offer some of the tools familiar to Termux users:
+  `am`, `termux-open`, `termux-open-url`, `termux-setup-storage` and `xdg-open`.
 
 ### Compatibility considerations
 

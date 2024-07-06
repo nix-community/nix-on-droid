@@ -29,6 +29,28 @@ in
       '';
     };
 
+    termux-open.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = "true";
+      description = lib.mdDoc ''
+        Provide a `termux-open` command
+        that opens files or urls in external apps
+        (uses `com.termux.app.TermuxOpenReceiver`).
+      '';
+    };
+
+    termux-open-url.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = "true";
+      description = lib.mdDoc ''
+        Provide a `termux-open-url` command
+        that opens files or urls in external apps
+        (uses `android.intent.action.VIEW`).
+      '';
+    };
+
     termux-setup-storage.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -37,6 +59,15 @@ in
         Provide a `termux-setup-storage` command
         that makes the app request storage permission,
         and then creates a $HOME/storage directory with symlinks to storage.
+      '';
+    };
+
+    xdg-open.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = "true";
+      description = lib.mdDoc ''
+        Provide an `xdg-open` alias to `termux-open` command.
       '';
     };
 
@@ -58,6 +89,9 @@ in
     environment.packages =
       (ifD cfg.am.enable termux-am) ++
       (ifD cfg.termux-setup-storage.enable termux-tools.setup_storage) ++
+      (ifD cfg.termux-open.enable termux-tools.open) ++
+      (ifD cfg.termux-open-url.enable termux-tools.open_url) ++
+      (ifD cfg.xdg-open.enable termux-tools.xdg_open) ++
       (ifD cfg.unsupported.enable termux-tools.out);
   };
 }
