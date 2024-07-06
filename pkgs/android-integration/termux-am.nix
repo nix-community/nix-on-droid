@@ -19,11 +19,12 @@ stdenv.mkDerivation rec {
   patchPhase = ''
     # Header generation doesn't seem to work on android
     echo "#define SOCKET_PATH \"${socketPath}\"" > termux-am.h
-
-    cat termux-am.h
-    # Fix the bash link so that nix can patch it
-    substituteInPlace termux-am.sh.in --replace @TERMUX_PREFIX@ ""
-    head termux-am.sh.in
+    # Fix the bash link so that nix can patch it + path to termux-am-socket
+    substituteInPlace termux-am.sh.in \
+      --replace @TERMUX_PREFIX@/bin/bash /bin/bash \
+      --replace \
+        "termux-am-socket \"\$am_command_string\"" \
+        "$out/bin/termux-am-socket \"\$am_command_string\""
   '';
   postInstall = ''
     # Scripts use 'am' as an alias.

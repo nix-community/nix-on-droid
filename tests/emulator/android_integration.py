@@ -1,3 +1,5 @@
+import time
+
 import bootstrap_channels
 
 from common import screenshot, wait_for
@@ -17,8 +19,9 @@ def run(d):
     d(f'input text \'cp {cfg} .config/nixpkgs/nix-on-droid.nix\'')
     d.ui.press('enter')
     screenshot(d, 'pre-switch')
-    d('input text "nix-on-droid switch"')
+    d('input text "nix-on-droid switch && echo integration  tools  installed"')
     d.ui.press('enter')
+    wait_for(d, 'integration tools installed')
     screenshot(d, 'post-switch')
 
     # Verify am is there
@@ -35,6 +38,18 @@ def run(d):
     wait_for(d, 'https://dontkillmyapp.com')
     screenshot(d, 'am-wants-permission')
 
+    # ... there might be a notification now, get rid of it
+    time.sleep(3)
+    screenshot(d, 'am-wants-permission-3-seconds-later')
+    if 'text="TermuxAm Socket Server Error"' in d.ui.dump_hierarchy():
+        d.ui.open_notification()
+        time.sleep(1)
+        screenshot(d, 'notification-opened')
+        d.ui(text='TermuxAm Socket Server Error').swipe('right')
+        screenshot(d, 'error-notification-swiped-right')
+        d.ui.press('back')
+        screenshot(d, 'back')
+
     # Grant nix app 'Draw over other apps' permission
     nod.permissions += 'android.permission.SYSTEM_ALERT_WINDOW'
 
@@ -44,6 +59,7 @@ def run(d):
     screenshot(d, 'settings-opening')
     wait_for(d, 'Search settings')
     wait_for(d, 'Network')
+    screenshot(d, 'settings-awaited')
     d.ui.press('back')
     screenshot(d, 'back-from-settings')
 
