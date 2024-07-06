@@ -1,6 +1,14 @@
 # Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, lib, stdenv, closureInfo, prootTermux, proot, pkgsStatic, system }:
+{ config
+, lib
+, stdenvNoCC
+, closureInfo
+, prootTermux
+, proot
+, pkgsStatic
+, system
+}:
 
 let
   buildRootDirectory = "root-directory";
@@ -20,7 +28,7 @@ let
   };
 in
 
-stdenv.mkDerivation {
+stdenvNoCC.mkDerivation {
   name = "nix-directory";
 
   src = builtins.fetchurl {
