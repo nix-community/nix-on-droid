@@ -7,7 +7,8 @@ from common import screenshot, wait_for
 
 def run(d):
     OPENERS = ['termux-open', 'termux-open-url', 'xdg-open']
-    TOOLS = ['am', 'termux-setup-storage'] + OPENERS
+    TOOLS = ['am', 'termux-setup-storage',
+             'termux-wake-lock', 'termux-wake-unlock'] + OPENERS
 
     nod = bootstrap_channels.run(d)
 
@@ -111,3 +112,53 @@ def run(d):
         d.ui.press('back')
         screenshot(d, f'{opener}-back')
         wait_for(d, f'{opener} https://example.org')
+
+    # test termux-wake-lock/termux-wake-unlock
+    d.ui.open_notification()
+    screenshot(d, 'notification-opened')
+    d.ui(text='Nix').right(resourceId='android:id/expand_button').click()
+    screenshot(d, 'notification-expanded')
+    wait_for(d, 'Acquire wakelock')
+    screenshot(d, 'wakelock-initially-not-acquired')
+    d.ui.press('back')
+
+    d('input text "termux-wake-lock"')
+    d.ui.press('enter')
+    time.sleep(3)
+    screenshot(d, 'wake-lock-command')
+    if 'Let app always run in background?' in d.ui.dump_hierarchy():
+        screenshot(d, 'wake-lock-permission-asked')
+        if 'text="Allow"' in d.ui.dump_hierarchy():
+            d.ui(text='Allow').click()
+        elif 'text="ALLOW"' in d.ui.dump_hierarchy():
+            d.ui(text='ALLOW').click()
+        screenshot(d, 'wake-lock-permission-granted')
+    d.ui.open_notification()
+    time.sleep(.5)
+    screenshot(d, 'notification-opened')
+    wait_for(d, '(wake lock held)')
+    if 'Release wakelock' not in d.ui.dump_hierarchy():
+        d.ui(text='Nix').right(resourceId='android:id/expand_button').click()
+        screenshot(d, 'notification-expanded')
+    wait_for(d, 'Release wakelock')
+    screenshot(d, 'notification-with-wakelock')
+    d.ui.press('back')
+    screenshot(d, 'back')
+    wait_for(d, 'termux-wake-lock')
+    screenshot(d, 'really-back')
+
+    d('input text "termux-wake-unlock"')
+    d.ui.press('enter')
+    screenshot(d, 'wake-unlock-command')
+    d.ui.open_notification()
+    time.sleep(.5)
+    screenshot(d, 'notification-opened')
+    if 'Acquire wakelock' not in d.ui.dump_hierarchy():
+        d.ui(text='Nix').right(resourceId='android:id/expand_button').click()
+        screenshot(d, 'notification-expanded')
+    wait_for(d, 'Acquire wakelock')
+    screenshot(d, 'notification-without-wakelock')
+    d.ui.press('back')
+    screenshot(d, 'back')
+    wait_for(d, 'termux-wake-unlock')
+    screenshot(d, 'really-back')
