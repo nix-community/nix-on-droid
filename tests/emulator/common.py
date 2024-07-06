@@ -10,7 +10,7 @@ BOOTSTRAP_URL = 'file:///data/local/tmp/n-o-d'
 
 def screenshot(d, suffix=''):
     os.makedirs('screenshots', exist_ok=True)
-    fname_base = f'screenshots/{time.time()}-{suffix}'
+    fname_base = f'screenshots/{time.time():.3f}-{suffix}'
     d.ui.screenshot(f'{fname_base}.png')
     with open(f'{fname_base}.xml', 'w') as f:
         f.write(d.ui.dump_hierarchy())
