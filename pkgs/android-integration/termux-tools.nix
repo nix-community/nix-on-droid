@@ -47,6 +47,9 @@ stdenvNoCC.mkDerivation rec {
   outputs = [
     "out" # all the unsupported unsorted stuff
     "setup_storage" # termux-setup-storage
+    "open" # termux-open
+    "open_url" # termux-open-url
+    "xdg_open" # xdg-open
   ];
   postInstall = ''
     rm $out/etc/termux-login.sh
@@ -79,17 +82,24 @@ stdenvNoCC.mkDerivation rec {
     mkdir -p $setup_storage/bin
     mv $out/bin/termux-setup-storage $setup_storage/bin/
 
+    mkdir -p $open/bin
+    mv $out/bin/termux-open $open/bin/
+
+    mkdir -p $open_url/bin
+    mv $out/bin/termux-open-url $open_url/bin/
+
+    mkdir -p $xdg_open/bin
+    rm $out/bin/xdg-open
+    ln -s $open/bin/termux-open $xdg_open/bin/xdg-open
+
     # check that we didn't package we didn't want to
     find $out | ${gnused}/bin/sed "s|^$out|.|" | sort > effective
     echo . >> expected
     echo ./bin >> expected
     echo ./bin/termux-backup >> expected           # entirely untested
-    echo ./bin/termux-open >> expected             # good candidate for fixing
-    echo ./bin/termux-open-url >> expected         # good candidate for fixing
     echo ./bin/termux-reload-settings >> expected  # good candidate for fixing
     echo ./bin/termux-wake-lock >> expected        # good candidate for fixing
     echo ./bin/termux-wake-unlock >> expected      # good candidate for fixing
-    echo ./bin/xdg-open >> expected                # good candidate for fixing
     echo ./share >> expected
     echo ./share/examples >> expected
     echo ./share/examples/termux >> expected
