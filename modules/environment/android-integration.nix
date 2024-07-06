@@ -62,6 +62,27 @@ in
       '';
     };
 
+    termux-wake-lock.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = "true";
+      description = lib.mdDoc ''
+        Provide a `termux-wake-lock` command
+        that tones down Android power saving measures.
+        This is the same action that's available from the notification.
+      '';
+    };
+
+    termux-wake-unlock.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = "true";
+      description = lib.mdDoc ''
+        Provide a `termux-wake-unlock` command
+        that undoes the effect of the `termux-wake-lock` one.
+      '';
+    };
+
     xdg-open.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -91,6 +112,8 @@ in
       (ifD cfg.termux-setup-storage.enable termux-tools.setup_storage) ++
       (ifD cfg.termux-open.enable termux-tools.open) ++
       (ifD cfg.termux-open-url.enable termux-tools.open_url) ++
+      (ifD cfg.termux-wake-lock.enable termux-tools.wake_lock) ++
+      (ifD cfg.termux-wake-unlock.enable termux-tools.wake_unlock) ++
       (ifD cfg.xdg-open.enable termux-tools.xdg_open) ++
       (ifD cfg.unsupported.enable termux-tools.out);
   };
