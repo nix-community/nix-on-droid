@@ -62,6 +62,17 @@ in
       '';
     };
 
+    termux-reload-settings.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = "true";
+      description = lib.mdDoc ''
+        Provide a `termux-reload-settings` command
+        which applies changes to font, colorscheme or terminal
+        without the need to close all the sessions.
+      '';
+    };
+
     termux-wake-lock.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -112,6 +123,7 @@ in
       (ifD cfg.termux-setup-storage.enable termux-tools.setup_storage) ++
       (ifD cfg.termux-open.enable termux-tools.open) ++
       (ifD cfg.termux-open-url.enable termux-tools.open_url) ++
+      (ifD cfg.termux-reload-settings.enable termux-tools.reload_settings) ++
       (ifD cfg.termux-wake-lock.enable termux-tools.wake_lock) ++
       (ifD cfg.termux-wake-unlock.enable termux-tools.wake_unlock) ++
       (ifD cfg.xdg-open.enable termux-tools.xdg_open) ++
