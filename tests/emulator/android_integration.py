@@ -1,3 +1,4 @@
+import base64
 import time
 
 import bootstrap_channels
@@ -7,7 +8,7 @@ from common import screenshot, wait_for
 
 def run(d):
     OPENERS = ['termux-open', 'termux-open-url', 'xdg-open']
-    TOOLS = ['am', 'termux-setup-storage',
+    TOOLS = ['am', 'termux-setup-storage', 'termux-reload-settings',
              'termux-wake-lock', 'termux-wake-unlock'] + OPENERS
 
     nod = bootstrap_channels.run(d)
@@ -162,3 +163,31 @@ def run(d):
     screenshot(d, 'back')
     wait_for(d, 'termux-wake-unlock')
     screenshot(d, 'really-back')
+
+    # Test termux-reload-settings
+    assert 'text="PGUP"' in d.ui.dump_hierarchy()
+    assert 'text="F12"' not in d.ui.dump_hierarchy()
+
+    d('input text "mkdir ~/.termux"')
+    d.ui.press('enter')
+    cmd = 'echo "extra-keys=[[\'F12\']]" > ~/.termux/termux.properties'
+    cmd_base64 = base64.b64encode(cmd.encode()).decode()
+    d(f'input text "echo {cmd_base64} | base64 -d | bash -s"')
+    d.ui.press('enter')
+    screenshot(d, 'pre-reload')
+    d('input text "termux-reload-settings"')
+    d.ui.press('enter')
+    time.sleep(1)
+    screenshot(d, 'post-reload')
+    assert 'text="PGUP"' not in d.ui.dump_hierarchy()
+    assert 'text="F12"' in d.ui.dump_hierarchy()
+
+    d('input text "rm -r ~/.termux"')
+    d.ui.press('enter')
+    screenshot(d, 'pre-reload-back')
+    d('input text "termux-reload-settings"')
+    d.ui.press('enter')
+    time.sleep(1)
+    screenshot(d, 'post-reload-back')
+    assert 'text="PGUP"' in d.ui.dump_hierarchy()
+    assert 'text="F12"' not in d.ui.dump_hierarchy()
