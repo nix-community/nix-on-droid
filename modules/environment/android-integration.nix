@@ -1,6 +1,6 @@
 # Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, nixpkgs, ... }:
 
 let
   cfg = config.android-integration;
@@ -10,6 +10,10 @@ let
   termux-tools =
     pkgs.callPackage (import ../../pkgs/android-integration/termux-tools.nix) {
       inherit termux-am;
+    };
+  okc-agents =
+    import (../../pkgs/android-integration/okc-agents) {
+      inherit nixpkgs pkgs termux-am;
     };
 in
 {
@@ -103,6 +107,17 @@ in
       '';
     };
 
+    okc-gpg.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      example = "true";
+      description = lib.mdDoc ''
+        Provides a GPG agent for OpenKeychain,
+        courtesy of https://github.com/DDoSolitary/okc-agents.
+        This lets you use PGP keys stored on hardware tokens, like Yubikeys.
+      '';
+    };
+
     unsupported.enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -110,6 +125,7 @@ in
       description = lib.mdDoc ''
         Provide several more unsupported and untested commands.
         For testing and for brave souls only.
+        Currently provides `termux-backup` and `okc-ssh-agent`.
       '';
     };
 
@@ -127,6 +143,8 @@ in
       (ifD cfg.termux-wake-lock.enable termux-tools.wake_lock) ++
       (ifD cfg.termux-wake-unlock.enable termux-tools.wake_unlock) ++
       (ifD cfg.xdg-open.enable termux-tools.xdg_open) ++
+      (ifD cfg.okc-gpg.enable okc-agents.okc_gpg) ++
+      (ifD cfg.unsupported.enable okc-agents.out) ++
       (ifD cfg.unsupported.enable termux-tools.out);
   };
 }

@@ -11,6 +11,7 @@ _:
     termux-wake-lock.enable = true;
     termux-wake-unlock.enable = true;
     xdg-open.enable = true;
+    okc-gpg.enable = false; # building takes an eternity, tested separately
     # unsupported.enable = false;
   };
 }

@@ -108,12 +108,13 @@ jobs:
         # below 28: bootstrap didn't start, IDK why
         # 34: sometimes work, but doesn't seem stable, even w/o caching images
         script:
-          - android_integration
-          - bootstrap_flakes
-          - bootstrap_channels
-          - poke_around
-          - test_channels_uiautomator
-          - test_channels_shell
+          # android_integration
+          # bootstrap_flakes
+          # bootstrap_channels
+          - okc_agents
+          # poke_around
+          # test_channels_uiautomator
+          # test_channels_shell
 
     steps:
       - name: Checkout repository

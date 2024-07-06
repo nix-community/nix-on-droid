@@ -9,6 +9,10 @@
   `am`, `termux-open`, `termux-open-url`, `termux-reload-settings`,
   `termux-setup-storage`, `termux-wake-lock`, `termux-wake-unlock`
   and `xdg-open`.
+* Another option under `android-integration`, `okc-gpg`,
+  provides a GPG agent for OpenKeychain,
+  courtesy of https://github.com/DDoSolitary/okc-agents.
+  This lets you use PGP keys stored on hardware tokens, like Yubikeys.
 
 ### Compatibility considerations
 
