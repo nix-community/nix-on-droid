@@ -8,6 +8,7 @@ load lib
   run ! command -v termux-setup-storage
   run ! command -v termux-open
   run ! command -v termux-open-url
+  run ! command -v termux-reload-settings
   run ! command -v termux-wake-lock
   run ! command -v termux-wake-unlock
   run ! command -v xdg-open
@@ -22,6 +23,7 @@ load lib
   command -v termux-setup-storage
   command -v termux-open
   command -v termux-open-url
+  command -v termux-reload-settings
   command -v termux-wake-lock
   command -v termux-wake-unlock
   command -v xdg-open
@@ -36,6 +38,7 @@ load lib
   command -v termux-setup-storage
   command -v termux-open
   command -v termux-open-url
+  command -v termux-reload-settings
   command -v termux-wake-lock
   command -v termux-wake-unlock
   command -v xdg-open

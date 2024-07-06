@@ -6,7 +6,7 @@
 
 * New options under `android-integration`,
   offer some of the tools familiar to Termux users:
-  `am`, `termux-open`, `termux-open-url`,
+  `am`, `termux-open`, `termux-open-url`, `termux-reload-settings`,
   `termux-setup-storage`, `termux-wake-lock`, `termux-wake-unlock`
   and `xdg-open`.
 
