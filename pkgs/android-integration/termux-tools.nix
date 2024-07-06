@@ -35,6 +35,8 @@ stdenvNoCC.mkDerivation rec {
       scripts/termux-wake-unlock.in \
       --replace @TERMUX_APP_PACKAGE@.app com.termux.app \
       --replace @TERMUX_APP_PACKAGE@ com.termux.nix
+    substituteInPlace scripts/termux-reload-settings.in \
+      --replace @TERMUX_APP_PACKAGE@ com.termux.nix
     ${gnused}/bin/sed -i 's|^am |${termux-am}/bin/am |' scripts/*
 
     rm -r doc  # manpage is half misleading, pulling pandoc is not worth it
@@ -53,6 +55,7 @@ stdenvNoCC.mkDerivation rec {
     "setup_storage" # termux-setup-storage
     "open" # termux-open
     "open_url" # termux-open-url
+    "reload_settings" # termux-reload-settings
     "wake_lock" # termux-wake-lock
     "wake_unlock" # termux-wake-unlock
     "xdg_open" # xdg-open
@@ -94,6 +97,9 @@ stdenvNoCC.mkDerivation rec {
     mkdir -p $open_url/bin
     mv $out/bin/termux-open-url $open_url/bin/
 
+    mkdir -p $reload_settings/bin
+    mv $out/bin/termux-reload-settings $reload_settings/bin/
+
     mkdir -p $wake_lock/bin
     mv $out/bin/termux-wake-lock $wake_lock/bin/
 
@@ -109,7 +115,6 @@ stdenvNoCC.mkDerivation rec {
     echo . >> expected
     echo ./bin >> expected
     echo ./bin/termux-backup >> expected           # entirely untested
-    echo ./bin/termux-reload-settings >> expected  # good candidate for fixing
     echo ./share >> expected
     echo ./share/examples >> expected
     echo ./share/examples/termux >> expected
