@@ -9,8 +9,16 @@ def run(d):
     nod.launch()
 
     wait_for(d, 'Bootstrap zipball location')
+    time.sleep(.5)
     screenshot(d, 'initial')
     d.ui(className='android.widget.EditText').set_text(BOOTSTRAP_URL)
+    time.sleep(.5)
+    if 'android:id/addToDictionaryButton' in d.ui.dump_hierarchy():
+        screenshot(d, 'add-to-dictionary-interferes')
+        d.ui.press('back')
+        time.sleep(.5)
+        screenshot(d, 'add-to-dictionary-back-pressed')
+    time.sleep(.5)
     screenshot(d, 'entered-url')
     for i in range(2):
         if 'text="OK"' not in d.ui.dump_hierarchy():
@@ -18,7 +26,9 @@ def run(d):
             time.sleep(.5)
         else:
             break
+    time.sleep(.5)
     screenshot(d, 'entered-url-back')
+    time.sleep(.5)
     d.ui(text='OK').click()
     screenshot(d, 'ok-clicked')
 
