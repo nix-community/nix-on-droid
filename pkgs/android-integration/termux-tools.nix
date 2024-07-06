@@ -28,9 +28,13 @@ stdenvNoCC.mkDerivation rec {
       --replace @TERMUX_HOME@ /data/data/com.termux.nix/files/home/ \
       --replace @TERMUX_APP_PACKAGE@ com.termux.nix
     substituteInPlace scripts/termux-open.in \
-      --replace @TERMUX_APP_PACKAGE@.app com.termux.app \
-      --replace @TERMUX_APP_PACKAGE@ com.termux.nix \
       --replace 'getopt ' '${getopt}/bin/getopt '
+    substituteInPlace \
+      scripts/termux-open.in \
+      scripts/termux-wake-lock.in \
+      scripts/termux-wake-unlock.in \
+      --replace @TERMUX_APP_PACKAGE@.app com.termux.app \
+      --replace @TERMUX_APP_PACKAGE@ com.termux.nix
     ${gnused}/bin/sed -i 's|^am |${termux-am}/bin/am |' scripts/*
 
     rm -r doc  # manpage is half misleading, pulling pandoc is not worth it
@@ -49,6 +53,8 @@ stdenvNoCC.mkDerivation rec {
     "setup_storage" # termux-setup-storage
     "open" # termux-open
     "open_url" # termux-open-url
+    "wake_lock" # termux-wake-lock
+    "wake_unlock" # termux-wake-unlock
     "xdg_open" # xdg-open
   ];
   postInstall = ''
@@ -88,6 +94,12 @@ stdenvNoCC.mkDerivation rec {
     mkdir -p $open_url/bin
     mv $out/bin/termux-open-url $open_url/bin/
 
+    mkdir -p $wake_lock/bin
+    mv $out/bin/termux-wake-lock $wake_lock/bin/
+
+    mkdir -p $wake_unlock/bin
+    mv $out/bin/termux-wake-unlock $wake_unlock/bin/
+
     mkdir -p $xdg_open/bin
     rm $out/bin/xdg-open
     ln -s $open/bin/termux-open $xdg_open/bin/xdg-open
@@ -98,8 +110,6 @@ stdenvNoCC.mkDerivation rec {
     echo ./bin >> expected
     echo ./bin/termux-backup >> expected           # entirely untested
     echo ./bin/termux-reload-settings >> expected  # good candidate for fixing
-    echo ./bin/termux-wake-lock >> expected        # good candidate for fixing
-    echo ./bin/termux-wake-unlock >> expected      # good candidate for fixing
     echo ./share >> expected
     echo ./share/examples >> expected
     echo ./share/examples/termux >> expected
