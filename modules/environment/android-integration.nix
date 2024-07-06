@@ -1,6 +1,6 @@
 # Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, nixpkgs, ... }:
 
 let
   cfg = config.android-integration;
@@ -11,6 +11,10 @@ let
     pkgs.callPackage (import ../../pkgs/android-integration/termux-tools.nix) {
       inherit termux-am;
     };
+  okc-agents =
+    (import (../../pkgs/android-integration/okc-agents.nix) {
+      inherit nixpkgs pkgs;
+    }).rootCrate.build;
 in
 {
 
@@ -113,6 +117,16 @@ in
       '';
     };
 
+    openkeychain.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      example = "true";
+      description = lib.mdDoc ''
+        Provides GPG agent ang SSH agent for OpenKeychain,
+        courtesy of https://github.com/DDoSolitary/okc-agents.
+      '';
+    };
+
   };
 
   ###### implementation
@@ -127,6 +141,7 @@ in
       (ifD cfg.termux-wake-lock.enable termux-tools.wake_lock) ++
       (ifD cfg.termux-wake-unlock.enable termux-tools.wake_unlock) ++
       (ifD cfg.xdg-open.enable termux-tools.xdg_open) ++
-      (ifD cfg.unsupported.enable termux-tools.out);
+      (ifD cfg.unsupported.enable termux-tools.out) ++
+      (ifD cfg.openkeychain.enable okc-agents);
   };
 }
