@@ -7,17 +7,12 @@ def run(d):
     nod = d.app('com.termux.nix', url=APK)
     nod.permissions.allow_notifications()
     nod.launch()
+    time.sleep(.5)
 
     wait_for(d, 'Bootstrap zipball location')
     time.sleep(.5)
     screenshot(d, 'initial')
     d.ui(className='android.widget.EditText').set_text(BOOTSTRAP_URL)
-    time.sleep(.5)
-    if 'android:id/addToDictionaryButton' in d.ui.dump_hierarchy():
-        screenshot(d, 'add-to-dictionary-interferes')
-        d.ui.press('back')
-        time.sleep(.5)
-        screenshot(d, 'add-to-dictionary-back-pressed')
     time.sleep(.5)
     screenshot(d, 'entered-url')
     for i in range(2):
