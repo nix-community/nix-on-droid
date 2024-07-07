@@ -8,7 +8,7 @@ from common import screenshot, wait_for
 
 def run(d):
     OPENERS = ['termux-open', 'termux-open-url', 'xdg-open']
-    TOOLS = ['am', 'termux-setup-storage',
+    TOOLS = ['am', 'termux-setup-storage', 'termux-reload-settings',
              'termux-wake-lock', 'termux-wake-unlock'] + OPENERS
 
     nod = bootstrap_channels.run(d)
