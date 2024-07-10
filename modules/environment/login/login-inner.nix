@@ -13,6 +13,8 @@ writeText "login-inner" ''
 
   set -eo pipefail
 
+  echo login-inner PATH=$PATH
+
   ${lib.optionalString (config.environment.motd != null) ''
     if [ "$#" -eq 0 ]; then  # if script is called from within Nix-on-Droid app
       echo "${lib.removeSuffix "\n" config.environment.motd}"
