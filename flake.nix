@@ -17,6 +17,7 @@
     nix-formatter-pack = {
       url = "github:Gerschtli/nix-formatter-pack";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nmd.follows = "nmd";
     };
 
     nixpkgs-docs.url = "github:NixOS/nixpkgs/release-23.05";
