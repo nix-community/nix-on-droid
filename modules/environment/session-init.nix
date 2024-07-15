@@ -39,6 +39,8 @@ let
       ''}
 
       ${exportAll cfg.sessionVariables}
+
+      ${cfg.shellInit}
     '';
   };
 in
@@ -58,6 +60,16 @@ in
         type = types.nullOr types.lines;
         description = ''
           Text to show on every new shell created by Nix-on-Droid.
+        '';
+      };
+
+      shellInit = mkOption {
+        default = "";
+        type = types.lines;
+        description = ''
+          Shell script code called during shell initialization
+
+          This is useful to add custom aliases or functions, for example.
         '';
       };
 
