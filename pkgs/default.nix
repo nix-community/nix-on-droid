@@ -42,6 +42,8 @@ let
       # Fix invoking bash after initial build.
       user.shell = "${initialPackageInfo.bash}/bin/bash";
 
+      environment.files.prootStatic = pkgs.lib.mkForce customPkgs.prootTermux;
+
       build = {
         channel = {
           nixpkgs = urlOptionValue nixpkgsChannelURL "NIXPKGS_CHANNEL_URL";
