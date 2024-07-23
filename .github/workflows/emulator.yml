@@ -47,7 +47,7 @@ jobs:
           rm -rf n-o-d
           mkdir -p n-o-d
           git -C . archive --format=tar.gz --prefix n-o-d/ HEAD > n-o-d/archive.tar.gz
-          ARCHES=x86_64 nix run '.#deploy' -- file:///data/local/tmp/n-o-d/archive.tar.gz n-o-d/
+          ARCHES=x86_64 nix run '.#deploy' -- file:///data/local/tmp/n-o-d/archive.tar.gz --rsync-target n-o-d/
           tar cf n-o-d.tar n-o-d
 
       - name: Store zipball and channel tarball to inject (n-o-d)
