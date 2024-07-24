@@ -32,7 +32,12 @@
     let
       forEachSystem = nixpkgs.lib.genAttrs [ "aarch64-linux" "x86_64-linux" ];
 
-      overlay = nixpkgs.lib.composeManyExtensions (import ./overlays);
+      overlaySelfPackages = _final: prev: {
+        nix-on-droid = self.packages."${prev.system}".nix-on-droid;
+      };
+      overlay = nixpkgs.lib.composeManyExtensions ((import ./overlays) ++ [
+        overlaySelfPackages
+      ]);
 
       formatterPackArgsFor = forEachSystem (system: {
         inherit nixpkgs system;
