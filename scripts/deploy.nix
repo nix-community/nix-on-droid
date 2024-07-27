@@ -7,6 +7,7 @@ let
 
   runtimePackages = with pkgs; [
     coreutils
+    diffutils
     git
     gnugrep
     gnused
