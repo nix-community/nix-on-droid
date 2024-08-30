@@ -6,6 +6,12 @@ let
   inherit (initialPackageInfo) cacert nix;
 
   nixCmd = "${nix}/bin/nix --extra-experimental-features 'flakes nix-command'";
+  userShell =
+    if config.user.shell.type or "not-found" == "derivation" then
+      if config.user.shell ? passthru.shellPath then
+        "${config.user.shell}${config.user.shell.passthru.shellPath}"
+      else builtins.abort "Derivation without shell path found at `user.shell`. Use the path to the exact binary."
+    else config.user.shell;
 in
 
 writeText "login-inner" ''
@@ -141,13 +147,18 @@ writeText "login-inner" ''
     exec /usr/bin/env bash  # otherwise it'll be a limited bash that came with Nix
   ''}
 
-  usershell="${config.user.shell}"
+  usershell="${userShell}"
   if [ "$#" -gt 0 ]; then  # if script is not called from within Nix-on-Droid app
     exec /usr/bin/env "$@"
+  elif [ -d "$usershell" ]; then
+    echo "Cannot execute shell '${userShell}', it is a directory."
+    echo "Unlike nixos you should point `user.shell` to the exact binary."
+    echo "Falling back to bash."
+    exec -l bash
   elif [ -x "$usershell" ]; then
     exec -a "-''${usershell##*/}" "$usershell"
   else
-    echo "Cannot execute shell '${config.user.shell}', falling back to bash"
+    echo "Cannot execute shell '${userShell}', falling back to bash"
     exec -l bash
   fi
 ''
