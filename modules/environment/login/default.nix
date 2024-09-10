@@ -37,7 +37,7 @@ in
 
       prootStatic = mkOption {
         type = types.package;
-        readOnly = true;
+        # not readOnly, this needs to be overridden when building bootstrap zip
         internal = true;
         description = "<literal>proot-static</literal> package.";
       };
@@ -84,14 +84,27 @@ in
     environment.files = {
       inherit login loginInner;
 
+      # Ideally this would build the static proot binary, but doing that on aarch64 is HARD so instead pull it from the bootstrap tarball
       prootStatic =
         let
-          crossCompiledPaths = {
-            aarch64-linux = "/nix/store/7qd99m1w65x2vgqg453nd70y60sm3kay-proot-termux-static-aarch64-unknown-linux-android-unstable-2024-05-04";
-            x86_64-linux = "/nix/store/pakj3svvw84rhkzdc6211yhc2cgvc21f-proot-termux-static-x86_64-unknown-linux-android-unstable-2024-05-04";
+          attrs = (import ./proot-attrs).${targetSystem};
+          prootFile = pkgs.fetchurl {
+            name = "proot-static-file";
+            inherit (attrs) url hash;
+
+            downloadToTemp = true;
+            executable = true;
+            postFetch = ''
+              ${pkgs.unzip}/bin/unzip -u $downloadedFile bin/proot-static
+              echo $PWD >&2
+              mv bin/proot-static $out
+            '';
           };
         in
-        "${crossCompiledPaths.${targetSystem}}";
+        pkgs.runCommand "proot-static" { } ''
+          mkdir -p $out/bin
+          cp ${prootFile} $out/bin/proot-static
+        '';
     };
 
   };
