@@ -5,7 +5,7 @@ on:
   schedule:
     - cron: 0 0 * * 1
 jobs:
-  lint:
+  lint-nix:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,3 +17,19 @@ jobs:
 
       - name: Run nix-formatter-pack-check
         run: nix build .#checks.x86_64-linux.nix-formatter-pack-check
+
+  lint-py:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v25
+
+      - name: Run ruff linter
+        run: nix run 'nixpkgs#ruff' -- check
+
+      - name: Run ruff formatter
+        run: nix run 'nixpkgs#ruff' -- format --diff

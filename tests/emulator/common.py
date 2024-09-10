@@ -1,4 +1,6 @@
-import os
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE
+
+import pathlib
 import sys
 import time
 
@@ -9,11 +11,11 @@ BOOTSTRAP_URL = 'file:///data/local/tmp/n-o-d'
 
 
 def screenshot(d, suffix=''):
-    os.makedirs('screenshots', exist_ok=True)
-    fname_base = f'screenshots/{time.time():.3f}-{suffix}'
-    d.ui.screenshot(f'{fname_base}.png')
-    with open(f'{fname_base}.xml', 'w') as f:
-        f.write(d.ui.dump_hierarchy())
+    screenshots = pathlib.Path('screenshots')
+    screenshots.mkdir(exist_ok=True)
+    fname_base = screenshots / f'{time.time():.3f}-{suffix}'
+    d.ui.screenshot(str(fname_base.with_suffix('.png')))
+    fname_base.with_suffix('.xml').write_text(d.ui.dump_hierarchy())
     print(f'screenshotted: {fname_base}.{{png,xml}}')
 
 
@@ -29,7 +31,7 @@ def wait_for(d, on_screen_text, timeout=90, critical=True):
         if on_screen_text in d.ui.dump_hierarchy():
             print(f'found: {on_screen_text} after {elapsed:.1f}s')
             return
-        time.sleep(.75)
+        time.sleep(0.75)
     print(f'NOT FOUND: {on_screen_text} after {timeout}s')
     screenshot(d, suffix='error')
     if critical:
