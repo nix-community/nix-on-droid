@@ -77,11 +77,11 @@
           # deprecated:
         , config ? null
         , extraModules ? null
-        , system ? null  # pkgs.system is used to detect user's arch
+        , system ? null  # pkgs.stdenv.hostPlatform.system is used to detect user's arch
         }:
-        if ! (builtins.elem pkgs.system [ "aarch64-linux" "x86_64-linux" ]) then
+        if ! (builtins.elem pkgs.stdenv.hostPlatform.system [ "aarch64-linux" "x86_64-linux" ]) then
           throw
-            ("${pkgs.system} is not supported; aarch64-linux / x86_64-linux " +
+            ("${pkgs.stdenv.hostPlatform.system} is not supported; aarch64-linux / x86_64-linux " +
               "are the only currently supported system types")
         else
           pkgs.lib.throwIf
@@ -95,12 +95,12 @@
 
               have been removed.
               Instead of 'extraModules' use the argument 'modules'.
-              The 'system' will be inferred by 'pkgs.system',
+              The 'system' will be inferred by 'pkgs.stdenv.hostPlatform.system',
               so pass a 'pkgs = import nixpkgs { system = "aarch64-linux"; };'
               See the 22.11 release notes for more.
             ''
             (import ./modules {
-              targetSystem = pkgs.system; # system to cross-compile to
+              targetSystem = pkgs.stdenv.hostPlatform.system; # system to cross-compile to
               inherit extraSpecialArgs home-manager-path pkgs;
               config.imports = modules;
               isFlake = true;
