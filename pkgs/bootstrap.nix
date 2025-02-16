@@ -22,13 +22,4 @@ runCommand "bootstrap" { } ''
   cp --dereference --recursive $out/etc/static $out/etc/.static.tmp
   rm $out/etc/static
   mv $out/etc/.static.tmp $out/etc/static
-
-  find $out -executable -type f | sed s@^$out/@@ > $out/EXECUTABLES.txt
-
-  find $out -type l | while read -r LINK; do
-    LNK=''${LINK#$out/}
-    TGT=$(readlink "$LINK")
-    echo "$TGT←$LNK" >> $out/SYMLINKS.txt
-    rm "$LINK"
-  done
 ''
