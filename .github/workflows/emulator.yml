@@ -14,9 +14,12 @@ jobs:
       path: ${{ steps.droidctl-build.outputs.path }}
     steps:
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-      - name: Configure Nix magic cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+        uses: nixbuild/nix-quick-install-action@master
+      - name: Configure Nix cache
+        uses: nix-community/cache-nix-action@main
+        with:
+          primary-key: nix-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-${{ runner.arch }}
 
       - name: Build droidctl
         id: droidctl-build
@@ -30,13 +33,16 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
+        uses: nixbuild/nix-quick-install-action@master
       - name: Setup cachix
         uses: cachix/cachix-action@v14
         with:
           name: nix-on-droid
-      - name: Configure Nix magic cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Configure Nix cache
+        uses: nix-community/cache-nix-action@main
+        with:
+          primary-key: nix-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-${{ runner.arch }}
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -132,16 +138,19 @@ jobs:
         run: tar xf n-o-d.tar
 
       - name: Install Nix / enable KVM
-        uses: DeterminateSystems/nix-installer-action@main
-      - name: Configure Nix magic cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+        uses: nixbuild/nix-quick-install-action@master
+      - name: Configure Nix cache
+        uses: nix-community/cache-nix-action@main
+        with:
+          primary-key: nix-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-${{ runner.arch }}
 
       - name: Fetch droidctl (using previous eval)
         id: droidctl-fetch
         env:
           DROIDCTL: ${{needs.prepare-droidctl.outputs.path}}
         run: nix build "$DROIDCTL" --out-link /tmp/droidctl
-        continue-on-error: true  # GitHub Actions can throttle magic-nix-cache
+        continue-on-error: true  # GitHub Actions can throttle cache-nix-action
 
       - name: Build droidctl (anew, fallback)
         if: always() && (steps.droidctl-fetch.outcome == 'failure')
