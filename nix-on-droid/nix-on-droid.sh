@@ -68,6 +68,7 @@ function doHelp() {
     echo "  --keep-going"
     echo "  --max-jobs NUM"
     echo "  --option NAME VALUE"
+    echo "  --override-input INPUT URL"
     echo "  --show-trace"
     echo
     echo "Commands"
@@ -162,7 +163,7 @@ while [[ $# -gt 0 ]]; do
         -n|--dry-run)
             export DRY_RUN=1
             ;;
-        --option)
+        --option|--override-input)
             PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
             shift 2
             ;;
