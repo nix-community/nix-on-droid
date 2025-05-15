@@ -24,7 +24,7 @@ jobs:
       - name: Build droidctl
         id: droidctl-build
         run: |
-          NIXPKGS_ALLOW_UNFREE=1 nix build --impure 'github:t184256/droidctl' --out-link /tmp/droidctl
+          nix build 'github:t184256/droidctl' --out-link /tmp/droidctl
           echo "path=$(realpath /tmp/droidctl)" >> "$GITHUB_OUTPUT"
 
 
@@ -154,7 +154,7 @@ jobs:
 
       - name: Build droidctl (anew, fallback)
         if: always() && (steps.droidctl-fetch.outcome == 'failure')
-        run: NIXPKGS_ALLOW_UNFREE=1 nix build --impure 'github:t184256/droidctl' --out-link /tmp/droidctl
+        run: nix build 'github:t184256/droidctl' --out-link /tmp/droidctl
 
       - name: Restore AVD cache
         id: avd-cache
