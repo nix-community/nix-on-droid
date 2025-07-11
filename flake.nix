@@ -63,9 +63,16 @@
         };
       });
 
-      checks = forEachSystem (system: {
-        nix-formatter-pack-check = nix-formatter-pack.lib.mkCheck formatterPackArgsFor.${system};
-      });
+      checks = forEachSystem (system:
+        let
+          pkgs = import nixpkgs { inherit system; };
+        in
+        {
+          nix-formatter-pack-check = nix-formatter-pack.lib.mkCheck formatterPackArgsFor.${system};
+          ruff-lint = import ./checks/ruff-lint.nix { inherit pkgs; checkRoot = ./.; };
+          ruff-fmt = import ./checks/ruff-fmt.nix { inherit pkgs; checkRoot = ./.; };
+        }
+      );
 
       formatter = forEachSystem (system: nix-formatter-pack.lib.mkFormatter formatterPackArgsFor.${system});
 
