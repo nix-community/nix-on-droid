@@ -25,6 +25,7 @@ let
   rawModule = evalModules {
     modules = [ configModule ] ++ nodModules;
     specialArgs = extraSpecialArgs;
+    class = "nixOnDroid";
   };
 
   failedAssertions = map (x: x.message) (filter (x: !x.assertion) rawModule.config.assertions);
