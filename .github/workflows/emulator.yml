@@ -100,7 +100,9 @@ jobs:
           force-avd-creation: false
           profile: pixel_tablet
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          enable-hw-keyboard: true
           disable-animations: false
+          disable-spellchecker: false
           script: echo "Generated AVD snapshot for caching."
 
 
@@ -176,7 +178,9 @@ jobs:
           force-avd-creation: false
           profile: pixel_tablet
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          enable-hw-keyboard: true
           disable-animations: true
+          disable-spellchecker: true
           # https://github.com/ReactiveCircus/android-emulator-runner/issues/385
           script: >
             trap 'pkill --exact --echo --signal SIGKILL crashpad_handle || true' EXIT &&
