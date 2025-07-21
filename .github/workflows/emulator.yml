@@ -98,6 +98,7 @@ jobs:
           arch: x86_64
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
+          profile: pixel_tablet
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
@@ -173,6 +174,7 @@ jobs:
           arch: x86_64
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
+          profile: pixel_tablet
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           # https://github.com/ReactiveCircus/android-emulator-runner/issues/385
