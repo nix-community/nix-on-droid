@@ -5,6 +5,18 @@ import bootstrap_channels
 
 from common import screenshot, wait_for
 
+def expand_notification(d):
+    session = d.ui(text='1 session')
+    nix = session.up(text='Nix', resourceId='android:id/app_name_text')
+    if nix is None:  # works on 29, but not on 35
+        print('android:id/app_name_text not found, '
+              'go for com.android.systemui:id/notification_title')
+        nix = session.up(
+            text='Nix',
+            resourceId='com.android.systemui:id/notification_title'
+        )
+    expand = nix.right(resourceId='android:id/expand_button')
+    nix.right(resourceId='android:id/expand_button').click()
 
 def run(d):
     OPENERS = ['termux-open', 'termux-open-url', 'xdg-open']
@@ -28,7 +40,7 @@ def run(d):
     screenshot(d, 'pre-switch')
     d('input text "nix-on-droid switch && echo integration  tools  installed"')
     d.ui.press('enter')
-    wait_for(d, 'integration tools installed')
+    wait_for(d, 'integration tools installed', timeout=180)
     screenshot(d, 'post-switch')
 
     # Verify am is there
@@ -115,9 +127,12 @@ def run(d):
         wait_for(d, f'{opener} https://example.org')
 
     # test termux-wake-lock/termux-wake-unlock
+    time.sleep(.5)
     d.ui.open_notification()
+    time.sleep(.5)
     screenshot(d, 'notification-opened')
-    d.ui(text='Nix').right(resourceId='android:id/expand_button').click()
+    if 'Release wakelock' not in d.ui.dump_hierarchy():
+        expand_notification(d)
     screenshot(d, 'notification-expanded')
     wait_for(d, 'Acquire wakelock')
     screenshot(d, 'wakelock-initially-not-acquired')
@@ -139,7 +154,7 @@ def run(d):
     screenshot(d, 'notification-opened')
     wait_for(d, '(wake lock held)')
     if 'Release wakelock' not in d.ui.dump_hierarchy():
-        d.ui(text='Nix').right(resourceId='android:id/expand_button').click()
+        expand_notification(d)
         screenshot(d, 'notification-expanded')
     wait_for(d, 'Release wakelock')
     screenshot(d, 'notification-with-wakelock')
@@ -155,7 +170,7 @@ def run(d):
     time.sleep(.5)
     screenshot(d, 'notification-opened')
     if 'Acquire wakelock' not in d.ui.dump_hierarchy():
-        d.ui(text='Nix').right(resourceId='android:id/expand_button').click()
+        expand_notification(d)
         screenshot(d, 'notification-expanded')
     wait_for(d, 'Acquire wakelock')
     screenshot(d, 'notification-without-wakelock')

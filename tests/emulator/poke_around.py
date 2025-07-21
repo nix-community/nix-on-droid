@@ -1,3 +1,5 @@
+import time
+
 import bootstrap_channels
 
 from common import screenshot, wait_for
@@ -45,6 +47,7 @@ def run(d):
     screenshot(d, 're-login')
     wait_for(d, 'Installing new login-inner...')
     wait_for(d, 'bash-5.2$')
+    time.sleep(1)
     screenshot(d, 're-login-done')
 
     # And verify zip is still there
@@ -55,7 +58,6 @@ def run(d):
 
     def change_shell_and_relogin(shell, descr):
         import base64
-        import time
         config = ('{pkgs, ...}: {user.shell = %SHELL%; ' +
                   'system.stateVersion = "24.05";}').replace('%SHELL%', shell)
         config_base64 = base64.b64encode(config.encode()).decode()
