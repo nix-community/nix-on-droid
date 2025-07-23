@@ -129,7 +129,7 @@ def run(d):
     # test termux-wake-lock/termux-wake-unlock
     time.sleep(.5)
     d.ui.open_notification()
-    time.sleep(.5)
+    time.sleep(1)
     screenshot(d, 'notification-opened')
     if 'Release wakelock' not in d.ui.dump_hierarchy():
         expand_notification(d)
@@ -150,7 +150,7 @@ def run(d):
             d.ui(text='ALLOW').click()
         screenshot(d, 'wake-lock-permission-granted')
     d.ui.open_notification()
-    time.sleep(.5)
+    time.sleep(1)
     screenshot(d, 'notification-opened')
     wait_for(d, '(wake lock held)')
     if 'Release wakelock' not in d.ui.dump_hierarchy():
@@ -165,9 +165,10 @@ def run(d):
 
     d('input text "termux-wake-unlock"')
     d.ui.press('enter')
+    time.sleep(.5)
     screenshot(d, 'wake-unlock-command')
     d.ui.open_notification()
-    time.sleep(.5)
+    time.sleep(1)
     screenshot(d, 'notification-opened')
     if 'Acquire wakelock' not in d.ui.dump_hierarchy():
         expand_notification(d)
