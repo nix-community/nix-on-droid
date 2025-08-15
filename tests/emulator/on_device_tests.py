@@ -1,3 +1,5 @@
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE
+
 from common import screenshot, wait_for
 
 

@@ -1,29 +1,31 @@
-from common import screenshot, wait_for, APK, BOOTSTRAP_URL
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE
 
 import time
+
+from common import APK, BOOTSTRAP_URL, screenshot, wait_for
 
 
 def run(d):
     nod = d.app('com.termux.nix', url=APK)
     nod.permissions.allow_notifications()
     nod.launch()
-    time.sleep(.5)
+    time.sleep(0.5)
 
     wait_for(d, 'Bootstrap zipball location')
-    time.sleep(.5)
+    time.sleep(0.5)
     screenshot(d, 'initial')
     d.ui(className='android.widget.EditText').set_text(BOOTSTRAP_URL)
-    time.sleep(.5)
+    time.sleep(0.5)
     screenshot(d, 'entered-url')
-    for i in range(2):
+    for _ in range(2):
         if 'text="OK"' not in d.ui.dump_hierarchy():
             d.ui.press('back')
-            time.sleep(.5)
+            time.sleep(0.5)
         else:
             break
-    time.sleep(.5)
+    time.sleep(0.5)
     screenshot(d, 'entered-url-back')
-    time.sleep(.5)
+    time.sleep(0.5)
     d.ui(text='OK').click()
     screenshot(d, 'ok-clicked')
 
