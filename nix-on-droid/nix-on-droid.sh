@@ -69,6 +69,7 @@ function doHelp() {
     echo "  --max-jobs NUM"
     echo "  --option NAME VALUE"
     echo "  --override-input INPUT URL"
+    echo "  --log-format"
     echo "  --show-trace"
     echo
     echo "Commands"
@@ -167,7 +168,7 @@ while [[ $# -gt 0 ]]; do
             PASSTHROUGH_OPTS+=("$opt" "$1" "$2")
             shift 2
             ;;
-        --builders|--cores|--max-jobs)
+        --builders|--cores|--max-jobs|--log-format)
             PASSTHROUGH_OPTS+=("$opt" "$1")
             shift
             ;;
