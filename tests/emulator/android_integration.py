@@ -105,14 +105,14 @@ def run(d):
 
     # Verify that *-open* commands work
     for opener in OPENERS:
-        d(f'input text "{opener} https://example.org"')
+        d(f'input text "{opener} https://nix-on-droid.unboiled.info/README.txt"')
         d.ui.press('enter')
         screenshot(d, f'{opener}-opened')
-        wait_for(d, 'This domain is for use in illustrative')
+        wait_for(d, 'This is Nix-on-Droid.')
         screenshot(d, f'{opener}-waited')
         d.ui.press('back')
         screenshot(d, f'{opener}-back')
-        wait_for(d, f'{opener} https://example.org')
+        wait_for(d, f'{opener} https://nix-on-droid.unboiled.info/README.txt')
 
     # test termux-wake-lock/termux-wake-unlock
     d.ui.open_notification()
