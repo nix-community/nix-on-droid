@@ -160,6 +160,13 @@ the android device this store path will be downloaded from the binary cache
 derivation has to be present there or in any other binary cache configured
 in the `nix.conf` on the device.
 
+If you want to build that proot derivation (possibly to put it in your own cache):
+
+```sh
+# must run on a linux-x86_64 system (cross-compile only)
+nix build ".#prootTermux-aarch64"
+```
+
 Obviously it's an annoyance if one wants to fork this repo and test something.
 To minimize the hassle with this scenario, proot derivation is also bundled
 with the bootstrap zipball. This way you only need your own binary cache
