@@ -59,7 +59,7 @@
 
         deploy = {
           type = "app";
-          program = toString (import ./scripts/deploy.nix { inherit nixpkgs system; });
+          program = import ./scripts/deploy.nix { inherit nixpkgs system; };
         };
       });
 
