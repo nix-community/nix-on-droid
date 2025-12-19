@@ -11,17 +11,20 @@ let
   pkgsCross = callPackage ./cross-pkgs.nix { };
 in
 
-pkgsCross.stdenv.mkDerivation rec {
+pkgsCross.stdenv.mkDerivation (finalAttrs: {
   pname = "talloc";
-  version = "2.4.2";
+  version = "2.4.3";
 
   src = fetchurl {
-    url = "mirror://samba/talloc/${pname}-${version}.tar.gz";
-    sha256 = "sha256-hez55GXiD5j5lQpS6aQR4UMgvFVfolfYdpe356mx2KY=";
+    url = "mirror://samba/talloc/talloc-${finalAttrs.version}.tar.gz";
+    hash = "sha256-3EbEC59GuzTdl/5B9Uiw6LJHt3qRhXZzPFKOg6vYVN0=";
   };
 
-  nativeBuildInputs = [ pkg-config python3 wafHook ];
-  buildInputs = [ ];
+  nativeBuildInputs = [
+    pkg-config
+    python3
+    wafHook
+  ];
 
   wafPath = "./buildtools/bin/waf";
   wafConfigureFlags = [
@@ -63,11 +66,22 @@ pkgsCross.stdenv.mkDerivation rec {
   '';
 
   # can't link unneeded .so, we'll link a static one by hand
-  buildPhase = "python ./buildtools/bin/waf build || true";
+  buildPhase = ''
+    runHook preBuild
+
+    python ./buildtools/bin/waf build || true
+
+    runHook postBuild
+  '';
+
   installPhase = ''
+    runHook preInstall
+
     mkdir -p $out/lib $out/include
     ${pkgsCross.stdenv.cc.targetPrefix}ar q $out/lib/libtalloc.a \
         bin/default/talloc.c.[0-9]*.o
     cp talloc.h $out/include/
+
+    runHook postInstall
   '';
-}
+})

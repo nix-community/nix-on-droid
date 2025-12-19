@@ -37,7 +37,7 @@ let
         pkgs = pkgs.lib.mkForce pkgs; # to override ./modules/nixpkgs/config.nix
       };
 
-      system.stateVersion = "24.05";
+      system.stateVersion = "25.11";
 
       # Fix invoking bash after initial build.
       user.shell = "${initialPackageInfo.bash}/bin/bash";
@@ -62,6 +62,12 @@ let
   );
 
   customPkgs = {
+    onetbb = pkgs.onetbb.overrideAttrs (oldAttrs: {
+      doCheck = if pkgs.stdenv.hostPlatform.isStatic then false else oldAttrs.doCheck;
+
+      cmakeFlags =
+        oldAttrs.cmakeFlags ++ (if pkgs.stdenv.hostPlatform.isStatic then [ "-DTBB_TEST=OFF" ] else [ ]);
+    });
     bootstrap = callPackage ./bootstrap.nix { };
     bootstrapZip = callPackage ./bootstrap-zip.nix { };
     prootTermux = callPackage ./cross-compiling/proot-termux.nix { };

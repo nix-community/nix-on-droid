@@ -8,10 +8,14 @@ let
   pkgsCross-patched = pkgsCross-imported.applyPatches {
     name = "nixpkgs-crosscompilation-patched";
     src = nixpkgs;
-    patches = [
-      ./compiler-rt.patch
-      ./libunwind.patch
-    ];
+    patches = [ ./compiler-rt.patch ];
+    postPatch = ''
+      substituteInPlace pkgs/development/compilers/llvm/common/compiler-rt/default.nix \
+        --replace-fail 'ln -s $out/lib/*/clang_rt.crtbegin-*.o $out/lib/crtbeginS.o' "" \
+        --replace-fail 'ln -s $out/lib/*/clang_rt.crtend-*.o $out/lib/crtendS.o' "" \
+        --replace-fail '"dev"' ""
+       sed -i '/cmakeFlags/i LDFLAGS = "-unwindlib=none";' pkgs/development/compilers/llvm/common/libunwind/default.nix
+    '';
   };
   pkgsCross = import pkgsCross-patched args;
 in

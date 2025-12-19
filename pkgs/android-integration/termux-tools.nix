@@ -1,53 +1,55 @@
 # Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ stdenvNoCC
+{ stdenv
 , fetchFromGitHub
 , autoreconfHook
 , makeWrapper
 , gnused
 , getopt
 , termux-am
+,
 }:
 
-stdenvNoCC.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   name = "termux-tools";
-  version = "1.42.4";
+  version = "1.47.1";
+
   src = fetchFromGitHub {
     owner = "termux";
     repo = "termux-tools";
-    rev = "v${version}";
-    sha256 = "sha256-LkkeaEQcY8HgunBYAg3Ymn5xYPvrGqGNCZTd/NyIOKY=";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-YfIxDegzIHyy62IlpSgrDz4fQiPoZNgSzXNtAk5lmn8=";
   };
-  nativeBuildInputs = [ autoreconfHook makeWrapper ];
+
+  nativeBuildInputs = [
+    autoreconfHook
+    makeWrapper
+  ];
+
   propagatedInputs = [ termux-am ];
 
-  # https://github.com/termux/termux-tools/pull/95
-  patches = [ ./termux-tools.patch ];
   postPatch = ''
     substituteInPlace scripts/termux-setup-storage.in \
-      --replace @TERMUX_HOME@ /data/data/com.termux.nix/files/home/ \
-      --replace @TERMUX_APP_PACKAGE@ com.termux.nix
+      --replace-fail "@TERMUX_HOME@" "/data/data/com.termux.nix/files/home/" \
+      --replace-fail "@TERMUX_APP_PACKAGE@" "com.termux.nix"
     substituteInPlace scripts/termux-open.in \
-      --replace 'getopt ' '${getopt}/bin/getopt '
+      --replace-fail "getopt " "${getopt}/bin/getopt "
     substituteInPlace \
       scripts/termux-open.in \
       scripts/termux-wake-lock.in \
       scripts/termux-wake-unlock.in \
-      --replace @TERMUX_APP_PACKAGE@.app com.termux.app \
-      --replace @TERMUX_APP_PACKAGE@ com.termux.nix
+      --replace-fail "@TERMUX_APP_PACKAGE@.app" "com.termux.app" \
+      --replace-fail "@TERMUX_APP_PACKAGE@" "com.termux.nix"
     substituteInPlace scripts/termux-reload-settings.in \
-      --replace @TERMUX_APP_PACKAGE@ com.termux.nix
+      --replace-fail "@TERMUX_APP_PACKAGE@" "com.termux.nix"
     ${gnused}/bin/sed -i 's|^am |${termux-am}/bin/am |' scripts/*
 
-    rm -r doc  # manpage is half misleading, pulling pandoc is not worth it
-    substituteInPlace Makefile.am --replace \
-      'SUBDIRS = . scripts doc mirrors motds' \
-      'SUBDIRS = . scripts'
-    substituteInPlace configure.ac --replace \
-      'AC_CONFIG_FILES([Makefile scripts/Makefile doc/Makefile' \
-      'AC_CONFIG_FILES([Makefile scripts/Makefile])'
-    substituteInPlace configure.ac --replace \
-      'mirrors/Makefile motds/Makefile])' ""
+    rm --recursive doc  # manpage is half misleading, pulling pandoc is not worth it
+    substituteInPlace Makefile.am \
+      --replace-fail "SUBDIRS = . scripts doc mirrors motds src" "SUBDIRS = . scripts"
+    substituteInPlace configure.ac \
+      --replace-fail "AC_CONFIG_FILES([Makefile scripts/Makefile doc/Makefile" "AC_CONFIG_FILES([Makefile scripts/Makefile])" \
+      --replace-fail "mirrors/Makefile motds/Makefile src/Makefile])" ""
   '';
 
   outputs = [
@@ -67,7 +69,6 @@ stdenvNoCC.mkDerivation rec {
     rm -d $out/etc
 
     rm $out/bin/chsh      # we offer a declarative way to change your shell
-    rm $out/bin/cmd       # doesn't work because we overlay /system/bin
     rm $out/bin/dalvikvm  # doesn't work because we overlay /system/bin
     rm $out/bin/df        # works without the magic
     rm $out/bin/getprop   # doesn't work because we overlay /system/bin
@@ -121,4 +122,4 @@ stdenvNoCC.mkDerivation rec {
     echo ./share/examples/termux/termux.properties >> expected  # useful
     diff -u expected effective
   '';
-}
+})

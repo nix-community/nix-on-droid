@@ -5,22 +5,24 @@
 , talloc
 , static ? true
 , outputBinaryName ? "proot-static"
+,
 }:
 
 stdenv.mkDerivation {
   pname = "proot-termux";
-  version = "unstable-2024-05-04";
+  version = "0-unstable-2025-10-19";
 
   src = fetchFromGitHub {
     repo = "proot";
     owner = "termux";
-    rev = "60485d2646c1e09105099772da4a20deda8d020d";
-    sha256 = "sha256-zHFPiL3ywZa8yzZa600BpoE+zuRipw2GNJrt3/Dy+/E=";
+    rev = "228a5f28b078f4e2504de46758ce17948f73f507";
+    hash = "sha256-ViV8i7W47dEgYDKPN1w4tY+XaVHcXLWxTGTX3wKdARk=";
   };
 
   # ashmem.h is rather small, our needs are even smaller, so just define these:
   preConfigure = ''
-    mkdir -p fake-ashmem/linux; cat > fake-ashmem/linux/ashmem.h << EOF
+    mkdir --parents fake-ashmem/linux
+    cat > fake-ashmem/linux/ashmem.h << EOF
     #include <linux/limits.h>
     #include <linux/ioctl.h>
     #include <string.h>
@@ -30,17 +32,28 @@ stdenv.mkDerivation {
     #define ASHMEM_SET_SIZE _IOW(__ASHMEMIOC, 3, size_t)
     #define ASHMEM_GET_SIZE _IO(__ASHMEMIOC, 4)
     EOF
-    substituteInPlace src/arch.h --replace \
-      '#define HAS_LOADER_32BIT true' \
-      ""
+    substituteInPlace src/arch.h \
+      --replace-fail '#define HAS_LOADER_32BIT true' ""
     ! (grep -F '#define HAS_LOADER_32BIT' src/arch.h)
   '';
   buildInputs = [ talloc ];
   patches = [ ./detranslate-empty.patch ];
-  makeFlags = [ "-Csrc" "V=1" ];
-  CFLAGS = [ "-O3" "-I../fake-ashmem" ] ++
-    (if static then [ "-static" ] else [ ]);
+  makeFlags = [
+    "-Csrc"
+    "V=1"
+  ];
+  CFLAGS = [
+    "-O3"
+    "-I../fake-ashmem"
+  ]
+  ++ (if static then [ "-static" ] else [ ]);
   LDFLAGS = if static then [ "-static" ] else [ ];
-  preInstall = "${stdenv.cc.targetPrefix}strip src/proot";
-  installPhase = "install -D -m 0755 src/proot $out/bin/${outputBinaryName}";
+  installPhase = ''
+    runHook preInstall
+
+    ${stdenv.cc.targetPrefix}strip src/proot
+    install -D --mode=0755 src/proot $out/bin/${outputBinaryName}
+
+    runHook postInstall
+  '';
 }
