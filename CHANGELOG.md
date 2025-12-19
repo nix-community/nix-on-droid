@@ -1,6 +1,6 @@
 # Changelog
 
-## Release 24.11 (unreleased)
+## Release 25.11 (unreleased)
 
 ## Release 24.05
 

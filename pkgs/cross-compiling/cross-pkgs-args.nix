@@ -10,7 +10,9 @@ in
 
   crossSystem = {
     config = "${arch}-unknown-linux-android";
-    sdkVer = "32";
+    sdkVer = "35";
+    androidSdkVersion = "35";
+    androidNdkVersion = "27";
     libc = "bionic";
     useAndroidPrebuilt = false;
     useLLVM = true;

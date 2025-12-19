@@ -4,7 +4,7 @@ load lib
 
 @test 'successfully loads a config with _class="nixOnDroid"' {
   # set up / build / activate the configuration
-  echo '{ config.system.stateVersion = "24.05"; _class = "nixOnDroid"; }' > ~/.config/nixpkgs/nix-on-droid.nix
+  echo '{ config.system.stateVersion = "25.11"; _class = "nixOnDroid"; }' > ~/.config/nixpkgs/nix-on-droid.nix
   _sed -e "s|<<FLAKE_URL>>|$FLAKE_URL|g" -e "s|<<SYSTEM>>|$(detect_system)|g" \
     "$ON_DEVICE_TESTS_DIR/config-flake.nix" \
     > ~/.config/nixpkgs/flake.nix
@@ -14,7 +14,7 @@ load lib
 
 @test 'fails to load a config with _class="nixos"' {
   # set up / build / activate the configuration
-  echo '{ config.system.stateVersion = "24.05"; _class = "nixos"; }' > ~/.config/nixpkgs/nix-on-droid.nix
+  echo '{ config.system.stateVersion = "25.11"; _class = "nixos"; }' > ~/.config/nixpkgs/nix-on-droid.nix
   _sed -e "s|<<FLAKE_URL>>|$FLAKE_URL|g" -e "s|<<SYSTEM>>|$(detect_system)|g" \
     "$ON_DEVICE_TESTS_DIR/config-flake.nix" \
     > ~/.config/nixpkgs/flake.nix
