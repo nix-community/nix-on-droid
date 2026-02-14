@@ -9,13 +9,13 @@
 
 stdenv.mkDerivation {
   pname = "proot-termux";
-  version = "unstable-2024-05-04";
+  version = "0-unstable-2026-01-18";
 
   src = fetchFromGitHub {
     repo = "proot";
     owner = "termux";
-    rev = "60485d2646c1e09105099772da4a20deda8d020d";
-    sha256 = "sha256-zHFPiL3ywZa8yzZa600BpoE+zuRipw2GNJrt3/Dy+/E=";
+    rev = "4dba3afbf3a63af89b4d9c1a59bf2bda10f4d10f";
+    hash = "sha256-NnlAvv8b0MKEX2BlD1GRpzoWCpgJxiIEgJ9C+C0PrMw=";
   };
 
   # ashmem.h is rather small, our needs are even smaller, so just define these:
