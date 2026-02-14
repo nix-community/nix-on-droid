@@ -8,6 +8,7 @@
 , proot
 , pkgsStatic
 , system
+, fetchurl
 }:
 
 let
@@ -31,13 +32,13 @@ in
 stdenvNoCC.mkDerivation {
   name = "nix-directory";
 
-  src = builtins.fetchurl {
-    url = "https://nixos.org/releases/nix/nix-2.20.5/nix-2.20.5-${system}.tar.xz";
-    sha256 =
+  src = fetchurl {
+    url = "https://nixos.org/releases/nix/nix-2.33.3/nix-2.33.3-${system}.tar.xz";
+    hash =
       let
         nixShas = {
-          aarch64-linux = "sha256:168wjfj3xsc8hq1y6cq59iipjp1g9hmj4n5wdn9c47ad9gbc9cvh";
-          x86_64-linux = "sha256:0dax9n562ldj53ap6lz0cwwsfx4d8j1267g9s6lg3zs237yyzw61";
+          aarch64-linux = "sha256-FeOn/Kg7KBcL4Oah3/LGZFUp+JnHbniVdcjOmzJRuy0=";
+          x86_64-linux = "sha256-lsUDWmNpmhIwFWb8p4OLsSZMOwiU3A9hAQFyZ1PlKsI=";
         };
       in
       nixShas.${system};
