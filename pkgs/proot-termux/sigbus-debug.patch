@@ -1,0 +1,20 @@
+--- a/src/tracee/event.c
++++ b/src/tracee/event.c
+@@ -668,6 +668,17 @@
+ 			break;
+ 		}
+
++		case SIGBUS: {
++			siginfo_t siginfo = {};
++			ptrace(PTRACE_GETSIGINFO, tracee->pid, NULL, &siginfo);
++			note(tracee, WARNING, INTERNAL,
++				"vpid %" PRIu64 ": SIGBUS si_code=%d si_addr=%p PC=0x%lx SP=0x%lx",
++				tracee->vpid, siginfo.si_code, siginfo.si_addr,
++				(unsigned long)peek_reg(tracee, CURRENT, INSTR_POINTER),
++				(unsigned long)peek_reg(tracee, CURRENT, STACK_POINTER));
++			break;
++		}
++
+ 		default:
+ 			/* Deliver this signal as-is,
+ 			 * unless we're chaining syscall.  */
