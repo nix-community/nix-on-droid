@@ -4,6 +4,7 @@
 , home-manager-path
 , isFlake
 , targetSystem  # system to cross-compile to
+, crossPkgs
 }:
 
 [
@@ -31,7 +32,7 @@
   {
     _file = ./module-list.nix;
     _module.args = {
-      inherit home-manager-path isFlake targetSystem;
+      inherit home-manager-path isFlake targetSystem crossPkgs;
       pkgs = pkgs.lib.mkDefault pkgs;
     };
   }
