@@ -1,0 +1,22 @@
+--- a/src/execve/exit.c
++++ b/src/execve/exit.c
+@@ -346,10 +346,15 @@
+ 	 * manually since we are in execve sysexit.  However it should
+ 	 * be done before transfering data since the kernel might not
+-	 * allow page faults below the stack pointer.  */
+-	poke_reg(tracee, STACK_POINTER, stack_pointer - buffer_size);
+-	poke_reg(tracee, USERARG_1, stack_pointer - buffer_size);
++	 * allow page faults below the stack pointer.
++	 *
++	 * AArch64 requires the stack pointer to be 16-byte aligned,
++	 * so round SP down.  USERARG_1 (the load script pointer)
++	 * must still point to the actual data.  */
++	word_t data_addr = stack_pointer - buffer_size;
++	poke_reg(tracee, STACK_POINTER, data_addr & ~(word_t)0xf);
++	poke_reg(tracee, USERARG_1, data_addr);
+
+ 	/* Copy everything in the tracee's memory at once.  */
+-	status = write_data(tracee, stack_pointer - buffer_size, buffer, buffer_size);
++	status = write_data(tracee, data_addr, buffer, buffer_size);
+ 	if (status < 0)
+ 		return status;

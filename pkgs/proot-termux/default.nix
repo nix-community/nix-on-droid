@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2025, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { stdenv
 , fetchFromGitHub
@@ -9,13 +9,13 @@
 
 stdenv.mkDerivation {
   pname = "proot-termux";
-  version = "unstable-2024-05-04";
+  version = "0-unstable-2025-10-19";
 
   src = fetchFromGitHub {
     repo = "proot";
     owner = "termux";
-    rev = "60485d2646c1e09105099772da4a20deda8d020d";
-    sha256 = "sha256-zHFPiL3ywZa8yzZa600BpoE+zuRipw2GNJrt3/Dy+/E=";
+    rev = "228a5f28b078f4e2504de46758ce17948f73f507";
+    sha256 = "sha256-ViV8i7W47dEgYDKPN1w4tY+XaVHcXLWxTGTX3wKdARk=";
   };
 
   # ashmem.h is rather small, our needs are even smaller, so just define these:
@@ -34,9 +34,30 @@ stdenv.mkDerivation {
       '#define HAS_LOADER_32BIT true' \
       ""
     ! (grep -F '#define HAS_LOADER_32BIT' src/arch.h)
+    # LLVM 21's lld sets file_offset = vaddr for -Ttext=0x2000000000,
+    # producing an 8 GB loader binary. Adding -n (nmagic) fixes the file
+    # size but sets p_align=4, which Android kernels reject (EINVAL on
+    # execve). Solution: link with -n, then binary-patch p_align to
+    # 0x10000 (64 KB, safe for 4/16/64 KB page-size devices).
+    substituteInPlace src/GNUmakefile --replace ",-Ttext" ",-n,-Ttext"
+    # Patch p_align in the first Elf64_Phdr (LOAD) of the loader ELF.
+    # Elf64_Ehdr is 64 bytes; Elf64_Phdr.p_align is at offset 48 within
+    # the phdr → file offset 112. Written after cp, before strip.
+    substituteInPlace src/GNUmakefile --replace \
+      '$$(Q)cp $$< $$@' \
+      '$$(Q)cp $$< $$@ && printf '"'"'\x00\x00\x01\x00\x00\x00\x00\x00'"'"' | dd of=$$@ bs=1 seek=112 count=8 conv=notrunc 2>/dev/null'
+    # readelf is needed to generate loader-info.c (pokedata workaround offset).
+    # The Makefile calls bare 'readelf' but only the cross-prefixed version exists.
+    substituteInPlace src/GNUmakefile --replace "readelf -s" "${stdenv.cc.targetPrefix}readelf -s"
+    # AArch64 requires 16-byte-aligned SP. proot's transfer_load_script sets
+    # SP = stack_pointer − buffer_size, which may not be aligned. LLVM 21's
+    # loader uses SP-relative addressing in _start, so misalignment → SIGBUS.
+    # Fix: align SP down independently; keep x0 pointing to actual data.
+    patch -p1 < ${./align-sp.patch}
   '';
   buildInputs = [ talloc ];
   patches = [ ./detranslate-empty.patch ];
+  hardeningDisable = [ "zerocallusedregs" ];
   makeFlags = [ "-Csrc" "V=1" ];
   CFLAGS = [ "-O3" "-I../fake-ashmem" ] ++
     (if static then [ "-static" ] else [ ]);
