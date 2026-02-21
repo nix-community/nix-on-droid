@@ -1,19 +1,24 @@
 # Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ nixpkgs
-, system  # system to compile for, user-facing name of targetSystem
-, _nativeSystem ? null  # system to cross-compile from, see flake.nix
+{ pkgs
+, crossPkgs
+, targetPkgs
 , nixOnDroidChannelURL ? null
 , nixpkgsChannelURL ? null
 , nixOnDroidFlakeURL ? null
 }:
 
 let
-  nativeSystem = if _nativeSystem == null then system else _nativeSystem;
-  nixDirectory = callPackage ./nix-directory.nix { inherit system; };
-  initialPackageInfo = import "${nixDirectory}/nix-support/package-info.nix";
+  targetSystem = crossPkgs.stdenv.hostPlatform.system;
 
-  pkgs = import nixpkgs { system = nativeSystem; };
+  # Use prebuilt bootstrap packages from nixpkgs cache
+  closureInfo = pkgs.closureInfo {
+    rootPaths = with targetPkgs; [ bash cacert nix ];
+  };
+  initialPackageInfo = {
+    inherit (targetPkgs) bash nix;
+    cacert = "${targetPkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+  };
 
   urlOptionValue = url: envVar:
     let
@@ -24,8 +29,7 @@ let
       (if url == null then envValue else url);
 
   modules = import ../modules {
-    inherit pkgs;
-    targetSystem = system;
+    inherit pkgs crossPkgs targetSystem;
 
     isFlake = true;
 
@@ -56,16 +60,17 @@ let
   callPackage = pkgs.lib.callPackageWith (
     pkgs // customPkgs // {
       inherit (modules) config;
-      inherit callPackage nixpkgs nixDirectory initialPackageInfo;
-      targetSystem = system;
+      inherit callPackage closureInfo initialPackageInfo targetSystem;
     }
   );
 
-  customPkgs = {
+  staticPkgs = crossPkgs.pkgsStatic.pkgsLLVM;
+
+  customPkgs = rec {
     bootstrap = callPackage ./bootstrap.nix { };
     bootstrapZip = callPackage ./bootstrap-zip.nix { };
-    prootTermux = callPackage ./cross-compiling/proot-termux.nix { };
-    tallocStatic = callPackage ./cross-compiling/talloc-static.nix { };
+    prootTermux = staticPkgs.callPackage ./proot-termux { talloc = tallocStatic; };
+    tallocStatic = staticPkgs.callPackage ./talloc { };
   };
 in
 
