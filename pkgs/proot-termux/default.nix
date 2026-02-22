@@ -39,8 +39,11 @@ stdenv.mkDerivation {
   patches = [ ./detranslate-empty.patch ];
   makeFlags = [ "-Csrc" "V=1" ];
   CFLAGS = [
-    "-O3" "-I../fake-ashmem"
-    "-D_LARGEFILE64_SOURCE" "-DMSG_COPY=040000" "-DTEMP_FAILURE_RETRY="
+    "-O3"
+    "-I../fake-ashmem"
+    "-D_LARGEFILE64_SOURCE"
+    "-DMSG_COPY=040000"
+    "-DTEMP_FAILURE_RETRY="
     "-D__ANDROID__"
     # Copied from linux/include/uapi/asm-generic/ioctls.h
     "-DTCGETS=0x5401"
@@ -52,7 +55,7 @@ stdenv.mkDerivation {
     "-DTCSETSW2=0x402C542C"
     "-DTCSETSF2=0x402C542D"
   ] ++
-    (if static then [ "-static" ] else [ ]);
+  (if static then [ "-static" ] else [ ]);
   LDFLAGS = if static then [ "-static" ] else [ ];
   preInstall = "${stdenv.cc.targetPrefix}strip src/proot";
   installPhase = "install -D -m 0755 src/proot $out/bin/${outputBinaryName}";
