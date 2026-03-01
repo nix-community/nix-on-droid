@@ -1,15 +1,155 @@
+commit 540e78bf7d3000f348084e418721173924eca543
+Author: Axel Karjalainen <axel@axka.fi>
+Date:   Wed Aug 6 17:33:55 2025 +0300
+
+    llvmPackages.compiler-rt: don't copy CRT on Android
+
+    CRT isn't built with compiler-rt on Android.
+
 diff --git a/pkgs/development/compilers/llvm/common/compiler-rt/default.nix b/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
-index 7d47436b714f..d30df471e92a 100644
+index a81e79aad26c..9ca5815b5c80 100644
 --- a/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
 +++ b/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
-@@ -155,8 +155,8 @@ stdenv.mkDerivation ({
-     # The presence of crtbegin_shared has been added and removed; it's possible
-     # people have added/removed it to get it working on their platforms.
-     # Try each in turn for now.
--    ln -s $out/lib/*/clang_rt.crtbegin-*.o $out/lib/crtbeginS.o
--    ln -s $out/lib/*/clang_rt.crtend-*.o $out/lib/crtendS.o
-+    #ln -s $out/lib/*/clang_rt.crtbegin-*.o $out/lib/crtbeginS.o
-+    #ln -s $out/lib/*/clang_rt.crtend-*.o $out/lib/crtendS.o
-     ln -s $out/lib/*/clang_rt.crtbegin_shared-*.o $out/lib/crtbeginS.o
-     ln -s $out/lib/*/clang_rt.crtend_shared-*.o $out/lib/crtendS.o
-   '' + lib.optionalString doFakeLibgcc ''
+@@ -41,7 +41,7 @@ let
+   # use clean up the `cmakeFlags` rats nest below.
+   haveLibcxx = stdenv.cc.libcxx != null;
+   isDarwinStatic = stdenv.hostPlatform.isDarwin && stdenv.hostPlatform.isStatic;
+-  inherit (stdenv.hostPlatform) isMusl isAarch64 isWindows;
++  inherit (stdenv.hostPlatform) isMusl isWindows isAndroid;
+   noSanitizers = !haveLibc || bareMetal || isMusl || isDarwinStatic || isWindows;
+ in
+
+@@ -241,7 +241,8 @@ stdenv.mkDerivation (finalAttrs: {
+     lib.optionalString (stdenv.hostPlatform.isDarwin) ''
+       ln -s "$out/lib"/*/* "$out/lib"
+     ''
+-    + lib.optionalString (useLLVM && stdenv.hostPlatform.isLinux) ''
++    # `!isAndroid`: CRT isn't built with compiler-rt on Android
++    + lib.optionalString (useLLVM && stdenv.hostPlatform.isLinux && !isAndroid) ''
+       ln -s $out/lib/*/clang_rt.crtbegin-*.o $out/lib/crtbegin.o
+       ln -s $out/lib/*/clang_rt.crtend-*.o $out/lib/crtend.o
+       # Note the history of crt{begin,end}S in previous versions of llvm in nixpkg:
+
+commit 1e37e21f7b00d4d5aecea5e5f0e90e63a15f9b80
+Author: Axel Karjalainen <axel@axka.fi>
+Date:   Wed Aug 6 17:29:28 2025 +0300
+
+    llvmPackages.compiler-rt-no-libc: fix build for Android
+
+diff --git a/pkgs/development/compilers/llvm/common/compiler-rt/default.nix b/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
+index 9ca5815b5c80..b258e0b543a3 100644
+--- a/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
++++ b/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
+@@ -85,7 +85,12 @@ stdenv.mkDerivation (finalAttrs: {
+     url = "https://github.com/llvm/llvm-project/pull/99837/commits/14ae0a660a38e1feb151928a14f35ff0f4487351.patch";
+     hash = "sha256-JykABCaNNhYhZQxCvKiBn54DZ5ZguksgCHnpdwWF2no=";
+     relative = "compiler-rt";
+-  });
++  })
++  ++ lib.optional (!haveLibc && isAndroid) [
++    # Patch to get compiler-rt-no-libc building for Android, being
++    # upstreamed: https://github.com/llvm/llvm-project/pull/152394
++    ./no-libc-android.patch
++  ];
+
+   nativeBuildInputs = [
+     cmake
+diff --git a/pkgs/development/compilers/llvm/common/compiler-rt/no-libc-android.patch b/pkgs/development/compilers/llvm/common/compiler-rt/no-libc-android.patch
+new file mode 100644
+index 000000000000..c085fae29f33
+--- /dev/null
++++ b/pkgs/development/compilers/llvm/common/compiler-rt/no-libc-android.patch
+@@ -0,0 +1,42 @@
++diff --git a/lib/builtins/CMakeLists.txt b/lib/builtins/CMakeLists.txt
++index 3ab9240..d6f2f48 100644
++--- a/lib/builtins/CMakeLists.txt
+++++ b/lib/builtins/CMakeLists.txt
++@@ -160,7 +160,6 @@ set(GENERIC_SOURCES
++   negvdi2.c
++   negvsi2.c
++   negvti2.c
++-  os_version_check.c
++   paritydi2.c
++   paritysi2.c
++   parityti2.c
++@@ -242,6 +241,7 @@ if(NOT FUCHSIA AND NOT COMPILER_RT_BAREMETAL_BUILD AND NOT COMPILER_RT_GPU_BUILD
++     emutls.c
++     enable_execute_stack.c
++     eprintf.c
+++    os_version_check.c
++   )
++ endif()
++
++diff --git a/lib/builtins/cpu_model/aarch64.c b/lib/builtins/cpu_model/aarch64.c
++index be002dd..5af475e 100644
++--- a/lib/builtins/cpu_model/aarch64.c
+++++ b/lib/builtins/cpu_model/aarch64.c
++@@ -43,7 +43,7 @@ _Bool __aarch64_have_lse_atomics
++ #elif defined(__Fuchsia__)
++ #include "aarch64/hwcap.inc"
++ #include "aarch64/lse_atomics/fuchsia.inc"
++-#elif defined(__ANDROID__)
+++#elif defined(__ANDROID__) && __has_include(<sys/system_properties.h>)
++ #include "aarch64/hwcap.inc"
++ #include "aarch64/lse_atomics/android.inc"
++ #elif defined(__linux__) && __has_include(<sys/auxv.h>)
++@@ -73,7 +73,7 @@ struct {
++ #include "aarch64/fmv/freebsd.inc"
++ #elif defined(__Fuchsia__)
++ #include "aarch64/fmv/fuchsia.inc"
++-#elif defined(__ANDROID__)
+++#elif defined(__ANDROID__) && __has_include(<sys/system_properties.h>)
++ #include "aarch64/fmv/mrs.inc"
++ #include "aarch64/fmv/android.inc"
++ #elif defined(__linux__) && __has_include(<sys/auxv.h>)
+
+commit c130931f3a32507a5e668ab0c8f403ab4d6407e5
+Author: Axel Karjalainen <axel@axka.fi>
+Date:   Wed Aug 6 17:43:46 2025 +0300
+
+    llvmPackages.compiler-rt-libc: fix build for Android
+
+diff --git a/pkgs/development/compilers/llvm/common/compiler-rt/default.nix b/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
+index b258e0b543a3..e7ad512911ef 100644
+--- a/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
++++ b/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
+@@ -42,7 +42,10 @@ let
+   haveLibcxx = stdenv.cc.libcxx != null;
+   isDarwinStatic = stdenv.hostPlatform.isDarwin && stdenv.hostPlatform.isStatic;
+   inherit (stdenv.hostPlatform) isMusl isWindows isAndroid;
+-  noSanitizers = !haveLibc || bareMetal || isMusl || isDarwinStatic || isWindows;
++  # On Android there's a weird error stating SSIZE_MAX doesn't exist.
++  # https://github.com/NixOS/nixpkgs/issues/380604#issuecomment-3159316203
++  # TODO: Figure out how to build sanitizers for Android
++  noSanitizers = !haveLibc || bareMetal || isMusl || isDarwinStatic || isWindows || isAndroid;
+ in
+
+ stdenv.mkDerivation (finalAttrs: {
+diff --git a/pkgs/development/compilers/llvm/common/default.nix b/pkgs/development/compilers/llvm/common/default.nix
+index 806cf214b4ea..0b9f4be642f8 100644
+--- a/pkgs/development/compilers/llvm/common/default.nix
++++ b/pkgs/development/compilers/llvm/common/default.nix
+@@ -393,6 +393,8 @@ makeScopeWithSplicing' {
+
+       # This is an "oddly ordered" bootstrap just for Darwin. Probably
+       # don't want it otherwise.
++      # Also used on Android to get compiler-rt-libc building without
++      # compiler-rt-no-libc and libunwind.
+       clangNoCompilerRtWithLibc = wrapCCWith rec {
+         cc = self.clang-unwrapped;
+         libcxx = null;
+@@ -415,7 +417,13 @@ makeScopeWithSplicing' {
+             if args.stdenv.hostPlatform.isDarwin then
+               overrideCC darwin.bootstrapStdenv buildLlvmPackages.clangWithLibcAndBasicRtAndLibcxx
+             else if args.stdenv.hostPlatform.useLLVM or false then
+-              overrideCC args.stdenv buildLlvmPackages.clangWithLibcAndBasicRtAndLibcxx
++                if args.stdenv.hostPlatform.isAndroid then
++                  # compiler-rt-no-libc isn't needed for compiler-rt-libc's build on Android
++                  overrideCC args.stdenv buildLlvmPackages.clangNoCompilerRtWithLibc
++                else
++                  # `libxcrypt` fails to build without compiler-rt
++                  # See: https://github.com/NixOS/nixpkgs/pull/431477#discussion_r2263654078
++                  overrideCC args.stdenv buildLlvmPackages.clangWithLibcAndBasicRtAndLibcxx
+             else
+               args.stdenv;
+         in

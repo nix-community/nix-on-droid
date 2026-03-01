@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2025, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { callPackage
 , fetchurl
@@ -13,11 +13,11 @@ in
 
 pkgsCross.stdenv.mkDerivation rec {
   pname = "talloc";
-  version = "2.4.2";
+  version = "2.4.3";
 
   src = fetchurl {
     url = "mirror://samba/talloc/${pname}-${version}.tar.gz";
-    sha256 = "sha256-hez55GXiD5j5lQpS6aQR4UMgvFVfolfYdpe356mx2KY=";
+    hash = "sha256-3EbEC59GuzTdl/5B9Uiw6LJHt3qRhXZzPFKOg6vYVN0=";
   };
 
   nativeBuildInputs = [ pkg-config python3 wafHook ];

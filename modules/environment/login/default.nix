@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2026, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config, lib, pkgs, initialPackageInfo, targetSystem, ... }:
 
@@ -87,8 +87,8 @@ in
       prootStatic =
         let
           crossCompiledPaths = {
-            aarch64-linux = "/nix/store/7qd99m1w65x2vgqg453nd70y60sm3kay-proot-termux-static-aarch64-unknown-linux-android-unstable-2024-05-04";
-            x86_64-linux = "/nix/store/pakj3svvw84rhkzdc6211yhc2cgvc21f-proot-termux-static-x86_64-unknown-linux-android-unstable-2024-05-04";
+            aarch64-linux = "/nix/store/3mbxpr3aybqb1vd12pymnmf9vwqhy302-proot-termux-static-aarch64-unknown-linux-android-0-unstable-2026-02-21";
+            x86_64-linux = "/nix/store/zfk8ysmdvz711vccb4q5xqs3q644xys3-proot-termux-static-x86_64-unknown-linux-android-0-unstable-2026-02-21";
           };
         in
         "${crossCompiledPaths.${targetSystem}}";

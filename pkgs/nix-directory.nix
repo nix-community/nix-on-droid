@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2025, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { config
 , lib
@@ -13,9 +13,16 @@
 let
   buildRootDirectory = "root-directory";
 
+  # https://github.com/NixOS/nixpkgs/pull/471845
+  staticNix = pkgsStatic.nix.overrideScope (_: _: {
+    libblake3 = pkgsStatic.libblake3.override { useTBB = false; };
+  });
+  # nix-cli is not exposed externally, hacking around it
+  staticNixCli = "$(dirname $(dirname $(readlink ${staticNix}/bin/nix)))";
+
   prootCommand = lib.concatStringsSep " " [
     "${proot}/bin/proot"
-    "-b ${pkgsStatic.nix}:/static-nix"
+    "-b ${staticNixCli}:/static-nix"
     "-b /proc:/proc" # needed because tries to access /proc/self/exe
     "-r ${buildRootDirectory}"
     "-w /"
@@ -32,12 +39,12 @@ stdenvNoCC.mkDerivation {
   name = "nix-directory";
 
   src = builtins.fetchurl {
-    url = "https://nixos.org/releases/nix/nix-2.20.5/nix-2.20.5-${system}.tar.xz";
+    url = "https://nixos.org/releases/nix/nix-2.31.2/nix-2.31.2-${system}.tar.xz";
     sha256 =
       let
         nixShas = {
-          aarch64-linux = "sha256:168wjfj3xsc8hq1y6cq59iipjp1g9hmj4n5wdn9c47ad9gbc9cvh";
-          x86_64-linux = "sha256:0dax9n562ldj53ap6lz0cwwsfx4d8j1267g9s6lg3zs237yyzw61";
+          aarch64-linux = "sha256:0mh4aqzx4dzf1m80al2ffx5p2axcwn2qzxzq9f5p2v892a255nv4";
+          x86_64-linux = "sha256:0q4azlxwqvzrad4bgbwggvm7lc4waawvy25sci4225nhxs37rxni";
         };
       in
       nixShas.${system};

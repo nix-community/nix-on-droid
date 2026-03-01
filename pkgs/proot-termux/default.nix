@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
+# Copyright (c) 2019-2025, see AUTHORS. Licensed under MIT License, see LICENSE.
 
 { stdenv
 , fetchFromGitHub
@@ -9,13 +9,13 @@
 
 stdenv.mkDerivation {
   pname = "proot-termux";
-  version = "unstable-2024-05-04";
+  version = "0-unstable-2026-02-21";
 
   src = fetchFromGitHub {
     repo = "proot";
     owner = "termux";
-    rev = "60485d2646c1e09105099772da4a20deda8d020d";
-    sha256 = "sha256-zHFPiL3ywZa8yzZa600BpoE+zuRipw2GNJrt3/Dy+/E=";
+    rev = "ab2e3464d04483b98a0614b470f3f8950d5a6468";
+    sha256 = "sha256-TMYkLmk+NnYcqJKF6RSOkN4S8AI5+HaNcgZZe/5E0vI=";
   };
 
   # ashmem.h is rather small, our needs are even smaller, so just define these:
@@ -34,9 +34,12 @@ stdenv.mkDerivation {
       '#define HAS_LOADER_32BIT true' \
       ""
     ! (grep -F '#define HAS_LOADER_32BIT' src/arch.h)
+    # don't wanna get a 128GB loader (LLVM 17->21 regression?)
+    substituteInPlace src/GNUmakefile --replace ",-Ttext" ",-n,-Ttext"
   '';
   buildInputs = [ talloc ];
   patches = [ ./detranslate-empty.patch ];
+  hardeningDisable = [ "zerocallusedregs" ];
   makeFlags = [ "-Csrc" "V=1" ];
   CFLAGS = [ "-O3" "-I../fake-ashmem" ] ++
     (if static then [ "-static" ] else [ ]);
