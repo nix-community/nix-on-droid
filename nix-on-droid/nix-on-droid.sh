@@ -70,6 +70,7 @@ function doHelp() {
     echo "  --option NAME VALUE"
     echo "  --override-input INPUT URL"
     echo "  --show-trace"
+    echo "  --refresh"
     echo
     echo "Commands"
     echo
@@ -173,6 +174,9 @@ while [[ $# -gt 0 ]]; do
             ;;
         --keep-failed|--keep-going|--show-trace)
             PASSTHROUGH_OPTS+=("$opt")
+            ;;
+        --refresh)
+            PASSTHROUGH_OPTS+=(--refresh)
             ;;
         -v|--verbose)
             export VERBOSE=1
