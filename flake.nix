@@ -156,4 +156,9 @@
         };
       };
     };
+
+  nixConfig = {
+    extra-substituters = [ "https://nix-on-droid.cachix.org" ];
+    extra-trusted-public-keys = [ "nix-on-droid.cachix.org-1:56snoMJTXmDRC1Ei24CmKoUqvHJ9XCp+nidK7qkMQrU=" ];
+  };
 }
