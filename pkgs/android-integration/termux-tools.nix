@@ -11,18 +11,18 @@
 
 stdenvNoCC.mkDerivation rec {
   name = "termux-tools";
-  version = "1.42.4";
+  version = "1.48.0";
   src = fetchFromGitHub {
     owner = "termux";
     repo = "termux-tools";
     rev = "v${version}";
-    sha256 = "sha256-LkkeaEQcY8HgunBYAg3Ymn5xYPvrGqGNCZTd/NyIOKY=";
+    sha256 = "sha256-5Qd0N8sW/DVTz8FoGeKMpaxb1hzr1JCJXM+P1wgFHjE=";
   };
   nativeBuildInputs = [ autoreconfHook makeWrapper ];
   propagatedInputs = [ termux-am ];
 
-  # https://github.com/termux/termux-tools/pull/95
-  patches = [ ./termux-tools.patch ];
+  # PR #95 (com.termux -> @TERMUX_APP_PACKAGE@) merged upstream in v1.43+
+  # but we still need to substitute the placeholders with our package name
   postPatch = ''
     substituteInPlace scripts/termux-setup-storage.in \
       --replace @TERMUX_HOME@ /data/data/com.termux.nix/files/home/ \
@@ -41,13 +41,13 @@ stdenvNoCC.mkDerivation rec {
 
     rm -r doc  # manpage is half misleading, pulling pandoc is not worth it
     substituteInPlace Makefile.am --replace \
-      'SUBDIRS = . scripts doc mirrors motds' \
+      'SUBDIRS = . scripts doc mirrors motds src' \
       'SUBDIRS = . scripts'
     substituteInPlace configure.ac --replace \
       'AC_CONFIG_FILES([Makefile scripts/Makefile doc/Makefile' \
       'AC_CONFIG_FILES([Makefile scripts/Makefile])'
     substituteInPlace configure.ac --replace \
-      'mirrors/Makefile motds/Makefile])' ""
+      'mirrors/Makefile motds/Makefile src/Makefile])' ""
   '';
 
   outputs = [
@@ -67,7 +67,6 @@ stdenvNoCC.mkDerivation rec {
     rm -d $out/etc
 
     rm $out/bin/chsh      # we offer a declarative way to change your shell
-    rm $out/bin/cmd       # doesn't work because we overlay /system/bin
     rm $out/bin/dalvikvm  # doesn't work because we overlay /system/bin
     rm $out/bin/df        # works without the magic
     rm $out/bin/getprop   # doesn't work because we overlay /system/bin

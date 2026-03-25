@@ -1,15 +1,48 @@
-diff --git a/pkgs/development/compilers/llvm/common/compiler-rt/default.nix b/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
-index 7d47436b714f..d30df471e92a 100644
---- a/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
-+++ b/pkgs/development/compilers/llvm/common/compiler-rt/default.nix
-@@ -155,8 +155,8 @@ stdenv.mkDerivation ({
-     # The presence of crtbegin_shared has been added and removed; it's possible
-     # people have added/removed it to get it working on their platforms.
-     # Try each in turn for now.
--    ln -s $out/lib/*/clang_rt.crtbegin-*.o $out/lib/crtbeginS.o
--    ln -s $out/lib/*/clang_rt.crtend-*.o $out/lib/crtendS.o
-+    #ln -s $out/lib/*/clang_rt.crtbegin-*.o $out/lib/crtbeginS.o
-+    #ln -s $out/lib/*/clang_rt.crtend-*.o $out/lib/crtendS.o
-     ln -s $out/lib/*/clang_rt.crtbegin_shared-*.o $out/lib/crtbeginS.o
-     ln -s $out/lib/*/clang_rt.crtend_shared-*.o $out/lib/crtendS.o
-   '' + lib.optionalString doFakeLibgcc ''
+--- a/pkgs/development/compilers/llvm/common/compiler-rt/default.nix	2026-03-24 20:44:53.816971290 +0100
++++ b/pkgs/development/compilers/llvm/common/compiler-rt/default.nix	2026-03-24 21:14:49.960465152 +0100
+@@ -186,6 +186,15 @@
+     lib.optional (stdenv.hostPlatform.isAarch64 && !haveLibc)
+       # Fixes https://github.com/NixOS/nixpkgs/issues/393603
+       (lib.cmakeBool "COMPILER_RT_DISABLE_AARCH64_FMV" true)
++  ++ lib.optionals stdenv.hostPlatform.isAndroid [
++    # NDK fortify headers reference SSIZE_MAX without including <limits.h>
++    (lib.cmakeFeature "CMAKE_C_FLAGS_INIT" "-DSSIZE_MAX=__LONG_MAX__")
++    (lib.cmakeFeature "CMAKE_CXX_FLAGS_INIT" "-DSSIZE_MAX=__LONG_MAX__")
++    # Android's bionic bundles rt/pthread into libc; log is only available at runtime
++    (lib.cmakeBool "COMPILER_RT_HAS_LIBRT" false)
++    (lib.cmakeBool "COMPILER_RT_HAS_LIBPTHREAD" false)
++    (lib.cmakeBool "COMPILER_RT_HAS_LIBLOG" false)
++  ]
+   ++ devExtraCmakeFlags;
+ 
+   outputs = [
+@@ -227,7 +236,17 @@
+         ''
+           substituteInPlace cmake/Modules/AddCompilerRT.cmake \
+             --replace-fail 'find_program(CODESIGN codesign)' ""
+-        '';
++        ''
++    +
++      # Disable Android-specific code that requires bionic headers
++      # (pthread.h, string.h) unavailable during compiler-rt cross-compilation.
++      lib.optionalString stdenv.hostPlatform.isAndroid ''
++        substituteInPlace lib/builtins/os_version_check.c \
++          --replace-fail '#elif __ANDROID__' '#elif 0'
++        substituteInPlace lib/builtins/cpu_model/aarch64.c \
++          --replace-fail '#elif defined(__ANDROID__)' \
++                         '#elif 0 // __ANDROID__ disabled for cross-compilation'
++      '';
+ 
+   preConfigure = lib.optionalString stdenv.hostPlatform.isDarwin ''
+     cmakeFlagsArray+=(
+@@ -248,8 +267,8 @@
+       # The presence of crtbegin_shared has been added and removed; it's possible
+       # people have added/removed it to get it working on their platforms.
+       # Try each in turn for now.
+-      ln -s $out/lib/*/clang_rt.crtbegin-*.o $out/lib/crtbeginS.o
+-      ln -s $out/lib/*/clang_rt.crtend-*.o $out/lib/crtendS.o
++      #ln -s $out/lib/*/clang_rt.crtbegin-*.o $out/lib/crtbeginS.o
++      #ln -s $out/lib/*/clang_rt.crtend-*.o $out/lib/crtendS.o
+       ln -s $out/lib/*/clang_rt.crtbegin_shared-*.o $out/lib/crtbeginS.o
+       ln -s $out/lib/*/clang_rt.crtend_shared-*.o $out/lib/crtendS.o
+     ''

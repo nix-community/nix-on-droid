@@ -10,7 +10,14 @@ runCommand "bootstrap" { } ''
   cp --recursive ${nixDirectory}/var $out/nix/var
   chmod --recursive u+w $out/nix
 
-  ln --symbolic ${initialPackageInfo.bash}/bin/sh $out/bin/sh
+  ln --symbolic ${initialPackageInfo.sh} $out/bin/sh
+
+  # Create busybox applet symlinks for common tools needed during initial setup
+  BUSYBOX_DIR=$(dirname $(dirname ${initialPackageInfo.sh}))
+  for applet in sed grep cat mkdir mv cp rm ln basename dirname env head tail wc tr sort uniq find xargs; do
+    ln --symbolic $BUSYBOX_DIR/bin/busybox $out/bin/$applet 2>/dev/null || true
+  done
+  ln --symbolic $BUSYBOX_DIR/bin/busybox $out/usr/bin/env 2>/dev/null || true
 
   install -D -m 0755 ${prootTermux}/bin/proot-static $out/bin/proot-static
 

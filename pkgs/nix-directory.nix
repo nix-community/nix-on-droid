@@ -15,7 +15,6 @@ let
 
   prootCommand = lib.concatStringsSep " " [
     "${proot}/bin/proot"
-    "-b ${pkgsStatic.nix}:/static-nix"
     "-b /proc:/proc" # needed because tries to access /proc/self/exe
     "-r ${buildRootDirectory}"
     "-w /"
@@ -32,12 +31,12 @@ stdenvNoCC.mkDerivation {
   name = "nix-directory";
 
   src = builtins.fetchurl {
-    url = "https://nixos.org/releases/nix/nix-2.20.5/nix-2.20.5-${system}.tar.xz";
+    url = "https://nixos.org/releases/nix/nix-2.34.3/nix-2.34.3-${system}.tar.xz";
     sha256 =
       let
         nixShas = {
-          aarch64-linux = "sha256:168wjfj3xsc8hq1y6cq59iipjp1g9hmj4n5wdn9c47ad9gbc9cvh";
-          x86_64-linux = "sha256:0dax9n562ldj53ap6lz0cwwsfx4d8j1267g9s6lg3zs237yyzw61";
+          aarch64-linux = "sha256:0c2fkqnbqq9dspw0gil3ixdd5qqwzm763hqrxagpawxnjrv4wdi1";
+          x86_64-linux = "sha256:1l7za5hi1sd5b266pxfrk2yi3212rfgdlv46kqa6w0kdb0xwm23q";
         };
       in
       nixShas.${system};
@@ -50,15 +49,20 @@ stdenvNoCC.mkDerivation {
     mkdir --parents ${buildRootDirectory}/nix/var/nix/db
     cp --recursive store ${buildRootDirectory}/nix/store
 
-    CACERT=$(find ${buildRootDirectory}/nix/store -path '*-nss-cacert-*/ca-bundle.crt' | sed 's,^${buildRootDirectory},,')
-    PKG_BASH=$(find ${buildRootDirectory}/nix/store -path '*/bin/bash' | sed 's,^${buildRootDirectory},,')
-    PKG_BASH=''${PKG_BASH%/bin/bash}
-    PKG_NIX=$(find ${buildRootDirectory}/nix/store -path '*/bin/nix' | sed 's,^${buildRootDirectory},,')
+    CACERT=$(find ${buildRootDirectory}/nix/store -path '*-nss-cacert-*/ca-bundle.crt' | head -1 | sed 's,^${buildRootDirectory},,')
+    PKG_SH=$(find ${buildRootDirectory}/nix/store -path '*/bin/sh' | head -1 | sed 's,^${buildRootDirectory},,')
+    PKG_NIX=$(find ${buildRootDirectory}/nix/store -path '*/bin/nix' | head -1 | sed 's,^${buildRootDirectory},,')
     PKG_NIX=''${PKG_NIX%/bin/nix}
 
     for i in $(< ${prootTermuxClosure}/store-paths); do
       cp --archive "$i" "${buildRootDirectory}$i"
     done
+
+    # Copy static nix into root directory so proot can access it
+    # Must dereference symlinks since the binary symlinks point to absolute /nix/store paths
+    mkdir -p ${buildRootDirectory}/static-nix/bin
+    cp -L ${pkgsStatic.nix}/bin/nix ${buildRootDirectory}/static-nix/bin/nix
+    ln -s nix ${buildRootDirectory}/static-nix/bin/nix-store
 
     USER=${config.user.userName} ${prootCommand} "/static-nix/bin/nix-store" --init
     USER=${config.user.userName} ${prootCommand} "/static-nix/bin/nix-store" --load-db < .reginfo
@@ -66,7 +70,7 @@ stdenvNoCC.mkDerivation {
 
     cat > package-info.nix <<EOF
     {
-      bash = "$PKG_BASH";
+      sh = "$PKG_SH";
       cacert = "$CACERT";
       nix = "$PKG_NIX";
     }
