@@ -101,12 +101,15 @@ function doSwitch() {
     fi
 
     echo "Building activation package..."
-    nixActivationPackage build --no-link
+    generationDir="$(nixActivationPackage build --no-link --print-out-paths | head -n1)"
 
-    echo "Executing activation script..."
-    generationDir="$(nixActivationPackage path-info)"
-
-    "${generationDir}/activate"
+    if [ -n "$generationDir" ] && [ -d "$generationDir" ]; then
+        echo "Executing activation script..."
+        "${generationDir}/activate"
+    else
+        errorEcho "Failed to determine activation package path."
+        return 1
+    fi
 }
 
 function doSwitchGeneration() {
