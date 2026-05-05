@@ -139,7 +139,7 @@ Run
 nix build ".#bootstrapZip-aarch64" --impure
 ```
 
-Put the zip file from `result` on some HTTP server
+Put the zip file from `result` on some HTTPS server
 and specify the parent directory URL during the installation.
 To re-trigger the installation, you can use
 'clear data' on the Android app (after backing stuff up, obviously).
@@ -260,7 +260,7 @@ Developer's device:
 3. Target `nix` database is initialized
 4. Support scripts and config files are built with `nix` and the Nix-on-Droid
    module system
-5. From these, a bootstrap zipball is built and published on an HTTP server
+5. From these, a bootstrap zipball is built and published on an HTTPS server
 
 User's device:
 
