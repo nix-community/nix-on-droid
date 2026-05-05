@@ -64,13 +64,10 @@ let
     }
   );
 
-  staticPkgs = crossPkgs.pkgsStatic.pkgsLLVM;
-
-  customPkgs = rec {
+  customPkgs = {
     bootstrap = callPackage ./bootstrap.nix { };
     bootstrapZip = callPackage ./bootstrap-zip.nix { };
-    prootTermux = staticPkgs.callPackage ./proot-termux { talloc = tallocStatic; };
-    tallocStatic = staticPkgs.callPackage ./talloc { };
+    prootTermux = modules.config.environment.files.prootStatic;
   };
 in
 
