@@ -137,10 +137,18 @@ while [[ $# -gt 0 ]]; do
             COMMAND="$opt"
             ;;
         -f|--file)
+            if [[ $# -eq 0 ]]; then
+                errorEcho "$0: option '$opt' requires an argument"
+                exit 1
+            fi
             CONFIG_FILE="$1"
             shift
             ;;
         -F|--flake)
+            if [[ $# -eq 0 ]]; then
+                errorEcho "$0: option '$opt' requires an argument"
+                exit 1
+            fi
             PASSTHROUGH_OPTS+=(--extra-experimental-features "flakes nix-command")
             # add "nixOnDroidConfigurations." as prefix in attribute name, e.g.
             # /path/to/flake#device -> /path/to/flake#nixOnDroidConfigurations.device
@@ -157,6 +165,10 @@ while [[ $# -gt 0 ]]; do
             exit 0
             ;;
         -I|--include)
+            if [[ $# -eq 0 ]]; then
+                errorEcho "$0: option '$opt' requires an argument"
+                exit 1
+            fi
             PASSTHROUGH_OPTS+=(-I "$1")
             shift
             ;;
