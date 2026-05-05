@@ -55,24 +55,10 @@ log "NIX_ON_DROID_CHANNEL_URL=$NIX_ON_DROID_CHANNEL_URL"
 log "NIX_ON_DROID_FLAKE_URL=$NIX_ON_DROID_FLAKE_URL"
 
 
-PROOT_HASH_FILE="modules/environment/login/default.nix"
 UPLOADS=()
 for arch in $ARCHES; do
     log "building $arch proot..."
-    proot="$(nix build --no-link --print-out-paths ".#prootTermux-${arch}")"
-
-    if grep -q "$arch-linux = \"$proot\";" "$PROOT_HASH_FILE"; then
-        log "keeping $arch proot path in $PROOT_HASH_FILE"
-    elif grep -q "$arch-linux = \"/nix/store/" "$PROOT_HASH_FILE"; then
-        log "patching $arch proot path in $PROOT_HASH_FILE..."
-        grep "$arch-linux = \"/nix/store/" "$PROOT_HASH_FILE"
-        sed -i "s|$arch-linux = \"/nix/store/.*\";|$arch-linux = \"$proot\";|" "$PROOT_HASH_FILE"
-        log "            ->"
-        grep "$arch-linux = \"/nix/store/" "$PROOT_HASH_FILE"
-    else
-        log "no $arch proot hash found in $PROOT_HASH_FILE!"
-        exit 1
-    fi
+    nix build --no-link --print-out-paths ".#prootTermux-${arch}"
 
     log "building $arch bootstrapZip..."
     BOOTSTRAP_ZIP="$(nix build --no-link --print-out-paths --impure ".#bootstrapZip-${arch}")"

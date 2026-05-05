@@ -1,23 +1,19 @@
 # Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ callPackage
+{ stdenv
 , fetchurl
 , python3
 , pkg-config
 , wafHook
 }:
 
-let
-  pkgsCross = callPackage ./cross-pkgs.nix { };
-in
-
-pkgsCross.stdenv.mkDerivation rec {
+stdenv.mkDerivation rec {
   pname = "talloc";
-  version = "2.4.2";
+  version = "2.4.3";
 
   src = fetchurl {
     url = "mirror://samba/talloc/${pname}-${version}.tar.gz";
-    sha256 = "sha256-hez55GXiD5j5lQpS6aQR4UMgvFVfolfYdpe356mx2KY=";
+    sha256 = "sha256-3EbEC59GuzTdl/5B9Uiw6LJHt3qRhXZzPFKOg6vYVN0=";
   };
 
   nativeBuildInputs = [ pkg-config python3 wafHook ];
@@ -66,7 +62,7 @@ pkgsCross.stdenv.mkDerivation rec {
   buildPhase = "python ./buildtools/bin/waf build || true";
   installPhase = ''
     mkdir -p $out/lib $out/include
-    ${pkgsCross.stdenv.cc.targetPrefix}ar q $out/lib/libtalloc.a \
+    ${stdenv.cc.targetPrefix}ar q $out/lib/libtalloc.a \
         bin/default/talloc.c.[0-9]*.o
     cp talloc.h $out/include/
   '';

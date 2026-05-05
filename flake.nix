@@ -5,9 +5,8 @@
     nixpkgs.url = "github:NixOS/nixpkgs";
 
     # for bootstrap zip ball creation and proot-termux builds, we use a fixed version of nixpkgs to ease maintanence.
-    # head of nixos-24.05 as of 2024-07-06
-    # note: when updating nixpkgs-for-bootstrap, update store paths of proot-termux in modules/environment/login/default.nix
-    nixpkgs-for-bootstrap.url = "github:NixOS/nixpkgs/49ee0e94463abada1de470c9c07bfc12b36dcf40";
+    # head of nixos-25.11 as of 2026-02-16
+    nixpkgs-for-bootstrap.url = "github:NixOS/nixpkgs/fa56d7d6de78f5a7f997b0ea2bc6efd5868ad9e8";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -78,6 +77,7 @@
         , config ? null
         , extraModules ? null
         , system ? null  # pkgs.stdenv.hostPlatform.system is used to detect user's arch
+        , bootstrapSystem ? pkgs.stdenv.hostPlatform.system
         }:
         if ! (builtins.elem pkgs.stdenv.hostPlatform.system [ "aarch64-linux" "x86_64-linux" ]) then
           throw
@@ -104,6 +104,7 @@
               inherit extraSpecialArgs home-manager-path pkgs;
               config.imports = modules;
               isFlake = true;
+              crossPkgs = import nixpkgs-for-bootstrap { crossSystem = pkgs.stdenv.hostPlatform.system; localSystem = bootstrapSystem; };
             });
 
       overlays.default = overlay;
@@ -118,9 +119,14 @@
               derivationAttrset;
           perArchCustomPkgs = arch: flattenArch arch
             (import ./pkgs {
-              _nativeSystem = system; # system to cross-compile from
-              system = "${arch}-linux"; # system to cross-compile to
-              nixpkgs = nixpkgs-for-bootstrap;
+              pkgs = import nixpkgs-for-bootstrap { inherit system; };
+              crossPkgs = import nixpkgs-for-bootstrap {
+                crossSystem = "${arch}-linux";
+                localSystem = system;
+              };
+              targetPkgs = import nixpkgs-for-bootstrap {
+                system = "${arch}-linux";
+              };
             }).customPkgs;
 
           docs = import ./docs {

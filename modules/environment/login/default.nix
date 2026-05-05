@@ -1,6 +1,6 @@
 # Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, lib, pkgs, initialPackageInfo, targetSystem, ... }:
+{ config, lib, pkgs, initialPackageInfo, targetSystem, crossPkgs, ... }:
 
 with lib;
 
@@ -12,6 +12,10 @@ let
   loginInner = pkgs.callPackage ./login-inner.nix {
     inherit config initialPackageInfo targetSystem;
   };
+
+  tallocStatic = crossPkgs.pkgsStatic.pkgsLLVM.callPackage ../../../pkgs/talloc { };
+
+  prootStatic = crossPkgs.pkgsStatic.pkgsLLVM.callPackage ../../../pkgs/proot-termux { talloc = tallocStatic; };
 in
 
 {
@@ -82,16 +86,7 @@ in
     };
 
     environment.files = {
-      inherit login loginInner;
-
-      prootStatic =
-        let
-          crossCompiledPaths = {
-            aarch64-linux = "/nix/store/7qd99m1w65x2vgqg453nd70y60sm3kay-proot-termux-static-aarch64-unknown-linux-android-unstable-2024-05-04";
-            x86_64-linux = "/nix/store/pakj3svvw84rhkzdc6211yhc2cgvc21f-proot-termux-static-x86_64-unknown-linux-android-unstable-2024-05-04";
-          };
-        in
-        "${crossCompiledPaths.${targetSystem}}";
+      inherit login loginInner prootStatic;
     };
 
   };
