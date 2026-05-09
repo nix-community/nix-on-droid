@@ -21,6 +21,7 @@
   ./environment/shell.nix
   ./home-manager.nix
   ./nixpkgs/options.nix
+  ./programs/ssh.nix
   ./terminal.nix
   ./time.nix
   ./upgrade.nix
