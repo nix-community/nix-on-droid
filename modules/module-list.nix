@@ -21,6 +21,7 @@
   ./environment/shell.nix
   ./home-manager.nix
   ./nixpkgs/options.nix
+  ./system/service/runit/service.nix
   ./terminal.nix
   ./time.nix
   ./upgrade.nix
