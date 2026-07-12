@@ -4,11 +4,13 @@
 
 runCommand "bootstrap" { } ''
   mkdir --parents $out/{.l2s,bin,dev/shm,etc,root,tmp,usr/{bin,lib}}
-  mkdir --parents $out/nix/var/nix/{profiles,gcroots}/per-user/nix-on-droid
+  mkdir --parents $out/nix
 
   cp --recursive ${nixDirectory}/store $out/nix/store
   cp --recursive ${nixDirectory}/var $out/nix/var
   chmod --recursive u+w $out/nix
+
+  mkdir --parents $out/nix/var/nix/{profiles,gcroots}/per-user/nix-on-droid
 
   ln --symbolic ${initialPackageInfo.bash}/bin/sh $out/bin/sh
 
