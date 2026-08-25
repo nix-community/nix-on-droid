@@ -34,6 +34,12 @@ in
         example = [ "doc" "info" "devdoc" ];
         description = "List of additional package outputs to be installed as user packages.";
       };
+
+      extraSetup = mkOption {
+        type = types.lines;
+        default = "";
+        description = "Shell fragments to be run after the system environment has been created. This should only be used for things that need to modify the internals of the environment, e.g. generating MIME caches. The environment being built can be accessed at $out.";
+      };
     };
 
   };
@@ -79,6 +85,8 @@ in
         paths = cfg.packages;
 
         inherit (cfg) extraOutputsToInstall;
+
+        postBuild = cfg.extraSetup;
 
         meta = {
           description = "Environment of packages installed through Nix-on-Droid.";
