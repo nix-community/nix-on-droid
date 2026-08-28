@@ -1,7 +1,9 @@
-import bootstrap_channels
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE
+
 import subprocess
 import sys
 
+import bootstrap_channels
 from common import screenshot, wait_for
 
 STD = '/data/data/com.termux.nix/files/home/.cache/nix-on-droid-self-test'
@@ -33,18 +35,21 @@ def run(d):
         f'touch {STD}/confirmation-granted',
         '/data/data/com.termux.nix/files/usr/bin/login echo test',
         '/data/data/com.termux.nix/files/usr/bin/login id',
-        ('cd /data/data/com.termux.nix/files/home; '
-         'pwd; '
-         'id; '
-         'env PATH= /data/data/com.termux.nix/files/usr/bin/login '
-         ' nix-on-droid on-device-test'),
+        (
+            'cd /data/data/com.termux.nix/files/home; '
+            'pwd; '
+            'id; '
+            'env PATH= /data/data/com.termux.nix/files/usr/bin/login '
+            ' nix-on-droid on-device-test'
+        ),
     ]:
         print(f'running {cmd} as {user} with capture:')
-        p = subprocess.Popen(['adb', 'shell', 'su', '0', 'su', user,
-                              'sh', '-c', f"'{cmd}'"],
-                             encoding='utf-8',
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.STDOUT)
+        p = subprocess.Popen(
+            ['adb', 'shell', 'su', '0', 'su', user, 'sh', '-c', f"'{cmd}'"],
+            encoding='utf-8',
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
         out = ''
         while p.poll() is None:
             line = p.stdout.readline()

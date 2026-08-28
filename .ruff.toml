@@ -1,0 +1,32 @@
+line-length = 79
+preview = true
+lint.select = [ "ALL" ]
+lint.ignore = [
+  "D203",  # one-blank-line-before-class
+  "D213",  # multi-line-summary-second-line
+]
+lint.per-file-ignores."tests/emulator/**" = [
+  "ANN",     # flake-8 annotations
+  "D100",    # undocumented-public-module
+  "D103",    # undocumented-public-function
+  "INP001",  # implicit-namespace-package
+  "PLR0915", # too-many-statements
+  "S101",    # assert
+  "T201",    # print
+]
+lint.per-file-ignores."tests/emulator/common.py" = [
+  "FBT002",  # boolean-default-value-positional-argument
+]
+lint.per-file-ignores."tests/emulator/android_integration.py" = [
+  "C901",    # complex-structure
+]
+lint.per-file-ignores."tests/emulator/test_channels_shell.py" = [
+  "S404",    # suspicious-subprocess-import
+  "S603",    # subprocess-without-shell-equals-true
+  "S607",    # start-process-with-partial-path
+]
+lint.flake8-quotes.inline-quotes = "single"
+lint.flake8-quotes.multiline-quotes = "single"
+lint.flake8-copyright.notice-rgx = '# Copyright \(c\) 2019-20\d\d, see AUTHORS\. Licensed under MIT License, see LICENSE\n'
+format.quote-style = "single"
+format.preview = true

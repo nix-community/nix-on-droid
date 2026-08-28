@@ -1,16 +1,23 @@
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE
+
 import base64
 import time
 
 import bootstrap_channels
-
 from common import screenshot, wait_for
+
+OPENERS = ['termux-open', 'termux-open-url', 'xdg-open']
+TOOLS = [
+    'am',
+    'termux-setup-storage',
+    'termux-reload-settings',
+    'termux-wake-lock',
+    'termux-wake-unlock',
+    *OPENERS,
+]
 
 
 def run(d):
-    OPENERS = ['termux-open', 'termux-open-url', 'xdg-open']
-    TOOLS = ['am', 'termux-setup-storage', 'termux-reload-settings',
-             'termux-wake-lock', 'termux-wake-unlock'] + OPENERS
-
     nod = bootstrap_channels.run(d)
 
     # Verify that android-integration tools aren't installed by default
@@ -21,9 +28,11 @@ def run(d):
         screenshot(d, f'no-{toolname}')
 
     # Apply a config that enables android-integration tools
-    cfg = ('/data/local/tmp/n-o-d/unpacked/tests/on-device/'
-           'config-android-integration.nix')
-    d(f'input text \'cp {cfg} .config/nixpkgs/nix-on-droid.nix\'')
+    cfg = (
+        '/data/local/tmp/n-o-d/unpacked/tests/on-device/'
+        'config-android-integration.nix'
+    )
+    d(f"input text 'cp {cfg} .config/nixpkgs/nix-on-droid.nix'")
     d.ui.press('enter')
     screenshot(d, 'pre-switch')
     d('input text "nix-on-droid switch && echo integration  tools  installed"')
@@ -135,7 +144,7 @@ def run(d):
             d.ui(text='ALLOW').click()
         screenshot(d, 'wake-lock-permission-granted')
     d.ui.open_notification()
-    time.sleep(.5)
+    time.sleep(0.5)
     screenshot(d, 'notification-opened')
     wait_for(d, '(wake lock held)')
     if 'Release wakelock' not in d.ui.dump_hierarchy():
@@ -152,7 +161,7 @@ def run(d):
     d.ui.press('enter')
     screenshot(d, 'wake-unlock-command')
     d.ui.open_notification()
-    time.sleep(.5)
+    time.sleep(0.5)
     screenshot(d, 'notification-opened')
     if 'Acquire wakelock' not in d.ui.dump_hierarchy():
         d.ui(text='Nix').right(resourceId='android:id/expand_button').click()

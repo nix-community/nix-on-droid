@@ -1,5 +1,9 @@
-import bootstrap_channels
+# Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE
 
+import base64
+import time
+
+import bootstrap_channels
 from common import screenshot, wait_for
 
 
@@ -54,13 +58,13 @@ def run(d):
     screenshot(d, 'zip-is-still-there')
 
     def change_shell_and_relogin(shell, descr):
-        import base64
-        import time
-        config = ('{pkgs, ...}: {user.shell = %SHELL%; ' +
-                  'system.stateVersion = "24.05";}').replace('%SHELL%', shell)
+        config = (
+            '{pkgs, ...}: {user.shell = %SHELL%; '
+            'system.stateVersion = "24.05";}'
+        ).replace('%SHELL%', shell)
         config_base64 = base64.b64encode(config.encode()).decode()
-        d(f'input text "echo {config_base64} | base64 -d > '
-          '~/.config/nixpkgs/nix-on-droid.nix"')
+        cfg_file = '~/.config/nixpkgs/nix-on-droid.nix"'
+        d(f'input text "echo {config_base64} | base64 -d > {cfg_file}')
         d.ui.press('enter')
         screenshot(d, f'pre-switch-{descr}')
         d(f'input text "nix-on-droid switch && echo switched  {descr}"')
@@ -85,8 +89,7 @@ def run(d):
     change_shell_and_relogin('"${pkgs.fish}"', 'fish-directory')
     wait_for(d, 'Cannot execute shell ')
     wait_for(d, 'it is a directory.')
-    wait_for(d,
-             "You should point 'user.shell' to the exact binary.")
+    wait_for(d, "You should point 'user.shell' to the exact binary.")
     wait_for(d, 'Falling back to bash.')
     wait_for(d, 'bash-5.2$')
     screenshot(d, 're-login-done-shell-dir-fallback')
