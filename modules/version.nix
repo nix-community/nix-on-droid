@@ -11,18 +11,7 @@ with lib;
   options = {
 
     system.stateVersion = mkOption {
-      type = types.enum [
-        "19.09"
-        "20.03"
-        "20.09"
-        "21.05"
-        "21.11"
-        "22.05"
-        "22.11"
-        "23.05"
-        "23.11"
-        "24.05"
-      ];
+      type = types.str;
       description = ''
         It is occasionally necessary for Nix-on-Droid to change
         configuration defaults in a way that is incompatible with
@@ -38,7 +27,21 @@ with lib;
         conversion or moving files.
       '';
     };
-
   };
 
+  config = {
+    assertions = [
+      {
+        assertion = match "[0-9]{2}\\.[0-9]{2}" config.system.stateVersion != null;
+        message = ''
+          ${config.system.stateVersion} is an invalid value for 'system.stateVersion'; it must be in the format "YY.MM",
+          which corresponds to a prior release of NixOS.
+
+          If you want to switch releases or switch to unstable, you should change your channel and/or flake input URLs only.
+          *DO NOT* touch the 'system.stateVersion' option, as it will not help you upgrade.
+          Leave it exactly on the previous value, which is likely the value you had for it when you installed your system.
+        '';
+      }
+    ];
+  };
 }
