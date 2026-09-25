@@ -44,7 +44,7 @@ in
   config = {
 
     build.activation.installPackages = ''
-      if [[ -e "${config.user.home}/.nix-profile/manifest.json" ]]; then
+      if [[ -e "${config.user.home}/.nix-profile/manifest.json" ]] || nix profile list > /dev/null 2>&1; then
         # manual removal and installation as two non-atomical steps is required
         # because of https://github.com/NixOS/nix/issues/6349
 
