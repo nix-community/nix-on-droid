@@ -1,6 +1,6 @@
 # Copyright (c) 2019-2024, see AUTHORS. Licensed under MIT License, see LICENSE.
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, isFlake, ... }:
 
 with lib;
 
@@ -28,9 +28,9 @@ let
       . "${config.user.home}/.nix-profile/etc/profile.d/nix.sh"
 
       # workaround for nix 2.4, see https://github.com/NixOS/nixpkgs/issues/149791
-      ${addToNixPath "${config.user.home}/.nix-defexpr/channels"}
+      ${if !isFlake then (addToNixPath "${config.user.home}/.nix-defexpr/channels") else ""}
       # Workaround for https://github.com/NixOS/nix/issues/1865
-      ${addToNixPath "nixpkgs=${config.user.home}/.nix-defexpr/channels/nixpkgs/"}
+      ${if !isFlake then (addToNixPath "nixpkgs=${config.user.home}/.nix-defexpr/channels/nixpkgs/") else ""}
 
       ${optionalString (config.home-manager.config != null) ''
         if [ -e "${config.user.home}/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
