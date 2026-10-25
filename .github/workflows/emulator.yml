@@ -35,7 +35,7 @@ jobs:
       - name: Install Nix
         uses: nixbuild/nix-quick-install-action@master
       - name: Setup cachix
-        uses: cachix/cachix-action@v14
+        uses: cachix/cachix-action@v17
         with:
           name: nix-on-droid
       - name: Configure Nix cache
@@ -45,7 +45,7 @@ jobs:
           restore-prefixes-first-match: nix-${{ runner.os }}-${{ runner.arch }}
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Build zipball and channel tarball to inject (n-o-d)
         id: injection-build
@@ -57,7 +57,7 @@ jobs:
           tar cf n-o-d.tar n-o-d
 
       - name: Store zipball and channel tarball to inject (n-o-d)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: n-o-d.tar
           path: n-o-d.tar
@@ -74,7 +74,7 @@ jobs:
     steps:
       - name: Configure AVD cache
         id: avd-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.android/avd/*
@@ -127,10 +127,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Retrieve zipball and channel tarball to inject (n-o-d)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: n-o-d.tar
 
@@ -159,7 +159,7 @@ jobs:
       - name: Restore AVD cache
         id: avd-cache
         if: matrix.api-level == 29  # tested, robust with kill workaround
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: |
             ~/.android/avd/*
@@ -192,7 +192,7 @@ jobs:
 
       - name: Upload screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: screenshots-${{ matrix.script }}-${{ matrix.api-level }}
           path: tests/emulator/screenshots
