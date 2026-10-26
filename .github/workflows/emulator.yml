@@ -79,7 +79,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
+          key: avd-test-${{ matrix.api-level }}
 
       - name: Enable KVM
         if: matrix.api-level == 29 && steps.avd-cache.outputs.cache-hit != 'true'
@@ -97,6 +97,7 @@ jobs:
           target: default
           arch: x86_64
           api-level: ${{ matrix.api-level }}
+          disk-size: 8G
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
@@ -164,7 +165,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
+          key: avd-test-${{ matrix.api-level }}
 
       - name: Test script=${{ matrix.script }} api-level=${{ matrix.api-level }}
         uses: reactivecircus/android-emulator-runner@v2
@@ -172,6 +173,7 @@ jobs:
           target: default
           arch: x86_64
           api-level: ${{ matrix.api-level }}
+          disk-size: 8G
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true

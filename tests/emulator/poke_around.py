@@ -57,7 +57,7 @@ def run(d):
         import base64
         import time
         config = ('{pkgs, ...}: {user.shell = %SHELL%; ' +
-                  'system.stateVersion = "24.05";}').replace('%SHELL%', shell)
+                  'system.stateVersion = "24.11";}').replace('%SHELL%', shell)
         config_base64 = base64.b64encode(config.encode()).decode()
         d(f'input text "echo {config_base64} | base64 -d > '
           '~/.config/nixpkgs/nix-on-droid.nix"')
