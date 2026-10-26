@@ -46,7 +46,7 @@ let
           else lib.traceSeqN 1 x false;
       in
       traceXIfNot isConfig;
-    merge = _args: fold (def: mergeConfig def.value) { };
+    merge = _args: foldr (def: mergeConfig def.value) { };
   };
 
   overlayType = mkOptionType {
